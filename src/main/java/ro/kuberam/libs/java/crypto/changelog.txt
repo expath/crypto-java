@@ -1,0 +1,52 @@
+0.2.3
+Feature #145: Investigate which of the module files can be automatically generated from spec
+Feature #146: Property 'project.version' from module build file to be extracted from spec
+Feature #185: Release EXPath Cryptographic Module as xar
+
+0.2.2
+Feature #134: Automatically generate the error messages Java class from spec
+Feature #135: Separate eXist specific code for XML digital signature generation class
+Feature #136: Separate eXist specific code for XML digital signature validation class
+Feature #138: Add JUnit unit test for XML signature validation
+Feature #139: Add JUnit unit test for XML signature generation
+
+0.2.1
+Feature #128: Investigate about the output encoding for crypto:hmac() and crypto:hash(); currently is hex string
+Feature #129: Adapt the algorithm names in examples to the implementation's Java crypto providers (for instance, from HMAC-SHA-256 to HmacSHA256 )
+Feature #130: Replace hard-coded error messages
+Feature #131: Replace the eXist XML Serializer used to validate a digital signature
+
+0.2.0
+Feature #122: Add crypto:hash() according to EXPath Crypto spec
+Feature #123: Align crypto:hmac() with EXPath Crypto spec
+Feature #124: Align crypto:encrypt() with EXPath Crypto spec
+Feature #125: Align crypto:decrypt() with EXPath Crypto spec
+Feature #126: Align crypto:generate-signature() with EXPath Crypto spec
+Feature #127: Align crypto:validate-signature() with EXPath Crypto spec
+
+Version 0.1.6 - 2012.01.01
+1. Improvement of the test suite.
+
+Version 0.1.5 - 2011.05.01
+1. Was added function hmac(), for hashing input strings.
+
+Version 0.1.4 - 2011.04.21
+1. Project's namespace changed from "http://kuberam.ro/x-crypt" to "http://kuberam.ro/ns/x-crypt".
+2. Added encrypt-string() and decrypt-string() functions, which works for now only for symmetric
+encryption/decryption.
+
+
+Version 0.1.3 - 2011.01.18
+1. Improvements of XML serialization.
+2. The function "validate-signature" validates only signatures generated without X.509 certificate.
+
+Version 0.1.2 - 2011.01.17
+1. The function "generate-signature" allows now the sign a XML document based on an XPath expression.
+
+
+Version 0.1.1 - 2011.01.11
+1. Added function "generate-signature" based on an X509 certificate.
+2. Added function "validate-signature".
+
+Version 0.1.0 - 2011.01.10
+1. First version. Contains "generate-signature" based on generated key pair.
