@@ -1,4 +1,4 @@
-package ro.kuberam.libs.java.crypto.junit.digitalSignature;
+package ro.kuberam.libs.java.crypto.digitalSignature;
 
 import java.io.InputStream;
 
@@ -10,7 +10,7 @@ import org.w3c.dom.Document;
 
 import ro.kuberam.tests.junit.BaseTest;
 
-public class GenerateDigitalSignature extends BaseTest {
+public class GenerateEnvelopedDigitalSignature extends BaseTest {
 
 	@Test
 	public void generateEnvelopedDigitalSignature() throws Exception {

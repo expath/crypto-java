@@ -1,4 +1,4 @@
-package ro.kuberam.libs.java.crypto.junit.digitalSignature;
+package ro.kuberam.libs.java.crypto.digitalSignature;
 
 import java.io.InputStream;
 
