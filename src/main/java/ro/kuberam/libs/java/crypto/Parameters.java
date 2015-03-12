@@ -67,7 +67,7 @@ public class Parameters {
 		if (!signatureTypeValues.equals(signatureType)) {
 			throw new Exception(ErrorMessages.error_signatureType);
 		}
-		
+
 		this.signatureType = signatureType;
 	}
 
