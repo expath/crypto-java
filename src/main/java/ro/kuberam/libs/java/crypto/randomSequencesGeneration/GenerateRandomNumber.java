@@ -3,19 +3,26 @@ package ro.kuberam.libs.java.crypto.randomSequencesGeneration;
 import java.security.SecureRandom;
 
 public class GenerateRandomNumber {
-	
-	public static SecureRandom generateRandomNumber(long seed, String algorithm, String provider) throws Exception {
+
+	public static SecureRandom generateRandomNumber(long seed, String algorithm, String provider)
+			throws Exception {
 		SecureRandom randomNumber = SecureRandom.getInstance(algorithm, provider);
 		randomNumber.setSeed(seed);
 
 		return randomNumber;
 	}
-	
+
+	public static SecureRandom generateRandomNumber(String algorithm, String provider) throws Exception {
+		SecureRandom randomNumber = SecureRandom.getInstance(algorithm, provider);
+
+		return randomNumber;
+	}
+
 	public static void main(String args[]) throws Exception {
 
-		SecureRandom randomNumber = generateRandomNumber(1008, "SHA1PRNG", "base64");
+		SecureRandom randomNumber = generateRandomNumber(1008, "SHA1PRNG", "SUN");
 
-		System.out.println("Random number:\n" + randomNumber);
+		System.out.println("Random number:\n" + randomNumber.nextLong());
 	}
 
 }
