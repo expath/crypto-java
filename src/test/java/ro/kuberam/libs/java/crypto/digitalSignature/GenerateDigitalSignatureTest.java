@@ -10,7 +10,7 @@ import org.w3c.dom.Document;
 
 import ro.kuberam.tests.junit.BaseTest;
 
-public class GenerateDigitalSignature extends BaseTest {
+public class GenerateDigitalSignatureTest extends BaseTest {
 
 	@Test
 	public void generateEnvelopedDigitalSignature() throws Exception {
