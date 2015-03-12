@@ -2,7 +2,7 @@ package ro.kuberam.libs.java.crypto.randomSequencesGeneration;
 
 import java.security.SecureRandom;
 
-public class GenerateRandomNumber {
+public class RandomNumber {
 
 	public static SecureRandom generateRandomNumber(long seed, String algorithm, String provider)
 			throws Exception {
