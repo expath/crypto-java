@@ -1,6 +1,6 @@
 package ro.kuberam.libs.java.crypto;
 
-public class CryptographicParameters {
+public class Parameters {
 	private String canonicalizationAlgorithm = "inclusive-with-comments";
 	private String[] canonicalizationAlgorithmValues = new String[] { "exclusive",
 			"exclusive-with-comments", "inclusive", "inclusive-with-comments" };
@@ -8,8 +8,11 @@ public class CryptographicParameters {
 	private String[] digestAlgorithmValues = new String[] { "SHA1", "SHA256", "SHA512" };
 	private String signatureAlgorithm = "RSA_SHA1";
 	private String[] signatureAlgorithmValues = new String[] { "DSA_SHA1", "RSA_SHA1" };
+	private String signatureNamespacePrefix = "dsig";
+	private String signatureType = "enveloped";
+	private String[] signatureTypeValues = new String[] { "DSA_SHA1", "RSA_SHA1" };
 
-	public CryptographicParameters() {
+	public Parameters() {
 	}
 
 	public String getCanonicalizationAlgorithm() {
@@ -46,6 +49,26 @@ public class CryptographicParameters {
 		}
 
 		this.signatureAlgorithm = signatureAlgorithm;
+	}
+
+	public String getSignatureNamespacePrefix() {
+		return signatureNamespacePrefix;
+	}
+
+	public void setSignatureNamespacePrefix(String signatureNamespacePrefix) {
+		this.signatureNamespacePrefix = signatureNamespacePrefix;
+	}
+
+	public String getSignatureType() {
+		return signatureType;
+	}
+
+	public void setSignatureType(String signatureType) throws Exception {
+		if (!signatureTypeValues.equals(signatureType)) {
+			throw new Exception(ErrorMessages.error_signatureType);
+		}
+		
+		this.signatureType = signatureType;
 	}
 
 }
