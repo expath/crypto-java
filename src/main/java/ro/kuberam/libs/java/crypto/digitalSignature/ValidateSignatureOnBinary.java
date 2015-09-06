@@ -29,7 +29,7 @@ public class ValidateSignatureOnBinary {
 
 	public static void main(String args[]) throws Exception {
 
-		KeyPair keyPair = GenerateKeyPair.generateKeyPair(1008, "SHA1PRNG",
+		KeyPair keyPair = GenerateKeyPair.generate(1008, "SHA1PRNG",
 				"base64");
 
 		byte[] data = { 65, 66, 67, 68, 69, 70, 71, 72, 73, 74 };

@@ -22,7 +22,7 @@ public class ParametersTest {
 		Parameters parameters = new Parameters();
 
 		Assert.assertTrue(parameters.getCanonicalizationAlgorithm().equals(
-				"inclusive-with-comments"));
+				"http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"));
 	}
 
 	@Test
@@ -41,7 +41,7 @@ public class ParametersTest {
 	public void testDigestAlgorithmDefaultValue() {
 		Parameters parameters = new Parameters();
 
-		Assert.assertTrue(parameters.getDigestAlgorithm().equals("SHA1"));
+		Assert.assertTrue(parameters.getDigestAlgorithm().equals("http://www.w3.org/2000/09/xmldsig#sha1"));
 	}
 
 	@Test
@@ -59,10 +59,10 @@ public class ParametersTest {
 	@Test
 	public void testSignatureAlgorithmDefaultValue() {
 		Parameters parameters = new Parameters();
-
-		Assert.assertTrue(parameters.getSignatureAlgorithm().equals("RSA_SHA1"));
+		System.out.println(parameters.getSignatureAlgorithm());
+		Assert.assertTrue(parameters.getSignatureAlgorithm().equals("http://www.w3.org/2000/09/xmldsig#rsa-sha1"));
 	}
-	
+
 	@Test
 	public void testSignatureNamespacePrefixDefaultValue() {
 		Parameters parameters = new Parameters();
