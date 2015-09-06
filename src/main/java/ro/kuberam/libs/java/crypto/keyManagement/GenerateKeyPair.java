@@ -44,7 +44,7 @@ public class GenerateKeyPair {
 		System.out.println("Private key:\n"
 				+ Base64.encodeToString(keyPair.getPrivate().getEncoded(), true));
 
-		System.out.println("Private key:\n" + savePrivateKey(keyPair.getPrivate()));
+		//System.out.println("Private key:\n" + savePrivateKey(keyPair.getPrivate()));
 
 		System.out.println("Public key:\n" + Base64.encodeToString(keyPair.getPublic().getEncoded(), true));
 	}

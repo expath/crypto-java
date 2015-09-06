@@ -22,7 +22,9 @@ package ro.kuberam.libs.java.crypto.encrypt;
 
 import java.io.ByteArrayOutputStream;
 import java.security.InvalidKeyException;
+import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.StringTokenizer;
 
 import javax.crypto.BadPaddingException;
@@ -52,10 +54,10 @@ public class AsymmetricEncryption {
 			throw new Exception(ErrorMessages.error_noPadding);
 		}
 
-		SecretKeySpec skeySpec = new SecretKeySpec(publicKey.getBytes("UTF-8"), algorithm);
-
+		X509EncodedKeySpec publicKeySpecification = new X509EncodedKeySpec(publicKey.getBytes("UTF-8"));
+		
 		try {
-			cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+			cipher.init(Cipher.ENCRYPT_MODE, KeyFactory.getInstance("RSA").generatePublic(publicKeySpecification));
 		} catch (InvalidKeyException ex) {
 			throw new Exception(ErrorMessages.error_cryptoKey);
 		}
