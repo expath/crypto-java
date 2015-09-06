@@ -12,7 +12,7 @@ public class ErrorMessages {
       public static String error_noPadding = "crypto:inexistent-padding: No such padding.";
       public static String error_incorrectPadding = "crypto:incorrect-padding: Incorrect padding.";
       public static String error_encType = "crypto:encryption-type: The encryption type is not supported.";
-      public static String error_cryptoKey = "crypto:secret-key: The secret key is invalid.";
+      public static String error_cryptoKey = "crypto:invalid-crypto-key: The cryptographic key is invalid.";
       public static String error_blockSize = "crypto:block-size: Illegal block size.";
       public static String error_decryptionType = "crypto:decryption-type: The decryption type is not supported.";
       public static String error_noProvider = "crypto:no-provider: The provider is not set.";
