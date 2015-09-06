@@ -14,7 +14,7 @@ public class HmacStringWithSha512AndDefaultFormat extends BaseTest {
 	@Test
 	public void hmacStringWithSha512AndDefaultProvider() throws Exception {
 		String input = "Short string for tests.";
-		InputStream secretKeyIs = getClass().getResourceAsStream("../../private-key.pem");
+		InputStream secretKeyIs = getClass().getResourceAsStream("../private-key.pem");
 	
 		String result = Hmac.hmac(input, IOUtils.toString(secretKeyIs), "HMAC-SHA-512");
 

@@ -15,7 +15,7 @@ public class HmacStringWithMd5 extends BaseTest {
 	@Test
 	public void hmacStringWithMd5() throws Exception {
 		String input = "Short string for tests.";
-		InputStream secretKeyIs = getClass().getResourceAsStream("../../private-key.pem");
+		InputStream secretKeyIs = getClass().getResourceAsStream("../private-key.pem");
 		String secretKey = IOUtils.toString(secretKeyIs);
 
 		String result = Hmac.hmac(input, secretKey, "HMAC-MD5", "base64");
