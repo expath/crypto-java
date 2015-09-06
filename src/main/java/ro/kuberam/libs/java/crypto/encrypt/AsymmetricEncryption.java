@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 Claudius Teodorescu
+ *  Copyright (C) 2015 Claudius Teodorescu
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public License
@@ -40,36 +40,24 @@ import ro.kuberam.libs.java.crypto.ErrorMessages;
  */
 public class AsymmetricEncryption {
 
-	public static String encryptString(String input, String plainKey, String transformationName, String iv, String provider) throws Exception {
+	public static String encryptString(String input, String publicKey, String algorithm) throws Exception {
 
-		IvParameterSpec ivSpec = null;
-		String algorithm = (transformationName.contains("/")) ? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
-		provider = provider.equals("") ? "SunJCE" : provider;
 		Cipher cipher = null;
 
 		try {
-			cipher = Cipher.getInstance(transformationName, provider);
+			cipher = Cipher.getInstance(algorithm);
 		} catch (NoSuchAlgorithmException ex) {
 			throw new Exception(ErrorMessages.error_unknownAlgorithm);
 		} catch (NoSuchPaddingException ex) {
 			throw new Exception(ErrorMessages.error_noPadding);
 		}
 
-		SecretKeySpec skeySpec = new SecretKeySpec(plainKey.getBytes("UTF-8"), algorithm);
+		SecretKeySpec skeySpec = new SecretKeySpec(publicKey.getBytes("UTF-8"), algorithm);
 
-		if (transformationName.contains("/")) {
-			ivSpec = new IvParameterSpec(iv.getBytes("UTF-8"), 0, 16);
-			try {
-				cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ivSpec);
-			} catch (InvalidKeyException ex) {
-				throw new Exception(ErrorMessages.error_cryptoKey);
-			}
-		} else {
-			try {
-				cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-			} catch (InvalidKeyException ex) {
-				throw new Exception(ErrorMessages.error_cryptoKey);
-			}
+		try {
+			cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+		} catch (InvalidKeyException ex) {
+			throw new Exception(ErrorMessages.error_cryptoKey);
 		}
 
 		byte[] resultBytes = null;
@@ -84,10 +72,12 @@ public class AsymmetricEncryption {
 		return getString(resultBytes);
 	}
 
-	public static String decryptString(String encryptedInput, String plainKey, String transformationName, String iv, String provider) throws Exception {
+	public static String decryptString(String encryptedInput, String plainKey, String transformationName,
+			String iv, String provider) throws Exception {
 
 		IvParameterSpec ivSpec = null;
-		String algorithm = (transformationName.contains("/")) ? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
+		String algorithm = (transformationName.contains("/")) ? transformationName.substring(0,
+				transformationName.indexOf("/")) : transformationName;
 		provider = provider.equals("") ? "SunJCE" : provider;
 		Cipher cipher = null;
 
