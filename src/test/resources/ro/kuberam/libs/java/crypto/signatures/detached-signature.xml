@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+	<SignedInfo>
+		<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+		<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+		<Reference URI="sgconrad:31e5343c:1158d3b080f:-75fc">
+			<Transforms>
+				<Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
+					<XPath>descendant-or-self::Contract</XPath>
+				</Transform>
+			</Transforms>
+			<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+			<DigestValue>
+				1ybLCHRnYSGKCoswkUOuD650Mr0=
+			</DigestValue>
+		</Reference>
+		<Reference URI="sgconrad:-3c3ab664:1158cfc1d5d:-5431">
+			<Transforms>
+				<Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
+					<XPath>
+						descendant-or-self::FILLER
+					</XPath>
+				</Transform>
+			</Transforms>
+			<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+			<DigestValue>
+				2jmj7l5rSw0yVb/vlWAYkK/YBwk=
+			</DigestValue>
+		</Reference>
+	</SignedInfo>
+	<SignatureValue>
+		CBML9dFb/hEQXXR7oYfTuu4qit/VhUjwIfvPhSUQTQg0j+BFiTZFwNZaCJkZGswxDnSKhH1p
+		CuLn/Fpzl2CJpNduDU0Ff0pstd7MITS0l0/IvhDVS+Tf6WiYkN8UYTCkJeg063zlbW+15mR1
+		Z25jCs0gWO9qESthX34qXRi7ii0=
+	</SignatureValue>
+</Signature>

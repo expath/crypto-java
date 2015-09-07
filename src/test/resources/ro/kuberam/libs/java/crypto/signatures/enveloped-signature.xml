@@ -1,0 +1,78 @@
+<test>
+	<value1 ID="1">
+		testval1
+	</value1>
+	<value2 ID="2">
+		testval2
+	</value2>
+	<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+		<SignedInfo>
+			<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+			<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+			<Reference URI="#1">
+				<Transforms>
+					<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+				</Transforms>
+				<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+				<DigestValue>
+					XEZm5p6sjqi+Gt61BHQTOWtL2Nw=
+				</DigestValue>
+			</Reference>
+			<Reference URI="#2">
+				<Transforms>
+					<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+				</Transforms>
+				<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+				<DigestValue>
+					1k1M9eAUMUWM4FP4OA1/YC9qS/Y=
+				</DigestValue>
+			</Reference>
+		</SignedInfo>
+		<SignatureValue>
+			UmZlQ5g4ummBZu4IRg+BHDpZeeX4ix1GXODhyG+f5tvw+4ZDKIGn8qm5wdAj3+/wJS84Lx/
+			V hRgjyaucMjM3qEoMAEXEWYRTag0PdeOmfrSUffictYcTaGpPUYjDiWfKyFXAlCL5XmSeBW
+			5sMGgy5Bi/Y0HB1gwlmu+Jsh6FsGM=
+		</SignatureValue>
+		<KeyInfo>
+			<KeyValue>
+				<RSAKeyValue>
+					<Modulus>
+						kFhwg4m9hjFmrlxVR3w0XmYx7fgGsoh+aelmXlzCug5gRV0t0XeSpaeoX1jXu6gacJ
+						Vl/pOlNs+av+iviDKmS94LDPJtjAcl7C9dZbbt39N+/2S9WBAtJGXk5MOIu0aab50D UFK55m
+						UbpsZzwoVQrisW+KArnWlbrUP5xWXsnwM=
+					</Modulus>
+					<Exponent>
+						AQAB
+					</Exponent>
+				</RSAKeyValue>
+			</KeyValue>
+			<X509Data>
+				<X509IssuerSerial>
+					<X509IssuerName>
+						CommonName=serena_rsa,Country=SG,EmailAddress=serena_li@stercomm.com
+					</X509IssuerName>
+					<X509SerialNumber>
+						1190704157
+					</X509SerialNumber>
+				</X509IssuerSerial>
+				<X509SubjectName>
+					CommonName=serena_rsa,Country=SG,EmailAddress=serena_li@stercomm.com
+				</X509SubjectName>
+				<X509Certificate>
+					MIICBjCCAW8CBEb4tB0wDQYJKoZIhvcNAQEFBQAwSTElMCMGCSqGSIb3DQEJARYWc2VyZW
+					5hX2xp QHN0ZXJjb21tLmNvbTELMAkGA1UEBhMCU0cxEzARBgNVBAMTCnNlcmVuYV9yc2Ew
+					IBcNMDcwOTI1
+					MDcwOTE3WhgPMjA2MjA2MjgwNzA5MTdaMEkxJTAjBgkqhk
+					iG9w0BCQEWFnNlcmVuYV9saUBzdGVy Y29tbS5jb20xCzAJBgNVBAYTAlNHMRMwEQYDVQQDE
+					wpzZXJlbmFfcnNhMIGfMA0GCSqGSIb3DQEB AQUAA4GNADCBiQKBgQCQWHCDib2GMWauXFVH
+					fDReZjHt+AayiH5p6WZeXMK6DmBFXS3Rd5Klp6hf WNe7qBpwlWX+k6U2z
+					5q/6K+IMqZL3gsM8m2MByXsL11ltu3f037/ZL1YEC0kZeTkw4i7RppvnQNQ UrnmZRumxnPCh
+					VCuKxb4oCudaVutQ/nFZeyfAwIDAQABMA0GCSqGSIb3DQEBBQUAA4GBAC+7glCs TKBSURkwmb
+					A4k/SYVOOhhz3VkBX0he3r1/Vd6Qk8IlRJwQj5AT8e40gz+vqO0GvjaY
+					Ax70bvIGqn yYE/VVJJOG5Zw6Tott69Dx4AOCrmbZb96zOAjlcEI3Ol7U1h+9+Uo2h5ZC8AMWn
+					C3rk3VudrSB8dAhBwZmY9l8AB
+				</X509Certificate>
+			</X509Data>
+		</KeyInfo>
+	</Signature>
+</test>

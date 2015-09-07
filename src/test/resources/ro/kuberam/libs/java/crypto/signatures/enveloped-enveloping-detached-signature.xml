@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test>
+	<value1 ID="1">
+		testval1</value1>
+	<value2 ID="2">
+		testval2</value2>
+	<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+		<SignedInfo>
+			<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+			<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+			<Reference URI="#1">
+				<Transforms>
+					<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+				</Transforms>
+				<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+				<DigestValue>IpBpovbT2WG7C+gTME1Np/V2fqo=</DigestValue>
+			</Reference>
+			<Reference URI="#2">
+				<Transforms>
+					<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+				</Transforms>
+				<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+				<DigestValue>
+					pFXQ3ZZv4Fivm2MFs6vpfEanEDI=</DigestValue>
+			</Reference>
+			<Reference URI="#sgconrad:-56000361:115d676b12e:-7988">
+				<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+				<DigestValue>
+					7bPj9pPMJpsJw1OJ1b2jsrhxYMY=</DigestValue>
+			</Reference>
+			<Reference URI="sgconrad:-56000361:115d676b12e:-795f">
+				<Transforms>
+					<Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
+						<XPath>
+							descendant-or-self::node1</XPath>
+					</Transform>
+				</Transforms>
+				<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+				<DigestValue>
+					2gFHdr03uDeDqwcxGveD+uYDIjM=</DigestValue>
+			</Reference>
+			<Reference URI="sgconrad:-56000361:115d676b12e:-795f">
+				<Transforms>
+					<Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
+						<XPath>
+							descendant-or-self::node2</XPath>
+					</Transform>
+				</Transforms>
+				<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+				<DigestValue>
+					nn7t7PJs5RqDp1BKZ4j1BxhX2ik=</DigestValue>
+			</Reference>
+		</SignedInfo>
+		<SignatureValue>
+			Ui7XYcZNkXG+9OqNgKrcRJoyCuhpoRtVmFnXVOMf8aAuGXZw3FwFxz7VLKv9c1K8ZUNW9vCs G4
+			EpahlCS4AcpbVBwv00HvkhA11/tqYYB9kRK/wM4cb6sN5ULbQ4Ab0j9xyFKOQ6sr2MawOx
+			fdNEes6XAHbpWZvxKDR4vWxAFnE=
+		</SignatureValue>
+		<Object xmlns="" Encoding="base64" Id="sgconrad:-56000361:115d676b12e:-7988">
+			dGhpcyBpcyBhbiBpbnZhbGlkIHRlc3QgZG9jIGZvciB4bWwgZHNpZyBzZXJ2aWNlLgo=
+		</Object>
+	</Signature>
+</test>
