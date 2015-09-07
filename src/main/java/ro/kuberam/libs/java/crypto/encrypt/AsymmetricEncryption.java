@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.StringTokenizer;
 
@@ -35,6 +36,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import ro.kuberam.libs.java.crypto.ErrorMessages;
+import ro.kuberam.libs.java.crypto.utils.Base64;
 
 /**
  * 
@@ -42,22 +44,24 @@ import ro.kuberam.libs.java.crypto.ErrorMessages;
  */
 public class AsymmetricEncryption {
 
-	public static String encryptString(String input, String publicKey, String algorithm) throws Exception {
+	public static String encryptString(String input, String publicKey, String transformationName) throws Exception {
 
 		Cipher cipher = null;
+		String algorithm = (transformationName.contains("/")) ? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
 
 		try {
-			cipher = Cipher.getInstance(algorithm);
+			cipher = Cipher.getInstance(transformationName);
 		} catch (NoSuchAlgorithmException ex) {
 			throw new Exception(ErrorMessages.error_unknownAlgorithm);
 		} catch (NoSuchPaddingException ex) {
 			throw new Exception(ErrorMessages.error_noPadding);
 		}
 
-		X509EncodedKeySpec publicKeySpecification = new X509EncodedKeySpec(publicKey.getBytes("UTF-8"));
+		X509EncodedKeySpec publicKeySpecification = new X509EncodedKeySpec(Base64.decode(publicKey));
+		PublicKey publicKey1 = KeyFactory.getInstance(algorithm).generatePublic(publicKeySpecification);
 		
 		try {
-			cipher.init(Cipher.ENCRYPT_MODE, KeyFactory.getInstance("RSA").generatePublic(publicKeySpecification));
+			cipher.init(Cipher.ENCRYPT_MODE, publicKey1);
 		} catch (InvalidKeyException ex) {
 			throw new Exception(ErrorMessages.error_cryptoKey);
 		}
