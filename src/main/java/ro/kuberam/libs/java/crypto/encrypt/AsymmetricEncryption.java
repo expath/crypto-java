@@ -21,6 +21,7 @@
 package ro.kuberam.libs.java.crypto.encrypt;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -95,10 +96,10 @@ public class AsymmetricEncryption {
 			throw new Exception(ErrorMessages.error_noPadding);
 		}
 
-		SecretKeySpec skeySpec = new SecretKeySpec(plainKey.getBytes("UTF-8"), algorithm);
+		SecretKeySpec skeySpec = new SecretKeySpec(plainKey.getBytes(StandardCharsets.UTF_8), algorithm);
 
 		if (transformationName.contains("/")) {
-			ivSpec = new IvParameterSpec(iv.getBytes("UTF-8"), 0, 16);
+			ivSpec = new IvParameterSpec(iv.getBytes(StandardCharsets.UTF_8), 0, 16);
 			try {
 				cipher.init(Cipher.DECRYPT_MODE, skeySpec, ivSpec);
 			} catch (InvalidKeyException ex) {

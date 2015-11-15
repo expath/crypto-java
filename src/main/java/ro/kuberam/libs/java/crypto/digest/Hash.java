@@ -28,6 +28,7 @@ package ro.kuberam.libs.java.crypto.digest;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -40,7 +41,6 @@ import ro.kuberam.libs.java.crypto.utils.Base64;
 public class Hash {
 
 	private final static Logger log = Logger.getLogger(Hash.class);
-	private final static String inputStringEncoding = "UTF-8";
 
 	public static String hashString(String data, String algorithm) throws Exception {
 		return hashString(data, algorithm, "");
@@ -53,7 +53,7 @@ public class Hash {
 
 		MessageDigest messageDigester = getMessageDigester(algorithm);
 
-		messageDigester.update(data.getBytes(inputStringEncoding));
+		messageDigester.update(data.getBytes(StandardCharsets.UTF_8));
 
 		byte[] resultBytes = messageDigester.digest();
 

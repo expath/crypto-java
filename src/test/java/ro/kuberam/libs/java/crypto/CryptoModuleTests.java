@@ -9,6 +9,7 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.util.UUID;
@@ -42,7 +43,7 @@ public class CryptoModuleTests extends BaseTest {
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					outp.write(message.getBytes("UTF-8"));
+					outp.write(message.getBytes(StandardCharsets.UTF_8));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -120,7 +121,7 @@ public class CryptoModuleTests extends BaseTest {
 		Runnable exporter = new Runnable() {
 			public void run() {
 				try {
-					out.write("message".getBytes("UTF-8"));
+					out.write("message".getBytes(StandardCharsets.UTF_8));
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -7,14 +7,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.Assert;
 
 import ro.kuberam.tests.junit.BaseTest;
 
@@ -81,11 +81,7 @@ public class HashPerformanceTest extends BaseTest {
 		
 		InputStream is = null;
 		
-        try {
-            is = new ByteArrayInputStream(tempString.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        is = new ByteArrayInputStream(tempString.getBytes(StandardCharsets.UTF_8));
 		
 		MessageDigest algorithm = MessageDigest.getInstance("SHA");
 		DigestInputStream dis = new DigestInputStream(is, algorithm);
@@ -104,7 +100,7 @@ public class HashPerformanceTest extends BaseTest {
 	public void digestString() throws Exception {
 		
 		MessageDigest algorithm = MessageDigest.getInstance("SHA");
-		algorithm.update(tempString.getBytes("UTF-8"));
+		algorithm.update(tempString.getBytes(StandardCharsets.UTF_8));
 		byte[] hash = algorithm.digest();
 		
 		Assert.assertTrue(hash.length == 20);

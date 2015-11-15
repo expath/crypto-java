@@ -12,7 +12,7 @@ public class HmacStringWithSha1AndDefaultFormat extends BaseTest {
 	public void hmacStringWithSha1() throws Exception {
 		String input = "abc";
 		
-		String result = Hmac.hmac(input, "def", "HMAC-SHA-1");
+		String result = Hmac.hmac(input, "def", "HMAC-SHA-1", "");
 		
 		System.out.println(result);
 

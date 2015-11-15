@@ -106,7 +106,7 @@ public class GenerateCertificate {
 //            
 //            byte[] buf = cert.getEncoded();
 //            FileOutputStream os = new FileOutputStream("mycert.cer");
-//            Writer wr = new OutputStreamWriter(os, Charset.forName("UTF-8"));
+//            Writer wr = new OutputStreamWriter(os, StandardCharsets.UTF_8);
 //            wr.write("-----BEGIN CERTIFICATE-----\n");
 //            wr.write(Base64.encodeToString( buf, true ));
 //            wr.write("\n-----END CERTIFICATE-----\n");

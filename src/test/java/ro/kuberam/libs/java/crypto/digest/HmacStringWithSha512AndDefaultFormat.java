@@ -16,7 +16,7 @@ public class HmacStringWithSha512AndDefaultFormat extends BaseTest {
 		String input = "Short string for tests.";
 		InputStream secretKeyIs = getClass().getResourceAsStream("../rsa-private-key.key");
 	
-		String result = Hmac.hmac(input, IOUtils.toString(secretKeyIs), "HMAC-SHA-512");
+		String result = Hmac.hmac(input, IOUtils.toString(secretKeyIs), "HMAC-SHA-512", "");
 
 		Assert.assertTrue(result
 				.equals("z9MtEpBXxO5bKmsXJWfKsZ4v+RduKU89Y95H2HMGQEwHGefWmewNNQ7urZVuWEU5aeRRdO7G7j0Q\r\nlcLYv1pkrg=="));

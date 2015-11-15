@@ -17,7 +17,7 @@ public class HmacStringWithMd5AndDefaultFormat extends BaseTest {
 		InputStream secretKeyIs = getClass().getResourceAsStream("../rsa-private-key.key");
 		String secretKey = IOUtils.toString(secretKeyIs);
 
-		String result = Hmac.hmac(input, secretKey, "HMAC-MD5");
+		String result = Hmac.hmac(input, secretKey, "HMAC-MD5", "");
 
 		Assert.assertTrue(result
 				.equals("l4MY6Yosjo7W60VJeXB/PQ=="));
