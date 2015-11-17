@@ -1,10 +1,9 @@
 package ro.kuberam.libs.java.crypto.digest;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
-import ro.kuberam.libs.java.crypto.ExpathCryptoModule;
-import ro.kuberam.libs.java.crypto.digest.Hmac;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,9 +17,9 @@ public class HmacStringWithMd5 extends BaseTest {
 		InputStream secretKeyIs = getClass().getResourceAsStream("../rsa-private-key.key");
 		String secretKey = IOUtils.toString(secretKeyIs);
 
-		String result = Hmac.hmac(input, secretKey, "HMAC-MD5", "base64");
+		String result = Hmac.hmac(input.getBytes(StandardCharsets.UTF_8),
+				secretKey.getBytes(StandardCharsets.UTF_8), "HMAC-MD5", "base64");
 
-		Assert.assertTrue(result
-				.equals("l4MY6Yosjo7W60VJeXB/PQ=="));
+		Assert.assertTrue(result.equals("l4MY6Yosjo7W60VJeXB/PQ=="));
 	}
 }

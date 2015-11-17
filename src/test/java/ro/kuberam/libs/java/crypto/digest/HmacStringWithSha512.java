@@ -1,9 +1,12 @@
 package ro.kuberam.libs.java.crypto.digest;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
+
 import ro.kuberam.libs.java.crypto.digest.Hmac;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,10 +18,11 @@ public class HmacStringWithSha512 extends BaseTest {
 	public void hmacStringWithSha512() throws Exception {
 		String input = "Short string for tests.";
 		InputStream secretKeyIs = getClass().getResourceAsStream("../rsa-private-key.key");
-	
-		String result = Hmac.hmac(input, IOUtils.toString(secretKeyIs), "HMAC-SHA-512", "base64");
+
+		String result = Hmac.hmac(input.getBytes(StandardCharsets.UTF_8), IOUtils.toByteArray(secretKeyIs),
+				"HMAC-SHA-512", "base64");
 
 		Assert.assertTrue(result
-				.equals("z9MtEpBXxO5bKmsXJWfKsZ4v+RduKU89Y95H2HMGQEwHGefWmewNNQ7urZVuWEU5aeRRdO7G7j0Q\r\nlcLYv1pkrg=="));
+				.equals("z9MtEpBXxO5bKmsXJWfKsZ4v+RduKU89Y95H2HMGQEwHGefWmewNNQ7urZVuWEU5aeRRdO7G7j0QlcLYv1pkrg=="));
 	}
 }

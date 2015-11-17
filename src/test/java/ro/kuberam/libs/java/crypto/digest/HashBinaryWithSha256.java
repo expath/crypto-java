@@ -12,7 +12,7 @@ public class HashBinaryWithSha256 extends BaseTest {
 
 	@Test
 	public void hashBinaryWithSha256() throws Exception {
-		InputStream input = getClass().getResourceAsStream("../../keystore.ks");
+		InputStream input = getClass().getResourceAsStream("../keystore.ks");
 		String result = Hash.hashBinary(input, "SHA-256", "base64");
 
 		Assert.assertTrue(result.equals("37JiNBym250ye3aUJ04RaZg3SFSP03qJ8FR/I1JckVI="));
