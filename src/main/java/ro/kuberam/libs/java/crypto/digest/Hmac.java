@@ -23,6 +23,8 @@ public class Hmac {
 
 		// TODO: validate the format
 		format = format.equals("") ? "base64" : format;
+		
+		System.out.println("secretKey = " + secretKey);
 
 		Mac mac = null;
 		HashMap<String, String> javaStandardAlgorithmNames = ExpathCryptoModule.javaStandardAlgorithmNames;

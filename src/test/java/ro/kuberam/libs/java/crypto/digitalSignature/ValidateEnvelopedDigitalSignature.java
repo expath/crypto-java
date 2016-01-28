@@ -15,7 +15,7 @@ public class ValidateEnvelopedDigitalSignature extends BaseTest {
 
 	@Test
 	public void test() throws Exception {
-		InputStream inputIs = getClass().getResourceAsStream("../../doc-1.xml");
+		InputStream inputIs = getClass().getResourceAsStream("../doc-1.xml");
 		Document input = parseXmlString(IOUtils.toString(inputIs));
 		String[] certificateDetails = new String[5];
 		certificateDetails[0] = "";		

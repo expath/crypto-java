@@ -4,26 +4,40 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<artifactId>base</artifactId>
-		<groupId>ro.kuberam.libs.java</groupId>
-		<version>0.0.1</version>
-	</parent>
-
+	<groupId>ro.kuberam.libs.java</groupId>
 	<artifactId>crypto</artifactId>
-	<version>1.3.0</version>
+	<version>1.3.1</version>
 	<name>Library for EXPath Cryptographic Module</name>
 	<url>http://kuberam.ro/specs/expath/crypto/crypto.html</url>
 
 	<prerequisites>
 		<maven>${mavenVersion}</maven>
 	</prerequisites>
-	
+
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java-version>1.8</java-version>
+		<mavenVersion>3.1.1</mavenVersion>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ro.kuberam</groupId>
+			<artifactId>junit-tests</artifactId>
+			<version>0.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.3.2</version>
+		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.uuid</groupId>
 			<artifactId>java-uuid-generator</artifactId>
@@ -31,5 +45,20 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+					<configuration>
+						<source>${java-version}</source>
+						<target>${java-version}</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
 </project>
