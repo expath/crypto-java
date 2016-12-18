@@ -17,7 +17,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java-version>1.8</java-version>
-		<mavenVersion>3.1.1</mavenVersion>
+		<mavenVersion>3.3.3</mavenVersion>
 	</properties>
 
 	<dependencies>
