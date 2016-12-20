@@ -1,6 +1,5 @@
 package ro.kuberam.libs.java.crypto.digest;
 
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -14,7 +13,6 @@ public class HmacStringWithSha256 extends BaseTest {
 	@Test
 	public void hmacStringWithSha256() throws Exception {
 		String input = "20120215";
-		InputStream secretKeyIs = getClass().getResourceAsStream("../rsa-private-key.key");
 
 		String result = Hmac.hmac(input.getBytes(StandardCharsets.UTF_8),
 				"AWS4wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY".getBytes(StandardCharsets.UTF_8),
