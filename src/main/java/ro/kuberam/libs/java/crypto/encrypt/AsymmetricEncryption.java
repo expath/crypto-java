@@ -37,7 +37,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import ro.kuberam.libs.java.crypto.ErrorMessages;
-import ro.kuberam.libs.java.crypto.utils.Base64;
+import java.util.Base64;
 
 /**
  * 
@@ -48,7 +48,8 @@ public class AsymmetricEncryption {
 	public static String encryptString(String input, String publicKey, String transformationName) throws Exception {
 
 		Cipher cipher = null;
-		String algorithm = (transformationName.contains("/")) ? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
+		String algorithm = (transformationName.contains("/"))
+				? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
 
 		try {
 			cipher = Cipher.getInstance(transformationName);
@@ -58,9 +59,9 @@ public class AsymmetricEncryption {
 			throw new Exception(ErrorMessages.error_noPadding);
 		}
 
-		X509EncodedKeySpec publicKeySpecification = new X509EncodedKeySpec(Base64.decode(publicKey));
+		X509EncodedKeySpec publicKeySpecification = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKey));
 		PublicKey publicKey1 = KeyFactory.getInstance(algorithm).generatePublic(publicKeySpecification);
-		
+
 		try {
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey1);
 		} catch (InvalidKeyException ex) {
@@ -79,12 +80,12 @@ public class AsymmetricEncryption {
 		return getString(resultBytes);
 	}
 
-	public static String decryptString(String encryptedInput, String plainKey, String transformationName,
-			String iv, String provider) throws Exception {
+	public static String decryptString(String encryptedInput, String plainKey, String transformationName, String iv,
+			String provider) throws Exception {
 
 		IvParameterSpec ivSpec = null;
-		String algorithm = (transformationName.contains("/")) ? transformationName.substring(0,
-				transformationName.indexOf("/")) : transformationName;
+		String algorithm = (transformationName.contains("/"))
+				? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
 		provider = provider.equals("") ? "SunJCE" : provider;
 		Cipher cipher = null;
 

@@ -36,7 +36,7 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.log4j.Logger;
 
 import ro.kuberam.libs.java.crypto.ErrorMessages;
-import ro.kuberam.libs.java.crypto.utils.Base64;
+import java.util.Base64;
 
 public class Hash {
 
@@ -58,7 +58,7 @@ public class Hash {
 		byte[] resultBytes = messageDigester.digest();
 
 		if (format.equals("base64")) {
-			return Base64.encodeToString(resultBytes, true);
+			return Base64.getEncoder().encodeToString(resultBytes);
 		} else {
 			return convertToHex(resultBytes);
 		}
@@ -72,7 +72,7 @@ public class Hash {
 
 		// TODO: validate the format
 		format = format.equals("") ? "base64" : format;
-		
+
 		String result = "";
 
 		BufferedInputStream bis = new BufferedInputStream(data);
@@ -85,13 +85,13 @@ public class Hash {
 		byte[] resultBytes = messageDigester.digest();
 
 		if (format.equals("base64")) {
-			result = Base64.encodeToString(resultBytes, true);
+			result = Base64.getEncoder().encodeToString(resultBytes);
 		} else {
 			result = convertToHex(resultBytes);
 		}
-		
-		log.info("hash value is: '" + result);	
-		
+
+		log.info("hash value is: '" + result);
+
 		return result;
 
 		// byte[] buffer = new byte[bufferSize];
