@@ -18,7 +18,7 @@ public class Hmac {
 
 	private final static Logger logger = Logger.getLogger(Hmac.class);
 
-	public static String hmac(byte[] data, byte[] secretKey, String algorithm, String format)
+	public static byte[] hmac(byte[] data, byte[] secretKey, String algorithm, String format)
 			throws Exception {
 		String result;
 
@@ -56,6 +56,6 @@ public class Hmac {
 		}
 		logger.debug("result = " + result);
 		
-		return result;
+		return resultBytes;
 	}
 }
