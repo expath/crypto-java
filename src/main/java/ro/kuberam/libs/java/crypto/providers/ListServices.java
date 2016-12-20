@@ -8,11 +8,7 @@ package ro.kuberam.libs.java.crypto.providers;
 import java.io.StringWriter;
 import java.security.Provider;
 import java.security.Security;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
 
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLOutputFactory;
@@ -24,28 +20,23 @@ import org.apache.log4j.Logger;
 
 import ro.kuberam.libs.java.crypto.ExpathCryptoModule;
 
-
 public class ListServices {
 	private static final Logger log = Logger.getLogger(ListServices.class);
 	private static String moduleNsUri = "";
+	private static String modulePrefix = "";
+
 	static {
 		moduleNsUri = ExpathCryptoModule.NAMESPACE_URI;
-	}
-	private static String modulePrefix = "";
-	static {
 		modulePrefix = ExpathCryptoModule.PREFIX;
 	}
 
-	public static StreamResult listServices(String providerName)
-			throws XMLStreamException, FactoryConfigurationError {
+	public static StreamResult listServices(String providerName) throws XMLStreamException, FactoryConfigurationError {
 		long startTime = new Date().getTime();
-		
+
 		Provider[] providers = Security.getProviders();
-		
 
 		StringWriter writer = new StringWriter();
-		XMLStreamWriter xmlWriter = XMLOutputFactory.newInstance()
-				.createXMLStreamWriter(writer);
+		XMLStreamWriter xmlWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(writer);
 		xmlWriter.setPrefix(modulePrefix, moduleNsUri);
 		xmlWriter.writeStartDocument();
 		xmlWriter.writeStartElement(modulePrefix + ":providers-list");
@@ -60,8 +51,7 @@ public class ListServices {
 		xmlWriter.close();
 
 		StreamResult resultAsStreamResult = new StreamResult(writer);
-		log.info("The list with cryptographic services for provider "
-				+ providerName + " was generated in "
+		log.info("The list with cryptographic services for provider " + providerName + " was generated in "
 				+ (new Date().getTime() - startTime) + " ms.");
 
 		return resultAsStreamResult;

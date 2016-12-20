@@ -20,6 +20,7 @@ public class Hmac {
 
 	public static String hmac(byte[] data, byte[] secretKey, String algorithm, String format)
 			throws Exception {
+		String result;
 
 		// TODO: validate the format
 		format = format.equals("") ? "base64" : format;
@@ -49,9 +50,12 @@ public class Hmac {
 		byte[] resultBytes = mac.doFinal(data);
 
 		if (format.equals("base64")) {
-			return Base64.getEncoder().encodeToString(resultBytes);
+			result = Base64.getEncoder().encodeToString(resultBytes);
 		} else {
-			return DatatypeConverter.printHexBinary(resultBytes).toLowerCase();
+			result = DatatypeConverter.printHexBinary(resultBytes).toLowerCase();
 		}
+		logger.debug("result = " + result);
+		
+		return result;
 	}
 }
