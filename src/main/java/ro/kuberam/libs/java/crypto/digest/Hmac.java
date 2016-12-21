@@ -18,15 +18,27 @@ public class Hmac {
 
 	private final static Logger logger = Logger.getLogger(Hmac.class);
 
-	public static byte[] hmac(byte[] data, byte[] secretKey, String algorithm, String format)
-			throws Exception {
+	public static String hmac(byte[] data, byte[] secretKey, String algorithm, String format) throws Exception {
 		String result;
 
 		// TODO: validate the format
 		format = format.equals("") ? "base64" : format;
-		
+
 		logger.debug("secretKey = " + secretKey);
 
+		byte[] resultBytes = hmac(data, secretKey, algorithm);
+
+		if (format.equals("base64")) {
+			result = Base64.getEncoder().encodeToString(resultBytes);
+		} else {
+			result = DatatypeConverter.printHexBinary(resultBytes).toLowerCase();
+		}
+		logger.debug("result = " + result);
+
+		return result;
+	}
+
+	public static byte[] hmac(byte[] data, byte[] secretKey, String algorithm) throws Exception {
 		Mac mac = null;
 		HashMap<String, String> javaStandardAlgorithmNames = ExpathCryptoModule.javaStandardAlgorithmNames;
 
@@ -47,15 +59,6 @@ public class Hmac {
 		} catch (InvalidKeyException ex) {
 		}
 
-		byte[] resultBytes = mac.doFinal(data);
-
-		if (format.equals("base64")) {
-			result = Base64.getEncoder().encodeToString(resultBytes);
-		} else {
-			result = DatatypeConverter.printHexBinary(resultBytes).toLowerCase();
-		}
-		logger.debug("result = " + result);
-		
-		return resultBytes;
+		return mac.doFinal(data);
 	}
 }
