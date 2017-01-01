@@ -1,6 +1,7 @@
 package ro.kuberam.libs.java.crypto.digest;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -26,6 +27,7 @@ public class GenerateAWSsignature extends BaseTest {
 
 		byte[] kDate = Hmac.hmac(dateStamp.getBytes(StandardCharsets.UTF_8), kSecret.getBytes(StandardCharsets.UTF_8),
 				"HMAC-SHA-256");
+		System.out.println(Arrays.toString(kDate));
 		String kDateHexValue = generateHexValue(kDate);
 		Assert.assertTrue(kDateHexValue.equals("969fbb94feb542b71ede6f87fe4d5fa29c789342b0f407474670f0c2489e0a0d"));
 
