@@ -1,25 +1,27 @@
 package ro.kuberam.libs.java.crypto.digest;
 
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
 import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertTrue;
+
 public class HmacStringWithMd5 extends BaseTest {
 
-	@Test
-	public void hmacStringWithMd5() throws Exception {
-		String input = "Short string for tests.";
-		InputStream secretKeyIs = getClass().getResourceAsStream("../rsa-private-key.key");
-		String secretKey = IOUtils.toString(secretKeyIs);
+    @Test
+    public void hmacStringWithMd5() throws Exception {
+        final String input = "Short string for tests.";
+        try (final InputStream secretKeyIs = getClass().getResourceAsStream("../rsa-private-key.key")) {
+            final String secretKey = IOUtils.toString(secretKeyIs, UTF_8);
 
-		String result = Hmac.hmac(input.getBytes(StandardCharsets.UTF_8),
-				secretKey.getBytes(StandardCharsets.UTF_8), "HMAC-MD5", "base64");
+            final String result = Hmac.hmac(input.getBytes(UTF_8),
+                    secretKey.getBytes(UTF_8), "HMAC-MD5", "base64");
 
-		Assert.assertTrue(result.equals("l4MY6Yosjo7W60VJeXB/PQ=="));
-	}
+            assertTrue(result.equals("l4MY6Yosjo7W60VJeXB/PQ=="));
+        }
+    }
 }

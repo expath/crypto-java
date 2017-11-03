@@ -1,42 +1,42 @@
 package ro.kuberam.libs.java.crypto.utils;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
 
+import static org.junit.Assert.assertEquals;
+
 public class InputStream2ByteArrayPerformanceTest extends BaseTest {
 
-	private static File tempFile;
-	private static InputStream tempFileIs;
+    private static Path tempFile;
 
-	@Before
-	public void initialize() throws IOException {
-		tempFile = generate5MbTempFile();
-		tempFileIs = new FileInputStream(tempFile);
+    @Before
+    public void initialize() throws IOException {
+        tempFile = generate5MbTempFile().toPath();
+    }
 
-	}
+    @Test
+    public void byteArrayOutputStreamTest() throws Exception {
 
-	@Test
-	public void byteArrayOutputStreamTest() throws Exception {
+        try (final InputStream is = Files.newInputStream(tempFile);
+             final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            int next = is.read();
+            while (next > -1) {
+                baos.write(next);
+                next = is.read();
+            }
+            baos.flush();
+            final byte[] byteArray = baos.toByteArray();
 
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		int next = tempFileIs.read();
-		while (next > -1) {
-			baos.write(next);
-			next = tempFileIs.read();
-		}
-		baos.flush();
-		byte[] byteArray = baos.toByteArray();
-
-		Assert.assertTrue(byteArray.length == 5200000);
-	}
+            assertEquals(5200000, byteArray.length);
+        }
+    }
 
 }

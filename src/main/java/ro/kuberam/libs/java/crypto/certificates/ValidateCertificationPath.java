@@ -1,7 +1,9 @@
 package ro.kuberam.libs.java.crypto.certificates;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -16,45 +18,42 @@ import java.security.cert.PKIXParameters;
 import java.security.cert.TrustAnchor;
 
 public class ValidateCertificationPath {
-	
-	public static byte[] validate(CertPath certPath) throws Exception {
-	
-	try {
-		//TODO: pay attention that this class maybe uses deprecated java.security.*
-		
-	    // Load the JDK's cacerts keystore file
-	    String filename = System.getProperty("java.home")
-	        + "/lib/security/cacerts".replace('/', File.separatorChar);
-	    FileInputStream is = new FileInputStream(filename);
-	    KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-	    String password = "changeit";
-	    keystore.load(is, password.toCharArray());
 
-	    // Create the parameters for the validator
-	    PKIXParameters params = new PKIXParameters(keystore);
+    public static byte[] validate(final CertPath certPath) throws Exception {
 
-	    // Disable CRL checking since we are not supplying any CRLs
-	    params.setRevocationEnabled(false);
+        try {
+            //TODO: pay attention that this class maybe uses deprecated java.security.*
 
-	    // Create the validator and validate the path
-	    // To create a path, see Creating a Certification Path
-	    CertPathValidator certPathValidator
-	        = CertPathValidator.getInstance(CertPathValidator.getDefaultType());
-	    CertPathValidatorResult result = certPathValidator.validate(certPath, params);
+            final KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+            final String password = "changeit";
 
-	    // Get the CA used to validate this path
-	    PKIXCertPathValidatorResult pkixResult = (PKIXCertPathValidatorResult)result;
-	    TrustAnchor ta = pkixResult.getTrustAnchor();
-	    java.security.cert.X509Certificate cert = ta.getTrustedCert();
-	} catch (CertificateException e) {
-	} catch (KeyStoreException e) {
-	} catch (NoSuchAlgorithmException e) {
-	} catch (InvalidAlgorithmParameterException e) {
-	} catch (CertPathValidatorException e) {
-	    // Validation failed
-	}
-	return null;
-	
-}
+            // Load the JDK's cacerts keystore file
+            final Path filename = Paths.get(System.getProperty("java.home"), "lib", "security", "cacerts");
+
+            try (final InputStream is = Files.newInputStream(filename)) {
+                keystore.load(is, password.toCharArray());
+            }
+
+            // Create the parameters for the validator
+            final PKIXParameters params = new PKIXParameters(keystore);
+
+            // Disable CRL checking since we are not supplying any CRLs
+            params.setRevocationEnabled(false);
+
+            // Create the validator and validate the path
+            // To create a path, see Creating a Certification Path
+            final CertPathValidator certPathValidator
+                    = CertPathValidator.getInstance(CertPathValidator.getDefaultType());
+            final CertPathValidatorResult result = certPathValidator.validate(certPath, params);
+
+            // Get the CA used to validate this path
+            final PKIXCertPathValidatorResult pkixResult = (PKIXCertPathValidatorResult) result;
+            final TrustAnchor ta = pkixResult.getTrustAnchor();
+            java.security.cert.X509Certificate cert = ta.getTrustedCert();
+        } catch (final CertificateException | KeyStoreException | NoSuchAlgorithmException | CertPathValidatorException | InvalidAlgorithmParameterException e) {
+        }
+        return null;
+
+    }
 
 }

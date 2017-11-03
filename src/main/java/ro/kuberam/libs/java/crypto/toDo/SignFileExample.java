@@ -1,7 +1,9 @@
 package ro.kuberam.libs.java.crypto.toDo;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -32,72 +34,79 @@ public class SignFileExample {
     private static final String ID = "acct";
 
     private static enum SignatureType {
-	SIGN_BY_ID,
-	SIGN_BY_PATH,
-	SIGN_WHOLE_DOCUMENT
-    };
+        SIGN_BY_ID,
+        SIGN_BY_PATH,
+        SIGN_WHOLE_DOCUMENT
+    }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         /*if (args.length < 2) {
         usage();
         return;
         }*/
 
-	String inputFile = "doc.xml";
-	String outputFile = "doc-signed.xml";
+        final String inputFile = "doc.xml";
+        final String outputFile = "doc-signed.xml";
 
-	SignatureType sigType = SignatureType.SIGN_WHOLE_DOCUMENT;
-	if (args.length >= 3) {
-	    if ("id".equals(args[2])) {
-		sigType = SignatureType.SIGN_BY_ID;
-	    }
-	    else if ("path".equals(args[2])) {
-		sigType = SignatureType.SIGN_BY_PATH;
-	    }
-	}
+        final SignatureType sigType;
+        if (args.length >= 3) {
+            if ("id".equals(args[2])) {
+                sigType = SignatureType.SIGN_BY_ID;
+            } else if ("path".equals(args[2])) {
+                sigType = SignatureType.SIGN_BY_PATH;
+            } else {
+                sigType = SignatureType.SIGN_WHOLE_DOCUMENT;
+            }
+        } else {
+            sigType = SignatureType.SIGN_WHOLE_DOCUMENT;
+        }
 
-	// Instantiate the document to be signed
-	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	dbFactory.setNamespaceAware(true);
-	Document doc = dbFactory
-		       .newDocumentBuilder()
-		       .parse(new FileInputStream(inputFile));
+        // Instantiate the document to be signed
+        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        dbFactory.setNamespaceAware(true);
+        final Document doc;
 
-	// prepare signature factory
-        String providerName = System.getProperty(
-			          "jsr105Provider",
-				  "org.jcp.xml.dsig.internal.dom.XMLDSigRI"
-			      );
+        try (final InputStream is = Files.newInputStream(Paths.get(inputFile))) {
+            doc = dbFactory
+                    .newDocumentBuilder()
+                    .parse(is);
+        }
 
-	final XMLSignatureFactory sigFactory = XMLSignatureFactory.getInstance(
-					    "DOM",
-					    (Provider) Class.forName(providerName).newInstance()
-					 );
+        // prepare signature factory
+        final String providerName = System.getProperty(
+                "jsr105Provider",
+                "org.jcp.xml.dsig.internal.dom.XMLDSigRI"
+        );
 
-	Node nodeToSign = null;
-	Node sigParent = null;
-	String referenceURI = null;
-	XPathExpression expr = null;
-	NodeList nodes;
-	List transforms = null;
+        final XMLSignatureFactory sigFactory = XMLSignatureFactory.getInstance(
+                "DOM",
+                (Provider) Class.forName(providerName).newInstance()
+        );
 
-	XPathFactory factory = XPathFactory.newInstance();
-	XPath xpath = factory.newXPath();
-	switch (sigType) {
-	    case SIGN_BY_ID:
-		expr = xpath.compile(
-		    String.format("//*[@id='%s']", ID)
-		);
-		nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-		if (nodes.getLength() == 0) {
-		    System.out.println("Can't find node with id: " + ID);
-		    return;
-		}
+        Node nodeToSign = null;
+        Node sigParent = null;
+        String referenceURI = null;
+        XPathExpression expr = null;
+        NodeList nodes;
+        List transforms = null;
 
-		nodeToSign = nodes.item(0);
-		sigParent = nodeToSign.getParentNode();
-		referenceURI = "#" + ID;
-		/*
+        final XPathFactory factory = XPathFactory.newInstance();
+        final XPath xpath = factory.newXPath();
+        switch (sigType) {
+            case SIGN_BY_ID:
+                expr = xpath.compile(
+                        String.format("//*[@id='%s']", ID)
+                );
+                nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+                if (nodes.getLength() == 0) {
+                    System.out.println("Can't find node with id: " + ID);
+                    return;
+                }
+
+                nodeToSign = nodes.item(0);
+                sigParent = nodeToSign.getParentNode();
+                referenceURI = "#" + ID;
+        /*
                  * This is not needed since the signature is alongside the signed element, not enclosed in it.
 		transforms = Collections.singletonList(
 			    	sigFactory.newTransform(
@@ -106,116 +115,111 @@ public class SignFileExample {
 				)
 			    );
 		    */
-		break;
-	    case SIGN_BY_PATH:
-		// Find the node to be signed by PATH
-		expr = xpath.compile(PATH);
-		nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-		if (nodes.getLength() < 1) {
-		    System.out.println("Invalid document, can't find node by PATH: " + PATH);
-		    return;
-		}
+                break;
+            case SIGN_BY_PATH:
+                // Find the node to be signed by PATH
+                expr = xpath.compile(PATH);
+                nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+                if (nodes.getLength() < 1) {
+                    System.out.println("Invalid document, can't find node by PATH: " + PATH);
+                    return;
+                }
 
-		nodeToSign = nodes.item(0);
-		sigParent = nodeToSign.getParentNode();
-		referenceURI = ""; // Empty string means whole document
-		transforms = new ArrayList<Transform>() {{
-		    add(sigFactory.newTransform(
-			    Transform.XPATH,
-			    new XPathFilterParameterSpec(PATH)
-			)
-		    );
-		    add(sigFactory.newTransform(
-			    Transform.ENVELOPED,
-			    (TransformParameterSpec) null
-			)
-		    );
-		}};
+                nodeToSign = nodes.item(0);
+                sigParent = nodeToSign.getParentNode();
+                referenceURI = ""; // Empty string means whole document
+                transforms = new ArrayList<Transform>() {{
+                    add(sigFactory.newTransform(
+                            Transform.XPATH,
+                            new XPathFilterParameterSpec(PATH)
+                            )
+                    );
+                    add(sigFactory.newTransform(
+                            Transform.ENVELOPED,
+                            (TransformParameterSpec) null
+                            )
+                    );
+                }};
 
-		break;
-	    default:
-		sigParent = doc.getDocumentElement();
-		referenceURI = ""; // Empty string means whole document
-		transforms = Collections.singletonList(
-			    	sigFactory.newTransform(
-				    Transform.ENVELOPED,
-				    (TransformParameterSpec) null
-				)
-			    );
-		break;
-	}
-
-
+                break;
+            default:
+                sigParent = doc.getDocumentElement();
+                referenceURI = ""; // Empty string means whole document
+                transforms = Collections.singletonList(
+                        sigFactory.newTransform(
+                                Transform.ENVELOPED,
+                                (TransformParameterSpec) null
+                        )
+                );
+                break;
+        }
 
 
-
-        
         // Retrieve signing key
-	KeyStore keyStore = KeyStore.getInstance( KEY_STORE_TYPE );
-	keyStore.load( new FileInputStream(KEY_STORE_NAME), KEY_STORE_PASS.toCharArray() );
+        final KeyStore keyStore;
+        try (final InputStream is = Files.newInputStream(Paths.get(KEY_STORE_NAME))) {
+            keyStore = KeyStore.getInstance(KEY_STORE_TYPE);
+            keyStore.load(is, KEY_STORE_PASS.toCharArray());
+        }
 
-	PrivateKey privateKey = (PrivateKey) keyStore.getKey(KEY_ALIAS, PRIVATE_KEY_PASS.toCharArray() );
+        final PrivateKey privateKey = (PrivateKey) keyStore.getKey(KEY_ALIAS, PRIVATE_KEY_PASS.toCharArray());
 
-	X509Certificate cert = (X509Certificate) keyStore.getCertificate(KEY_ALIAS);
-	PublicKey publicKey = cert.getPublicKey();
+        final X509Certificate cert = (X509Certificate) keyStore.getCertificate(KEY_ALIAS);
+        PublicKey publicKey = cert.getPublicKey();
 
         // Create a KeyValue containing the RSA PublicKey
-	KeyInfoFactory keyInfoFactory = sigFactory.getKeyInfoFactory();
-        KeyValue keyValue = keyInfoFactory.newKeyValue(publicKey);
+        final KeyInfoFactory keyInfoFactory = sigFactory.getKeyInfoFactory();
+        final KeyValue keyValue = keyInfoFactory.newKeyValue(publicKey);
 
-	// Create a KeyInfo and add the KeyValue to it
-        KeyInfo keyInfo = keyInfoFactory.newKeyInfo(Collections.singletonList(keyValue));
-
-
-
-        
+        // Create a KeyInfo and add the KeyValue to it
+        final KeyInfo keyInfo = keyInfoFactory.newKeyInfo(Collections.singletonList(keyValue));
 
 
         // Create a Reference to the enveloped document
-	Reference ref = sigFactory.newReference(
-			    referenceURI,
-			    sigFactory.newDigestMethod(DigestMethod.SHA1, null),
-			    transforms,
-			    null,
-			    null
-			);
+        final Reference ref = sigFactory.newReference(
+                referenceURI,
+                sigFactory.newDigestMethod(DigestMethod.SHA1, null),
+                transforms,
+                null,
+                null
+        );
 
-	// Create the SignedInfo
-	SignedInfo signedInfo = sigFactory.newSignedInfo(
-				    sigFactory.newCanonicalizationMethod(
-					CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS,
-					(C14NMethodParameterSpec) null
-				    ),
-				    sigFactory.newSignatureMethod(
-					SignatureMethod.DSA_SHA1,
-					null
-				    ),
-				    Collections.singletonList(ref)
-				);
-
+        // Create the SignedInfo
+        final SignedInfo signedInfo = sigFactory.newSignedInfo(
+                sigFactory.newCanonicalizationMethod(
+                        CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS,
+                        (C14NMethodParameterSpec) null
+                ),
+                sigFactory.newSignatureMethod(
+                        SignatureMethod.DSA_SHA1,
+                        null
+                ),
+                Collections.singletonList(ref)
+        );
 
 
         // Create a DOMSignContext and specify the RSA PrivateKey and
         // location of the resulting XMLSignature's parent element
-	DOMSignContext dsc = new DOMSignContext(
-				 privateKey,
-				 sigParent
-			     );
+        final DOMSignContext dsc = new DOMSignContext(
+                privateKey,
+                sigParent
+        );
 
-	// Create the XMLSignature (but don't sign it yet)
-	XMLSignature signature = sigFactory.newXMLSignature(signedInfo, keyInfo);
+        // Create the XMLSignature (but don't sign it yet)
+        final XMLSignature signature = sigFactory.newXMLSignature(signedInfo, keyInfo);
 
         // Marshal, generate (and sign) the enveloped signature
         signature.sign(dsc);
 
-	// output the resulting document
-	OutputStream os = new FileOutputStream(args[1]);
-	Transformer trans = TransformerFactory.newInstance().newTransformer();
-	trans.transform(new DOMSource(doc), new StreamResult(os));
+        // output the resulting document
+        try (final OutputStream os = Files.newOutputStream(Paths.get(args[1]))) {
+            final Transformer trans = TransformerFactory.newInstance().newTransformer();
+            trans.transform(new DOMSource(doc), new StreamResult(os));
+        }
     }
 
     private static void usage() {
-	System.out.println("Usage: java SignFile <inputFile> <outputFile> [id|path|whole]");
+        System.out.println("Usage: java SignFile <inputFile> <outputFile> [id|path|whole]");
     }
 }
 

@@ -1,6 +1,6 @@
 package ro.kuberam.libs.java.crypto.digitalSignature;
 
-import java.io.File;
+import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyException;
 import java.security.KeyPair;
@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.crypto.MarshalException;
-import javax.xml.crypto.XMLStructure;
 import javax.xml.crypto.dom.DOMStructure;
 import javax.xml.crypto.dsig.Reference;
 import javax.xml.crypto.dsig.SignedInfo;
@@ -43,108 +42,84 @@ import ro.kuberam.tests.junit.BaseTest;
 
 public class GenerateDigitalSignatureTest extends BaseTest {
 
-	@Test
-	public void generateEnvelopedDigitalSignature() throws Exception {
-		Parameters parameters = new Parameters();
-		parameters.setSignatureType("enveloping");
-		List<Document> data = new ArrayList<Document>();
-		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+    @Test
+    public void generateEnvelopedDigitalSignature() throws Exception {
+        final Parameters parameters = new Parameters();
+        parameters.setSignatureType("enveloping");
+        final List<Document> data = new ArrayList<>();
+        final DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 
-		Document doc1 = docBuilder.parse(new File(
-				"src/test/resources/ro/kuberam/libs/java/crypto/digitalSignature/doc-1.xml"));
-		data.add(doc1);
+        final Document doc1 = docBuilder.parse(Paths.get(
+                "src/test/resources/ro/kuberam/libs/java/crypto/digitalSignature/doc-1.xml").toFile());
+        data.add(doc1);
 
-		Document doc2 = docBuilder.parse(new File(
-				"src/test/resources/ro/kuberam/libs/java/crypto/digitalSignature/doc-2.xml"));
-		data.add(doc2);
+        final Document doc2 = docBuilder.parse(Paths.get(
+                "src/test/resources/ro/kuberam/libs/java/crypto/digitalSignature/doc-2.xml").toFile());
+        data.add(doc2);
 
-		Document doc3 = docBuilder.parse(new File(
-				"src/test/resources/ro/kuberam/libs/java/crypto/digitalSignature/doc-3.xml"));
-		data.add(doc3);
+        final Document doc3 = docBuilder.parse(Paths.get(
+                "src/test/resources/ro/kuberam/libs/java/crypto/digitalSignature/doc-3.xml").toFile());
+        data.add(doc3);
 
-		generateXMLSignature(data, parameters);
-	}
+        generateXMLSignature(data, parameters);
+    }
 
-	private String generateXMLSignature(List<Document> data, Parameters parameters)
-			throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+    private String generateXMLSignature(final List<Document> data, final Parameters parameters)
+            throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, KeyException, ParserConfigurationException, MarshalException, XMLSignatureException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 
-		String keyPairAlgorithm = "RSA";
+        final String keyPairAlgorithm = "RSA";
 
-		final XMLSignatureFactory sigFactory = XMLSignatureFactory.getInstance("DOM");
+        final XMLSignatureFactory sigFactory = XMLSignatureFactory.getInstance("DOM");
 
-		// create references
-		ArrayList<Reference> references = new ArrayList<Reference>();
-		List<XMLObject> xmlObjects = new ArrayList<XMLObject>();
+        // create references
+        final List<Reference> references = new ArrayList<>();
+        final List<XMLObject> xmlObjects = new ArrayList<>();
 
-		Iterator<Document> iterator = data.iterator();
-		while (iterator.hasNext()) {
-			Document referencedObject = (Document) iterator.next();
-			List<Transform> transforms = Collections.singletonList(sigFactory.newTransform(
-					Transform.ENVELOPED, (TransformParameterSpec) null));
-			Reference reference = sigFactory.newReference("",
-					sigFactory.newDigestMethod(parameters.getDigestAlgorithm(), null), transforms, null,
-					null);
-			references.add(reference);
+        final Iterator<Document> iterator = data.iterator();
+        while (iterator.hasNext()) {
+            final Document referencedObject = iterator.next();
+            final List<Transform> transforms = Collections.singletonList(sigFactory.newTransform(
+                    Transform.ENVELOPED, (TransformParameterSpec) null));
+            final Reference reference = sigFactory.newReference("",
+                    sigFactory.newDigestMethod(parameters.getDigestAlgorithm(), null), transforms, null,
+                    null);
+            references.add(reference);
 
-			xmlObjects.add(sigFactory.newXMLObject(
-					Collections.singletonList(new DOMStructure(referencedObject.getDocumentElement())),
-					null, null, null));
-		}
+            xmlObjects.add(sigFactory.newXMLObject(
+                    Collections.singletonList(new DOMStructure(referencedObject.getDocumentElement())),
+                    null, null, null));
+        }
 
-		SignedInfo si = sigFactory.newSignedInfo(sigFactory.newCanonicalizationMethod(
-				parameters.getCanonicalizationAlgorithm(), (C14NMethodParameterSpec) null), sigFactory
-				.newSignatureMethod(parameters.getSignatureAlgorithm(), null), references);
+        final SignedInfo si = sigFactory.newSignedInfo(sigFactory.newCanonicalizationMethod(
+                parameters.getCanonicalizationAlgorithm(), (C14NMethodParameterSpec) null), sigFactory
+                .newSignatureMethod(parameters.getSignatureAlgorithm(), null), references);
 
-		// to be removed==============================
-		KeyPairGenerator kpg = KeyPairGenerator.getInstance(keyPairAlgorithm);
-		kpg.initialize(512);
-		KeyPair kp = kpg.generateKeyPair();
-		KeyInfoFactory kif = sigFactory.getKeyInfoFactory();
-		KeyValue kv = null;
-		try {
-			kv = kif.newKeyValue(kp.getPublic());
-		} catch (KeyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		KeyInfo ki = kif.newKeyInfo(Collections.singletonList(kv));
-		PrivateKey privateKey = kp.getPrivate();
-		// to be removed==============================
+        // to be removed==============================
+        final KeyPairGenerator kpg = KeyPairGenerator.getInstance(keyPairAlgorithm);
+        kpg.initialize(512);
+        final KeyPair kp = kpg.generateKeyPair();
+        final KeyInfoFactory kif = sigFactory.getKeyInfoFactory();
+        final KeyValue kv = kif.newKeyValue(kp.getPublic());
 
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		dbf.setNamespaceAware(true);
-		Document doc = null;
-		try {
-			doc = dbf.newDocumentBuilder().newDocument();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        final KeyInfo ki = kif.newKeyInfo(Collections.singletonList(kv));
+        final PrivateKey privateKey = kp.getPrivate();
+        // to be removed==============================
 
-		DOMSignContext dsc = new DOMSignContext(privateKey, doc);
+        final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        final Document doc = dbf.newDocumentBuilder().newDocument();
 
-		XMLSignature signature = sigFactory.newXMLSignature(si, ki, xmlObjects, null, null);
+        final DOMSignContext dsc = new DOMSignContext(privateKey, doc);
 
-		try {
-			signature.sign(dsc);
-		} catch (MarshalException | XMLSignatureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        final XMLSignature signature = sigFactory.newXMLSignature(si, ki, xmlObjects, null, null);
+        signature.sign(dsc);
 
-		DOMImplementationRegistry registry = null;
-		try {
-			registry = DOMImplementationRegistry.newInstance();
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| ClassCastException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-		LSSerializer serializer = impl.createLSSerializer();
-		System.out.println(serializer.writeToString(doc));
+        final DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+        final DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
+        final LSSerializer serializer = impl.createLSSerializer();
+        System.out.println(serializer.writeToString(doc));
 
-		return "";
-	}
+        return "";
+    }
 }

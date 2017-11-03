@@ -9,24 +9,22 @@ import java.security.cert.CertificateException;
 
 public class CreateSecureStore {
 
-	public static byte[] create(String password) throws NoSuchAlgorithmException, CertificateException,
-			IOException, KeyStoreException {
-		
-		KeyStore ks = KeyStore.getInstance("JKS");
-		char[] passwordCharArray = password.toCharArray();
+    public static byte[] create(final String password) throws NoSuchAlgorithmException, CertificateException,
+            IOException, KeyStoreException {
 
-		ks.load(null, passwordCharArray);
+        final KeyStore ks = KeyStore.getInstance("JKS");
+        final char[] passwordCharArray = password.toCharArray();
 
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ks.load(null, passwordCharArray);
 
-		ks.store(baos, passwordCharArray);
-		baos.close();
-		
-		return baos.toByteArray();
-	}
-	
-	   public static void main(String[] args) throws Exception {
-		   System.out.println(new String(create("password")));
-	   }
+        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ks.store(baos, passwordCharArray);
+            return baos.toByteArray();
+        }
+    }
+
+    public static void main(final String[] args) throws Exception {
+        System.out.println(new String(create("password")));
+    }
 
 }

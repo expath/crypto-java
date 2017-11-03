@@ -4,27 +4,27 @@ import java.security.Key;
 import java.security.cert.Certificate;
 
 public class AddEntry {
-	
-	public boolean add() {
-		
-		boolean added = true;
-		
-		return added;
-	}
-	
-	private boolean addKey(String alias, Key key, char[] password, Certificate[] certificateChain) {
-		
-		boolean added = true;
-		
-		return added;
-	}
-	
-	private boolean addCertificate(String alias, Certificate certificate) {
-		
-		boolean added = true;
-		
-		return added;
-	}
+
+    public boolean add() {
+
+        boolean added = true;
+
+        return added;
+    }
+
+    private boolean addKey(final String alias, final Key key, final char[] password, final Certificate[] certificateChain) {
+
+        boolean added = true;
+
+        return added;
+    }
+
+    private boolean addCertificate(final String alias, final Certificate certificate) {
+
+        boolean added = true;
+
+        return added;
+    }
 }
 
 //import java.security.*;
@@ -100,7 +100,6 @@ public class AddEntry {
 //		}
 //	}
 //}
-
 
 
 //import java.io.*;

@@ -2,19 +2,19 @@ package ro.kuberam.libs.java.crypto.digest;
 
 import java.io.InputStream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-import ro.kuberam.libs.java.crypto.digest.Hash;
 import ro.kuberam.tests.junit.BaseTest;
+
+import static org.junit.Assert.assertTrue;
 
 public class HashBinaryWithMd5AndDefaultFormat extends BaseTest {
 
-	@Test
-	public void hashBinaryWithMd5() throws Exception {
-		InputStream input = getClass().getResourceAsStream("../keystore.ks");
-		String result = Hash.hashBinary(input, "MD5");
-
-		Assert.assertTrue(result.equals("UI/aOJodA6gtJPitQ6xcJA=="));
-	}
+    @Test
+    public void hashBinaryWithMd5() throws Exception {
+        try (final InputStream input = getClass().getResourceAsStream("../keystore.ks")) {
+            final String result = Hash.hashBinary(input, "MD5");
+            assertTrue(result.equals("UI/aOJodA6gtJPitQ6xcJA=="));
+        }
+    }
 }

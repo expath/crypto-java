@@ -2,7 +2,7 @@ package ro.kuberam.libs.java.crypto.certificates;
 
 
 public class GenerateCertificate {
-	
+
 //	  public static void main(String[] args) throws Exception {
 //		    String keystoreFile = "keyStoreFile.bin";
 //		    String caAlias = "caAlias";
@@ -62,7 +62,7 @@ public class GenerateCertificate {
 //		    output.close();
 //
 //		  }
-	
+
 //    public static X509Certificate generateV1Certificate(KeyPair pair)
 //            throws InvalidKeyException, NoSuchProviderException, SignatureException, CertificateEncodingException, IllegalStateException, NoSuchAlgorithmException
 //        {
@@ -122,7 +122,7 @@ public class GenerateCertificate {
 //        System.out.println(pair.getPrivate());
 //            
 //        }
-	
+
 	/* Creating a Self-Signed Version 3 Certificate
 	import java.math.BigInteger;
 	import java.security.InvalidKeyException;
