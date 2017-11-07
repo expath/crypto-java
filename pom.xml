@@ -4,20 +4,50 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>ro.kuberam.libs.java</groupId>
-	<artifactId>crypto</artifactId>
-	<version>1.4-SNAPSHOT</version>
-	<name>Library for EXPath Cryptographic Module</name>
-	<url>http://kuberam.ro/specs/expath/crypto/crypto.html</url>
-
 	<prerequisites>
 		<maven>${mavenVersion}</maven>
 	</prerequisites>
 
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+		<relativePath />
+	</parent>
+
+	<groupId>ro.kuberam.libs.java</groupId>
+	<artifactId>crypto</artifactId>
+	<version>1.4-SNAPSHOT</version>
+
+	<name>EXPath Cryptographic Module</name>
+	<description>Java Library providing an EXPath Cryptographic Module</description>
+	<url>http://kuberam.ro/specs/expath/crypto/crypto.html</url>
+	<inceptionYear>2015</inceptionYear>
+
+	<organization>
+		<name>Kuberam</name>
+		<url>http://kuberam.ro</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License version 2.1</name>
+			<url>https://opensource.org/licenses/LGPL-2.1</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:https://github.com/claudius108/crypto-java-lib.git</connection>
+		<developerConnection>scm:git:https://github.com/claudius108/crypto-java-lib.git</developerConnection>
+		<url>scm:git:https://github.com/claudius108/crypto-java-lib.git</url>
+	</scm>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<project.build.source>1.8</project.build.source>
+		<project.build.target>1.8</project.build.target>
+
 		<mavenVersion>3.3.3</mavenVersion>
 	</properties>
 
@@ -56,5 +86,160 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<header>LGPL2.1-template.txt</header>
+					<failIfMissing>true</failIfMissing>
+					<aggregate>true</aggregate>
+					<strictCheck>true</strictCheck>
+					<properties>
+						<owner>${project.organization.name}</owner>
+						<organization>${project.organization.name}</organization>
+						<email>exit-open@lists.sourceforge.net</email>
+						<url>${project.organization.url}</url>
+					</properties>
+					<excludes>
+						<exclude>pom.xml</exclude>
+						<exclude>README.md</exclude>
+						<exclude>LICENSE</exclude>
+						<exclude>crypto-java-lib deploy.launch</exclude>
+						<exclude>src/main/java/ro/kuberam/libs/java/crypto/changelog.txt</exclude>
+						<exclude>src/main/resources/ro/kuberam/libs/java/crypto/lib.properties</exclude>
+						<exclude>src/test/resources/**/*.txt</exclude>
+						<exclude>src/test/resources/**/*.xml</exclude>
+						<exclude>**/*.cer</exclude>
+						<exclude>**/*.ks</exclude>
+						<exclude>**/*.key</exclude>
+						<exclude>**/*.pub</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+					<execution>
+						<id>analyze</id>
+						<goals>
+							<goal>analyze-only</goal>
+						</goals>
+						<configuration>
+							<failOnWarning>true</failOnWarning>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
+				<configuration>
+					<source>${project.build.source}</source>
+					<target>${project.build.target}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.code54.mojo</groupId>
+				<artifactId>buildversion-plugin</artifactId>
+				<version>1.0.3</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>set-properties</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Build-Tag>${build-tag}</Build-Tag>
+							<Git-Commit>${build-commit}</Git-Commit>
+							<Git-Commit-Abbrev>${build-commit-abbrev}</Git-Commit-Abbrev>
+							<Build-Version>${build-version}</Build-Version>
+							<Build-Timestamp>${build-tstamp}</Build-Timestamp>
+							<Source-Repository>${project.scm.connection}</Source-Repository>
+							<Description>${project.description}</Description>
+							<Implementation-URL>${project.url}</Implementation-URL>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- Attach source jars -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.1</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Build-Tag>${build-tag}</Build-Tag>
+							<Git-Commit>${build-commit}</Git-Commit>
+							<Git-Commit-Abbrev>${build-commit-abbrev}</Git-Commit-Abbrev>
+							<Build-Version>${build-version}</Build-Version>
+							<Build-Timestamp>${build-tstamp}</Build-Timestamp>
+							<Source-Repository>${project.scm.connection}</Source-Repository>
+							<Description>${project.description}</Description>
+							<Implementation-URL>${project.url}</Implementation-URL>
+						</manifestEntries>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.6</version>
+				<configuration>
+					<useAgent>true</useAgent>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.3</version>
+				<configuration>
+					<mavenExecutorId>forked-path</mavenExecutorId> <!-- avoid a bug with GPG plugin hanging http://jira.codehaus.org/browse/MGPG-9 -->
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<tagNameFormat>@{project.version}</tagNameFormat>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>clojars.org</id>
+			<url>http://clojars.org/repo</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 </project>
