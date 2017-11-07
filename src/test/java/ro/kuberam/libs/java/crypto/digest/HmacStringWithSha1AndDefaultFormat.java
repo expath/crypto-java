@@ -19,12 +19,16 @@
  */
 package ro.kuberam.libs.java.crypto.digest;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class HmacStringWithSha1AndDefaultFormat extends BaseTest {
 
@@ -38,5 +42,19 @@ public class HmacStringWithSha1AndDefaultFormat extends BaseTest {
         System.out.println(result);
 
         Assert.assertTrue(result.equals("dYTuFEkwcs2NmuhQ4P8JBTgjD4w="));
+    }
+
+    @Test
+    public void hmacStringWithSha1_withInputStream() throws Exception {
+        final String input = "abc";
+
+        try(final InputStream is = new ByteArrayInputStream(input.getBytes(UTF_8))) {
+            final String result = Hmac.hmac(is,
+                    "def".getBytes(StandardCharsets.UTF_8), "HMAC-SHA-1", "");
+
+            System.out.println(result);
+
+            Assert.assertTrue(result.equals("dYTuFEkwcs2NmuhQ4P8JBTgjD4w="));
+        }
     }
 }

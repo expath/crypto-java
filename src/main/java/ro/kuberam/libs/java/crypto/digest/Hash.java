@@ -19,10 +19,8 @@
  */
 package ro.kuberam.libs.java.crypto.digest;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -57,7 +55,7 @@ public class Hash {
         final MessageDigest messageDigester = getMessageDigester(algorithm);
         messageDigester.update(data.getBytes(StandardCharsets.UTF_8));
 
-        byte[] resultBytes = messageDigester.digest();
+        final byte[] resultBytes = messageDigester.digest();
 
         if (actualFormat.equals("base64")) {
             return Base64.getEncoder().encodeToString(resultBytes);
@@ -79,14 +77,13 @@ public class Hash {
 
         final byte[] resultBytes;
         final MessageDigest messageDigester = getMessageDigester(algorithm);
-        try (final BufferedInputStream bis = new BufferedInputStream(data);
-             final DigestInputStream dis = new DigestInputStream(bis, messageDigester)) {
 
-            while (dis.read() != -1)
-                ;
-
-            resultBytes = messageDigester.digest();
+        final byte[] buf = new byte[16 * 1024]; // 16 KB
+        int read = -1;
+        while((read = data.read(buf)) > -1) {
+            messageDigester.update(buf, 0, read);
         }
+        resultBytes = messageDigester.digest();
 
         final String result;
         if (actualFormat.equals("base64")) {
@@ -100,17 +97,6 @@ public class Hash {
         }
 
         return result;
-
-        // byte[] buffer = new byte[bufferSize];
-        // int sizeRead = -1;
-        // while ((sizeRead = in.read(buffer)) != -1) {
-        // digest.update(buffer, 0, sizeRead);
-        // }
-        // in.close();
-        //
-        // byte[] hash = null;
-        // hash = new byte[digest.getDigestLength()];
-        // hash = digest.digest();
     }
 
     private static MessageDigest getMessageDigester(final String algorithm) throws Exception {
