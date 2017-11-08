@@ -51,7 +51,7 @@ import org.w3c.dom.Node;
 /**
  * Cryptographic extension functions.
  *
- * @author Claudius Teodorescu <claudius.teodorescu@gmail.com>
+ * @author <a href="mailto:claudius.teodorescu@gmail.com">Claudius Teodorescu</a>
  */
 
 public class ValidateXmlSignature {

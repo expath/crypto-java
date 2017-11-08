@@ -66,7 +66,7 @@ import ro.kuberam.libs.java.crypto.ErrorMessages;
 /**
  * Implements the module definition.
  *
- * @author Claudius Teodorescu <claudius.teodorescu@gmail.com>
+ * @author <a href="mailto:claudius.teodorescu@gmail.com">Claudius Teodorescu</a>
  */
 
 public class GenerateXmlSignature {

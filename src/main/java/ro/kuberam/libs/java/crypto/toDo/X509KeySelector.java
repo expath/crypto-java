@@ -19,7 +19,6 @@
  */
 package ro.kuberam.libs.java.crypto.toDo;
 
-import java.io.InputStream;
 import java.io.IOException;
 import java.security.Key;
 import java.security.KeyStore;
@@ -35,22 +34,21 @@ import java.util.Iterator;
 import javax.security.auth.x500.X500Principal;
 import javax.xml.crypto.*;
 import javax.xml.crypto.dsig.*;
-import javax.xml.crypto.dom.*;
 import javax.xml.crypto.dsig.keyinfo.*;
 
 /**
  * A <code>KeySelector</code> that returns {@link PublicKey}s of trusted
  * {@link X509Certificate}s stored in a {@link KeyStore}.
- * <p>
- * <p>This <code>KeySelector</code> uses the specified <code>KeyStore</code>
+ *
+ * This <code>KeySelector</code> uses the specified <code>KeyStore</code>
  * to find a trusted <code>X509Certificate</code> that matches information
  * specified in the {@link KeyInfo} passed to the {@link #select} method.
  * The public key from the first match is returned. If no match,
  * <code>null</code> is returned. See the <code>select</code> method for more
  * information.
- * <p>
- * <p>NOTE!: This X509KeySelector requires J2SE 1.4 because it uses the
- * java.security.cert.X509CertSelector & javax.security.auth.x500.X500Principal
+ *
+ * NOTE!: This X509KeySelector requires J2SE 1.4 because it uses the
+ * java.security.cert.X509CertSelector &amp; javax.security.auth.x500.X500Principal
  * classes to parse X.500 DNs and match on certificate attributes.
  *
  * @author Sean Mullan
@@ -78,14 +76,14 @@ public class X509KeySelector extends KeySelector {
 
     /**
      * Finds a key from the keystore satisfying the specified constraints.
-     * <p>
-     * <p>This method compares data contained in {@link KeyInfo} entries
+     *
+     * This method compares data contained in {@link KeyInfo} entries
      * with information stored in the <code>KeyStore</code>. The implementation
      * iterates over the KeyInfo types and returns the first {@link PublicKey}
      * of an X509Certificate in the keystore that is compatible with the
      * specified AlgorithmMethod according to the following rules for each
      * keyinfo type:
-     * <p>
+     *
      * X509Data X509Certificate: if it contains a <code>KeyUsage</code>
      * extension that asserts the <code>digitalSignature</code> bit and
      * matches an <code>X509Certificate</code> in the <code>KeyStore</code>.
