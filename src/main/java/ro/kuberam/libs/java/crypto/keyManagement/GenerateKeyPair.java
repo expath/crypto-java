@@ -1,3 +1,22 @@
+/**
+ * EXPath Cryptographic Module
+ * Java Library providing an EXPath Cryptographic Module
+ * Copyright (C) 2015 Kuberam
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 package ro.kuberam.libs.java.crypto.keyManagement;
 
 import java.security.GeneralSecurityException;
@@ -9,45 +28,42 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Arrays;
 
 import ro.kuberam.libs.java.crypto.randomSequencesGeneration.RandomNumber;
+
 import java.util.Base64;
 
 public class GenerateKeyPair {
 
-	public static KeyPair generate(String algorithm) throws Exception {
-		KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(algorithm);
-		keyGenerator.initialize(1024, RandomNumber.generate("SHA1PRNG", "SUN"));
+    public static KeyPair generate(final String algorithm) throws Exception {
+        final KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(algorithm);
+        keyGenerator.initialize(1024, RandomNumber.generate("SHA1PRNG", "SUN"));
+        return keyGenerator.generateKeyPair();
+    }
 
-		return (keyGenerator.generateKeyPair());
-	}
+    public static KeyPair generate(final long seed, final String algorithm, final String provider) throws Exception {
+        final KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(algorithm);
+        keyGenerator.initialize(1024, RandomNumber.generate(seed, "SHA1PRNG", provider));
+        return keyGenerator.generateKeyPair();
+    }
 
-	public static KeyPair generate(long seed, String algorithm, String provider) throws Exception {
-		KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(algorithm);
-		keyGenerator.initialize(1024, RandomNumber.generate(seed, "SHA1PRNG", provider));
+    public static String savePrivateKey(final PrivateKey priv) throws GeneralSecurityException {
+        final KeyFactory fact = KeyFactory.getInstance("RSA");
+        final PKCS8EncodedKeySpec spec = fact.getKeySpec(priv, PKCS8EncodedKeySpec.class);
+        final byte[] packed = spec.getEncoded();
+        final String key64 = Base64.getEncoder().encodeToString(packed);
+        Arrays.fill(packed, (byte) 0);
+        return key64;
+    }
 
-		return (keyGenerator.generateKeyPair());
-	}
+    public static void main(final String args[]) throws Exception {
+        final KeyPair keyPair = generate("RSA");
 
-	public static String savePrivateKey(PrivateKey priv) throws GeneralSecurityException {
-		KeyFactory fact = KeyFactory.getInstance("RSA");
-		PKCS8EncodedKeySpec spec = fact.getKeySpec(priv, PKCS8EncodedKeySpec.class);
-		byte[] packed = spec.getEncoded();
-		String key64 = Base64.getEncoder().encodeToString(packed);
+        System.out.println("Private key:\n" + Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded()));
 
-		Arrays.fill(packed, (byte) 0);
-		return key64;
-	}
+        // System.out.println("Private key:\n" +
+        // savePrivateKey(keyPair.getPrivate()));
 
-	public static void main(String args[]) throws Exception {
-
-		KeyPair keyPair = generate("RSA");
-
-		System.out.println("Private key:\n" + Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded()));
-
-		// System.out.println("Private key:\n" +
-		// savePrivateKey(keyPair.getPrivate()));
-
-		System.out.println("Public key:\n" + Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded()));
-	}
+        System.out.println("Public key:\n" + Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded()));
+    }
 
 }
 

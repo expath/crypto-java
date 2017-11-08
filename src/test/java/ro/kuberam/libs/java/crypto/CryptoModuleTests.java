@@ -1,15 +1,29 @@
+/**
+ * EXPath Cryptographic Module
+ * Java Library providing an EXPath Cryptographic Module
+ * Copyright (C) 2015 Kuberam
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 package ro.kuberam.libs.java.crypto;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectOutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.util.UUID;
@@ -25,172 +39,158 @@ import ro.kuberam.tests.junit.BaseTest;
 
 public class CryptoModuleTests extends BaseTest {
 
-	@Test
-	public void pipedStreams1Test() throws Exception {
-		final String message = "String for tests.";
+    @Test
+    public void pipedStreams1Test() throws Exception {
+        final String message = "String for tests.";
 
-		PipedInputStream in = new PipedInputStream();
-		final PipedOutputStream outp = new PipedOutputStream(in);
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					outp.write(message.getBytes(StandardCharsets.UTF_8));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}).start();
+        try (final PipedInputStream in = new PipedInputStream();
+             final PipedOutputStream outp = new PipedOutputStream(in)) {
+            new Thread(() -> {
+                try {
+                    outp.write(message.getBytes(StandardCharsets.UTF_8));
+                } catch (final IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }).start();
 
-		System.out.println("result: " + in);
-	}
+            System.out.println("result: " + in);
+        }
+    }
 
-	@Ignore
-	@Test
-	public void pipedStreams2Test() throws Exception {
-		InputStream document = getClass().getResourceAsStream("../doc-1.xml");
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		int next = document.read();
-		while (next > -1) {
-			bos.write(next);
-			next = document.read();
-		}
-		bos.flush();
-		byte[] result = bos.toByteArray();
+    @Ignore
+    @Test
+    public void pipedStreams2Test() throws Exception {
+        try (final InputStream document = getClass().getResourceAsStream("../doc-1.xml");
+             final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            int next = document.read();
+            while (next > -1) {
+                bos.write(next);
+                next = document.read();
+            }
+            bos.flush();
+            final byte[] result = bos.toByteArray();
 
-		PipedOutputStream poStream = new PipedOutputStream();
-		PipedInputStream piStream = new PipedInputStream();
+            try (final PipedOutputStream poStream = new PipedOutputStream();
+                 final PipedInputStream piStream = new PipedInputStream()) {
 
-		// piped input stream connect to the piped output stream
-		piStream.connect(poStream);
+                // piped input stream connect to the piped output stream
+                piStream.connect(poStream);
 
-		// Writes specified byte array.
-		poStream.write(result);
+                // Writes specified byte array.
+                poStream.write(result);
 
-		// Reads the next byte of data from this piped input stream.
-		for (int i = 0; i < result.length; i++) {
-			System.out.println(piStream.read());
-		}
+                // Reads the next byte of data from this piped input stream.
+                for (int i = 0; i < result.length; i++) {
+                    System.out.println(piStream.read());
+                }
+            }
+        }
+    }
 
-		// Closes piped input stream
-		poStream.close();
+    @Test
+    public void digestOutputStreamTest() throws Exception {
+        final MessageDigest md = MessageDigest.getInstance("SHA-512");
 
-		// Closes piped output stream
-		piStream.close();
-	}
+        try (final OutputStream fos = Files.newOutputStream(Paths.get("/home/claudius/workspace-claudius/expath-crypto/src/org/expath/crypto/tests/string.txt"));
+             final DigestOutputStream dos = new DigestOutputStream(fos, md);
+             final ObjectOutputStream oos = new ObjectOutputStream(dos)
+        ) {
 
-	@Test
-	public void digestOutputStreamTest() throws Exception {
-		try {
-			FileOutputStream fos = new FileOutputStream(
-					"/home/claudius/workspace-claudius/expath-crypto/src/org/expath/crypto/tests/string.txt");
-			MessageDigest md = MessageDigest.getInstance("SHA-512");
-			DigestOutputStream dos = new DigestOutputStream(fos, md);
-			ObjectOutputStream oos = new ObjectOutputStream(dos);
-			String data = "This have I thought good to deliver thee, "
-					+ "that thou mightst not lose the dues of rejoicing "
-					+ "by being ignorant of what greatness is promised thee.";
-			oos.writeObject(data);
-			dos.on(false);
-			byte[] digest = md.digest();
-			oos.writeObject(digest);
-			int digestLength = digest.length;
-			System.out.println("length: " + digestLength);
-			BigInteger bi = new BigInteger(1, digest);
-			String result = bi.toString(digestLength);
-			if (result.length() % 2 != 0) {
-				result = "0" + result;
-			}
+            final String data = "This have I thought good to deliver thee, "
+                    + "that thou mightst not lose the dues of rejoicing "
+                    + "by being ignorant of what greatness is promised thee.";
+            oos.writeObject(data);
+            dos.on(false);
+            final byte[] digest = md.digest();
+            oos.writeObject(digest);
+            final int digestLength = digest.length;
+            System.out.println("length: " + digestLength);
+            final BigInteger bi = new BigInteger(1, digest);
+            String result = bi.toString(digestLength);
+            if (result.length() % 2 != 0) {
+                result = "0" + result;
+            }
 
-			System.out.println("result: " + result);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
+            System.out.println("result: " + result);
+        }
+    }
 
-	public InputStream openStream() throws IOException {
-		final PipedOutputStream out = new PipedOutputStream();
-		PipedInputStream in = new PipedInputStream(out);
+    public InputStream openStream() throws IOException {
+        final PipedOutputStream out = new PipedOutputStream();
+        final PipedInputStream in = new PipedInputStream(out);
 
-		Runnable exporter = new Runnable() {
-			public void run() {
-				try {
-					out.write("message".getBytes(StandardCharsets.UTF_8));
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				IOUtils.closeQuietly(out);
-			}
-		};
+        final Runnable exporter = () -> {
+            try {
+                out.write("message".getBytes(StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            IOUtils.closeQuietly(out);
+        };
 
-		// executor.submit(exporter);
+        // executor.submit(exporter);
 
-		return in;
-	}
+        return in;
+    }
 
-	@Test
-	public void uuid5Test() throws Exception {
+    @Test
+    public void uuid5Test() throws Exception {
+        final String seed = "www.widgets.com";
 
-		String seed = "www.widgets.com";
+        final NameBasedGenerator uuid_gen_dns = Generators.nameBasedGenerator(NameBasedGenerator.NAMESPACE_DNS);
+        final UUID uuid_dns = uuid_gen_dns.generate(seed);
+        System.out.println("uuid_dns: " + uuid_dns);
 
-		NameBasedGenerator uuid_gen_dns = Generators.nameBasedGenerator(NameBasedGenerator.NAMESPACE_DNS);
-		UUID uuid_dns = uuid_gen_dns.generate(seed);
-		System.out.println("uuid_dns: " + uuid_dns);
+        final NameBasedGenerator uuid_gen_oid = Generators.nameBasedGenerator(NameBasedGenerator.NAMESPACE_OID);
+        final UUID uuid_oid = uuid_gen_oid.generate(seed);
+        System.out.println("uuid_oid: " + uuid_oid);
 
-		NameBasedGenerator uuid_gen_oid = Generators.nameBasedGenerator(NameBasedGenerator.NAMESPACE_OID);
-		UUID uuid_oid = uuid_gen_oid.generate(seed);
-		System.out.println("uuid_oid: " + uuid_oid);
+        final NameBasedGenerator uuid_gen_url = Generators.nameBasedGenerator(NameBasedGenerator.NAMESPACE_URL);
+        final UUID uuid_url = uuid_gen_url.generate(seed);
+        System.out.println("uuid_url: " + uuid_url);
 
-		NameBasedGenerator uuid_gen_url = Generators.nameBasedGenerator(NameBasedGenerator.NAMESPACE_URL);
-		UUID uuid_url = uuid_gen_url.generate(seed);
-		System.out.println("uuid_url: " + uuid_url);
+        final NameBasedGenerator uuid_gen_x500 = Generators.nameBasedGenerator(NameBasedGenerator.NAMESPACE_X500);
+        final UUID uuid_x500 = uuid_gen_x500.generate(seed);
+        System.out.println("uuid_x500: " + uuid_x500);
+    }
 
-		NameBasedGenerator uuid_gen_x500 = Generators.nameBasedGenerator(NameBasedGenerator.NAMESPACE_X500);
-		UUID uuid_x500 = uuid_gen_x500.generate(seed);
-		System.out.println("uuid_x500: " + uuid_x500);
+    @Test
+    public void uuid5NewTest() throws Exception {
+        final String NameSpace_OID_string = "6ba7b812-9dad-11d1-80b4-00c04fd430c8";
+        final UUID NameSpace_OID_uuid = UUID.fromString(NameSpace_OID_string);
 
-	}
+        final long msb = NameSpace_OID_uuid.getMostSignificantBits();
+        final long lsb = NameSpace_OID_uuid.getLeastSignificantBits();
 
-	@Test
-	public void uuid5NewTest() throws Exception {
-		String NameSpace_OID_string = "6ba7b812-9dad-11d1-80b4-00c04fd430c8";
-		UUID NameSpace_OID_uuid = UUID.fromString(NameSpace_OID_string);
+        final byte[] NameSpace_OID_buffer = new byte[16];
 
-		long msb = NameSpace_OID_uuid.getMostSignificantBits();
-		long lsb = NameSpace_OID_uuid.getLeastSignificantBits();
+        for (int i = 0; i < 8; i++) {
+            NameSpace_OID_buffer[i] = (byte) (msb >>> 8 * (7 - i));
+        }
+        for (int i = 8; i < 16; i++) {
+            NameSpace_OID_buffer[i] = (byte) (lsb >>> 8 * (7 - i));
+        }
 
-		byte[] NameSpace_OID_buffer = new byte[16];
+        final String name = "user123";
+        final byte[] name_buffer = name.getBytes();
 
-		for (int i = 0; i < 8; i++) {
-			NameSpace_OID_buffer[i] = (byte) (msb >>> 8 * (7 - i));
-		}
-		for (int i = 8; i < 16; i++) {
-			NameSpace_OID_buffer[i] = (byte) (lsb >>> 8 * (7 - i));
-		}
 
-		String name = "user123";
-		byte[] name_buffer = name.getBytes();
+        try (final ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            outputStream.write(NameSpace_OID_buffer);
+            outputStream.write(name_buffer);
 
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		try {
-			outputStream.write(NameSpace_OID_buffer);
-			outputStream.write(name_buffer);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            final byte byteArray[] = outputStream.toByteArray();
+            System.out.println(UUID.nameUUIDFromBytes(byteArray).toString());
+        } catch (final IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-		byte byteArray[] = outputStream.toByteArray();
+    public static void main(final String[] args) throws Exception {
 
-		System.out.println(UUID.nameUUIDFromBytes(byteArray).toString());
-	}
-
-	public static void main(String[] args) throws Exception {
-
-	}
+    }
 
 }

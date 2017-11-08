@@ -1,10 +1,29 @@
+/**
+ * EXPath Cryptographic Module
+ * Java Library providing an EXPath Cryptographic Module
+ * Copyright (C) 2015 Kuberam
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 package ro.kuberam.libs.java.crypto.providers;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.security.Provider;
 import java.security.Security;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -14,72 +33,65 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ro.kuberam.libs.java.crypto.ExpathCryptoModule;
 
 public class ListProviders {
-	private static final Logger log = Logger.getLogger(ListProviders.class);
-	private static String moduleNsUri = "";
-	static {
-		moduleNsUri = ExpathCryptoModule.NAMESPACE_URI;
-	}
-	private static String modulePrefix = "";
-	static {
-		modulePrefix = ExpathCryptoModule.PREFIX;
-	}
+    private static final Logger LOG = LogManager.getLogger(ListProviders.class);
+    private static final String moduleNsUri = ExpathCryptoModule.NAMESPACE_URI;
+    private static final String modulePrefix = ExpathCryptoModule.PREFIX;
 
-	public static StreamResult listProviders() throws XMLStreamException,
-			FactoryConfigurationError {
-		long startTime = new Date().getTime();
+    public static StreamResult listProviders() throws XMLStreamException,
+            FactoryConfigurationError, IOException {
+        final long startTime = new Date().getTime();
 
-		StringWriter writer = new StringWriter();
-		XMLStreamWriter xmlWriter = XMLOutputFactory.newInstance()
-				.createXMLStreamWriter(writer);
-		xmlWriter.setPrefix(modulePrefix, moduleNsUri);
-		xmlWriter.writeStartDocument();
-		xmlWriter.writeStartElement(modulePrefix + ":providers-list");
-		xmlWriter.writeNamespace(modulePrefix, moduleNsUri);
-		for (Provider provider : Security.getProviders()) {
-			xmlWriter.writeStartElement(modulePrefix + ":provider");
-			xmlWriter.writeAttribute("name", provider.getName());			
-			xmlWriter.writeAttribute("version", Double.toString(provider.getVersion()));
-			Set keys = provider.keySet();
-			Set result = new HashSet();
-			
-			System.out.println(provider.elements().nextElement().toString());
+        try (final StringWriter writer = new StringWriter()) {
+            final XMLStreamWriter xmlWriter = XMLOutputFactory.newInstance()
+                    .createXMLStreamWriter(writer);
+            xmlWriter.setPrefix(modulePrefix, moduleNsUri);
+            xmlWriter.writeStartDocument();
+            xmlWriter.writeStartElement(modulePrefix + ":providers-list");
+            xmlWriter.writeNamespace(modulePrefix, moduleNsUri);
 
-			for (Iterator it = keys.iterator(); it.hasNext();) {
+            for (final Provider provider : Security.getProviders()) {
+                xmlWriter.writeStartElement(modulePrefix + ":provider");
+                xmlWriter.writeAttribute("name", provider.getName());
+                xmlWriter.writeAttribute("version", Double.toString(provider.getVersion()));
+                final Set keys = provider.keySet();
 
-				String key = (String) it.next();
-				key = key.split(" ")[0];
+                System.out.println(provider.elements().nextElement().toString());
 
-				if (key.startsWith("Alg.Alias")) {
-					// Strip the alias
-					key = key.substring(10);
-				}
+                for (Iterator it = keys.iterator(); it.hasNext(); ) {
 
-				int ix = key.indexOf('.');
-				//System.out.println(key);
-				result.add(key.substring(0, ix));
-				
-				
-			}			
-			Object[] array = result.toArray(new String[result.size()]);
-			
-			
-			xmlWriter.writeEndElement();
-		}
-		xmlWriter.writeEndElement();
-		xmlWriter.writeEndDocument();
-		xmlWriter.close();
+                    String key = (String) it.next();
+                    key = key.split(" ")[0];
 
-		StreamResult resultAsStreamResult = new StreamResult(writer);
-		log.info("The list with cryptographic providers was generated in "
-				+ (new Date().getTime() - startTime) + " ms.");
+                    if (key.startsWith("Alg.Alias")) {
+                        // Strip the alias
+                        key = key.substring(10);
+                    }
 
-		return resultAsStreamResult;
-	}
+                    final int ix = key.indexOf('.');
+                    //System.out.println(key);
+
+
+                }
+                xmlWriter.writeEndElement();
+            }
+            xmlWriter.writeEndElement();
+            xmlWriter.writeEndDocument();
+            xmlWriter.close();
+
+            final StreamResult resultAsStreamResult = new StreamResult(writer);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("The list with cryptographic providers was generated in "
+                        + (new Date().getTime() - startTime) + " ms.");
+            }
+
+            return resultAsStreamResult;
+        }
+    }
 
 }
 

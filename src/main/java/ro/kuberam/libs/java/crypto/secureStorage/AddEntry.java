@@ -1,30 +1,49 @@
+/**
+ * EXPath Cryptographic Module
+ * Java Library providing an EXPath Cryptographic Module
+ * Copyright (C) 2015 Kuberam
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 package ro.kuberam.libs.java.crypto.secureStorage;
 
 import java.security.Key;
 import java.security.cert.Certificate;
 
 public class AddEntry {
-	
-	public boolean add() {
-		
-		boolean added = true;
-		
-		return added;
-	}
-	
-	private boolean addKey(String alias, Key key, char[] password, Certificate[] certificateChain) {
-		
-		boolean added = true;
-		
-		return added;
-	}
-	
-	private boolean addCertificate(String alias, Certificate certificate) {
-		
-		boolean added = true;
-		
-		return added;
-	}
+
+    public boolean add() {
+
+        boolean added = true;
+
+        return added;
+    }
+
+    private boolean addKey(final String alias, final Key key, final char[] password, final Certificate[] certificateChain) {
+
+        boolean added = true;
+
+        return added;
+    }
+
+    private boolean addCertificate(final String alias, final Certificate certificate) {
+
+        boolean added = true;
+
+        return added;
+    }
 }
 
 //import java.security.*;
@@ -100,7 +119,6 @@ public class AddEntry {
 //		}
 //	}
 //}
-
 
 
 //import java.io.*;

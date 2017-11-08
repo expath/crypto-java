@@ -1,3 +1,22 @@
+/**
+ * EXPath Cryptographic Module
+ * Java Library providing an EXPath Cryptographic Module
+ * Copyright (C) 2015 Kuberam
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -6,7 +25,6 @@
 package ro.kuberam.libs.java.crypto.toDo;
 
 /**
- *
  * @author claudius
  */
 // -----------------------------------------------------------------------------
@@ -55,8 +73,8 @@ import java.util.Iterator;
  * <code>SecureRandom.SHA1PRNG</code>
  * -----------------------------------------------------------------------------
  * @version 1.0
- * @author  Jeffrey M. Hunter  (jhunter@idevelopment.info)
- * @author  http://www.idevelopment.info
+ * @author Jeffrey M. Hunter  (jhunter@idevelopment.info)
+ * @author http://www.idevelopment.info
  * -----------------------------------------------------------------------------
  */
 
@@ -69,18 +87,18 @@ public class ListAvailableCryptographicServices {
      */
     private static String[] getServiceTypes() {
 
-        Set result = new HashSet();
+        final Set<String> result = new HashSet<>();
 
         // All providers
-        Provider[] providers = Security.getProviders();
-        for (int i=0; i<providers.length; i++) {
+        final Provider[] providers = Security.getProviders();
+        for (int i = 0; i < providers.length; i++) {
 
             // Get services provided by each provider
-            Set keys = providers[i].keySet();
+            final Set keys = providers[i].keySet();
 
-            for (Iterator it=keys.iterator(); it.hasNext(); ) {
+            for (final Iterator it = keys.iterator(); it.hasNext(); ) {
 
-                String key = (String)it.next();
+                String key = (String) it.next();
                 key = key.split(" ")[0];
 
                 if (key.startsWith("Alg.Alias")) {
@@ -88,13 +106,13 @@ public class ListAvailableCryptographicServices {
                     key = key.substring(10);
                 }
 
-                int ix = key.indexOf('.');
-                result.add(key.substring(0,ix));
+                final int ix = key.indexOf('.');
+                result.add(key.substring(0, ix));
             }
 
         }
 
-        return (String[])result.toArray(new String[result.size()]);
+        return result.toArray(new String[result.size()]);
 
     }
 
@@ -107,20 +125,20 @@ public class ListAvailableCryptographicServices {
      * @return <code>String[]</code> object that is a list of all available
      *                               service type implementations.
      */
-    private static String[] getCryptoImpls(String serviceType) {
+    private static String[] getCryptoImpls(final String serviceType) {
 
-        Set result = new HashSet();
+        final Set<String> result = new HashSet<>();
 
         // All providers
-        Provider[] providers = Security.getProviders();
-        for (int i=0; i<providers.length; i++) {
+        final Provider[] providers = Security.getProviders();
+        for (int i = 0; i < providers.length; i++) {
 
             // Get services provided by each provider
-            Set keys = providers[i].keySet();
+            final Set keys = providers[i].keySet();
 
-            for (Iterator it=keys.iterator(); it.hasNext(); ) {
+            for (final Iterator it = keys.iterator(); it.hasNext(); ) {
 
-                String key = (String)it.next();
+                String key = (String) it.next();
 
                 key = key.split(" ")[0];
 
@@ -135,7 +153,7 @@ public class ListAvailableCryptographicServices {
 
         }
 
-        return (String[])result.toArray(new String[result.size()]);
+        return result.toArray(new String[result.size()]);
 
     }
 
@@ -149,10 +167,10 @@ public class ListAvailableCryptographicServices {
         System.out.println("Service Types");
         System.out.println("-------------");
 
-        String[] serviceTypes = getServiceTypes();
+        final String[] serviceTypes = getServiceTypes();
         Arrays.sort(serviceTypes);
 
-        for (int i=0; i<serviceTypes.length; i++) {
+        for (int i = 0; i < serviceTypes.length; i++) {
             System.out.println("  - " + serviceTypes[i]);
         }
         System.out.println();
@@ -169,18 +187,18 @@ public class ListAvailableCryptographicServices {
         System.out.println("Service Type Implementations");
         System.out.println("----------------------------");
 
-        String[] serviceTypes = getServiceTypes();
+        final String[] serviceTypes = getServiceTypes();
         Arrays.sort(serviceTypes);
 
-        for (int i=0; i<serviceTypes.length; i++) {
+        for (int i = 0; i < serviceTypes.length; i++) {
 
             System.out.println();
             System.out.println("  - " + serviceTypes[i]);
 
-            String[] serviceTypeImpls = getCryptoImpls(serviceTypes[i]);
+            final String[] serviceTypeImpls = getCryptoImpls(serviceTypes[i]);
             Arrays.sort(serviceTypeImpls);
 
-            for (int j=0; j<serviceTypeImpls.length; j++) {
+            for (int j = 0; j < serviceTypeImpls.length; j++) {
                 System.out.println("      " + serviceTypeImpls[j]);
             }
 
@@ -190,7 +208,7 @@ public class ListAvailableCryptographicServices {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         listServiceTypes();
         listCryptoImpls();
     }

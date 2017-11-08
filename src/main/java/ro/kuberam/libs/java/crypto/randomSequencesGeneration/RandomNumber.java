@@ -1,28 +1,43 @@
+/**
+ * EXPath Cryptographic Module
+ * Java Library providing an EXPath Cryptographic Module
+ * Copyright (C) 2015 Kuberam
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 package ro.kuberam.libs.java.crypto.randomSequencesGeneration;
 
 import java.security.SecureRandom;
 
 public class RandomNumber {
 
-	public static SecureRandom generate(long seed, String algorithm, String provider)
-			throws Exception {
-		SecureRandom randomNumber = SecureRandom.getInstance(algorithm, provider);
-		randomNumber.setSeed(seed);
+    public static SecureRandom generate(final long seed, final String algorithm, final String provider)
+            throws Exception {
+        final SecureRandom randomNumber = SecureRandom.getInstance(algorithm, provider);
+        randomNumber.setSeed(seed);
+        return randomNumber;
+    }
 
-		return randomNumber;
-	}
+    public static SecureRandom generate(final String algorithm, final String provider) throws Exception {
+        final SecureRandom randomNumber = SecureRandom.getInstance(algorithm, provider);
+        return randomNumber;
+    }
 
-	public static SecureRandom generate(String algorithm, String provider) throws Exception {
-		SecureRandom randomNumber = SecureRandom.getInstance(algorithm, provider);
-
-		return randomNumber;
-	}
-
-	public static void main(String args[]) throws Exception {
-
-		SecureRandom randomNumber = generate(1008, "SHA1PRNG", "SUN");
-
-		System.out.println("Random number:\n" + randomNumber.nextLong());
-	}
+    public static void main(final String args[]) throws Exception {
+        final SecureRandom randomNumber = generate(1008, "SHA1PRNG", "SUN");
+        System.out.println("Random number:\n" + randomNumber.nextLong());
+    }
 
 }

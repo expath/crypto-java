@@ -1,3 +1,22 @@
+/**
+ * EXPath Cryptographic Module
+ * Java Library providing an EXPath Cryptographic Module
+ * Copyright (C) 2015 Kuberam
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2.1
+ * of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 package ro.kuberam.libs.java.crypto;
 
 import javax.xml.crypto.dsig.CanonicalizationMethod;
@@ -6,98 +25,105 @@ import javax.xml.crypto.dsig.SignatureMethod;
 import javax.xml.crypto.dsig.Transform;
 
 public class Parameters {
-	private String canonicalizationAlgorithm = CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS;
-	private String[] canonicalizationAlgorithmValues = new String[] { "exclusive",
-			"exclusive-with-comments", "inclusive", "inclusive-with-comments" };
-	private String digestAlgorithm = DigestMethod.SHA1;
-	private String[] digestAlgorithmValues = new String[] { "SHA1", "SHA256", "SHA512" };
-	private String signatureAlgorithm = SignatureMethod.RSA_SHA1;
-	private String[] signatureAlgorithmValues = new String[] { "DSA_SHA1", "RSA_SHA1" };
-	private String signatureNamespacePrefix = "dsig";
-	private String signatureType = "enveloped";
-	private String[] signatureTypeValues = new String[] { "enveloping", "enveloped", "detached" };
+    private String canonicalizationAlgorithm = CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS;
+    private static final String[] CANONICALIZATION_ALGORITHM_VALUES = {"exclusive",
+            "exclusive-with-comments", "inclusive", "inclusive-with-comments"};
+    private String digestAlgorithm = DigestMethod.SHA1;
+    private static final String[] DIGEST_ALGORITHM_VALUES = {"SHA1", "SHA256", "SHA512"};
+    private String signatureAlgorithm = SignatureMethod.RSA_SHA1;
+    private static final String[] SIGNATURE_ALGORITHM_VALUES = {"DSA_SHA1", "RSA_SHA1"};
+    private String signatureNamespacePrefix = "dsig";
+    private String signatureType = "enveloped";
+    private static final String[] SIGNATURE_TYPE_VALUES = {"enveloping", "enveloped", "detached"};
 
-	public Parameters() {
-	}
+    public String getCanonicalizationAlgorithm() {
+        return canonicalizationAlgorithm;
+    }
 
-	public String getCanonicalizationAlgorithm() {
-		return canonicalizationAlgorithm;
-	}
+    public void setCanonicalizationAlgorithm(final String canonicalizationAlgorithm) throws Exception {
+        if (!contains(CANONICALIZATION_ALGORITHM_VALUES, canonicalizationAlgorithm)) {
+            throw new Exception(ErrorMessages.error_unknownAlgorithm);
+        }
 
-	public void setCanonicalizationAlgorithm(String canonicalizationAlgorithm) throws Exception {
-		if (!canonicalizationAlgorithmValues.equals(canonicalizationAlgorithm)) {
-			throw new Exception(ErrorMessages.error_unknownAlgorithm);
-		}
+        if (canonicalizationAlgorithm.equals("exclusive")) {
+            this.canonicalizationAlgorithm = CanonicalizationMethod.EXCLUSIVE;
+        } else if (canonicalizationAlgorithm.equals("exclusive-with-comments")) {
+            this.canonicalizationAlgorithm = CanonicalizationMethod.EXCLUSIVE_WITH_COMMENTS;
+        } else if (canonicalizationAlgorithm.equals("inclusive")) {
+            this.canonicalizationAlgorithm = CanonicalizationMethod.INCLUSIVE;
+        }
 
-		if (canonicalizationAlgorithm.equals("exclusive")) {
-			canonicalizationAlgorithm = CanonicalizationMethod.EXCLUSIVE;
-		} else if (canonicalizationAlgorithm.equals("exclusive-with-comments")) {
-			canonicalizationAlgorithm = CanonicalizationMethod.EXCLUSIVE_WITH_COMMENTS;
-		} else if (canonicalizationAlgorithm.equals("inclusive")) {
-			canonicalizationAlgorithm = CanonicalizationMethod.INCLUSIVE;
-		}
+        this.canonicalizationAlgorithm = canonicalizationAlgorithm;
+    }
 
-		this.canonicalizationAlgorithm = canonicalizationAlgorithm;
-	}
+    public String getDigestAlgorithm() {
+        return digestAlgorithm;
+    }
 
-	public String getDigestAlgorithm() {
-		return digestAlgorithm;
-	}
+    public void setDigestAlgorithm(final String digestAlgorithm) throws Exception {
+        if (!contains(DIGEST_ALGORITHM_VALUES, digestAlgorithm)) {
+            throw new Exception(ErrorMessages.error_unknownAlgorithm);
+        }
 
-	public void setDigestAlgorithm(String digestAlgorithm) throws Exception {
-		if (!digestAlgorithmValues.equals(digestAlgorithm)) {
-			throw new Exception(ErrorMessages.error_unknownAlgorithm);
-		}
+        if (digestAlgorithm.equals("SHA256")) {
+            this.digestAlgorithm = DigestMethod.SHA256;
+        } else if (digestAlgorithm.equals("SHA512")) {
+            this.digestAlgorithm = DigestMethod.SHA512;
+        } else {
+            this.digestAlgorithm = digestAlgorithm;
+        }
+    }
 
-		if (digestAlgorithm.equals("SHA256")) {
-			digestAlgorithm = DigestMethod.SHA256;
-		} else if (digestAlgorithm.equals("SHA512")) {
-			digestAlgorithm = DigestMethod.SHA512;
-		}
+    public String getSignatureAlgorithm() {
+        return signatureAlgorithm;
+    }
 
-		this.digestAlgorithm = digestAlgorithm;
-	}
+    public void setSignatureAlgorithm(final String signatureAlgorithm) throws Exception {
+        if (!contains(SIGNATURE_ALGORITHM_VALUES, signatureAlgorithm)) {
+            throw new Exception(ErrorMessages.error_unknownAlgorithm);
+        }
 
-	public String getSignatureAlgorithm() {
-		return signatureAlgorithm;
-	}
+        if (signatureAlgorithm.equals("DSA_SHA1")) {
+            this.signatureAlgorithm = SignatureMethod.DSA_SHA1;
+        } else {
+            this.signatureAlgorithm = signatureAlgorithm;
+        }
+    }
 
-	public void setSignatureAlgorithm(String signatureAlgorithm) throws Exception {
-		if (!signatureAlgorithmValues.equals(signatureAlgorithm)) {
-			throw new Exception(ErrorMessages.error_unknownAlgorithm);
-		}
+    public String getSignatureNamespacePrefix() {
+        return signatureNamespacePrefix;
+    }
 
-		if (signatureAlgorithm.equals("DSA_SHA1")) {
-			signatureAlgorithm = SignatureMethod.DSA_SHA1;
-		}
+    public void setSignatureNamespacePrefix(final String signatureNamespacePrefix) {
+        this.signatureNamespacePrefix = signatureNamespacePrefix;
+    }
 
-		this.signatureAlgorithm = signatureAlgorithm;
-	}
+    public String getSignatureType() {
+        System.out.println("signatureType = " + Transform.ENVELOPED);
+        return signatureType;
+    }
 
-	public String getSignatureNamespacePrefix() {
-		return signatureNamespacePrefix;
-	}
+    public void setSignatureType(final String signatureType) throws Exception {
+        for (String e : SIGNATURE_TYPE_VALUES) {
+            System.out.println("SIGNATURE_TYPE_VALUES = " + e);
+        }
 
-	public void setSignatureNamespacePrefix(String signatureNamespacePrefix) {
-		this.signatureNamespacePrefix = signatureNamespacePrefix;
-	}
 
-	public String getSignatureType() {
-		System.out.println("signatureType = " + Transform.ENVELOPED);
-		return signatureType;
-	}
+        if (!SIGNATURE_TYPE_VALUES.equals(signatureType)) {
+            //throw new Exception(ErrorMessages.error_signatureType);
+        }
 
-	public void setSignatureType(String signatureType) throws Exception {
-		for (String e : signatureTypeValues) {
-			System.out.println("signatureTypeValues = " + e);	
-		}
-			
-		
-		if (!signatureTypeValues.equals(signatureType)) {
-			//throw new Exception(ErrorMessages.error_signatureType);
-		}
+        this.signatureType = signatureType;
+    }
 
-		this.signatureType = signatureType;
-	}
+    private boolean contains(final String[] strs, final String str) {
+        for (final String s : strs) {
+            if (s.equals(str)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }
