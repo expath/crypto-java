@@ -192,6 +192,7 @@ public class ByteArray2HexStringPerformanceTest extends BaseTest {
         assertEquals(10400000, result.length());
     }
 
+    @Ignore
     @Test
     public void hexBinaryAdapterTest() throws Exception {
         final String result = new HexBinaryAdapter().marshal(tempByteArray);
