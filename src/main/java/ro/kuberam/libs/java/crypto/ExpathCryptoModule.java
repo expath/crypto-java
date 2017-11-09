@@ -27,7 +27,7 @@ import java.util.Properties;
 /**
  * Implements the module definition.
  *
- * @author Claudius Teodorescu <claudius.teodorescu@gmail.com>
+ * @author <a href="mailto:claudius.teodorescu@gmail.com">Claudius Teodorescu</a>
  */
 public class ExpathCryptoModule {
 

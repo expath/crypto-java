@@ -35,7 +35,7 @@ import java.util.Optional;
 /**
  * Implements the crypto:hash() function.
  *
- * @author Claudius Teodorescu <claudius.teodorescu@gmail.com>
+ * @author <a href="mailto:claudius.teodorescu@gmail.com">Claudius Teodorescu</a>
  */
 public class Hash {
 
