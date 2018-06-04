@@ -17,16 +17,22 @@
  * along with this library; if not, write to the Free Software Foundation,
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package ro.kuberam.libs.java.crypto.utils;
+package ro.kuberam.libs.java.crypto;
 
-public class ByteArray2HexString {
+public class CryptoException extends Exception {
+    private final CryptoError cryptoError;
 
-    public String convert(final byte[] byteArray) {
-        final StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < byteArray.length; ++i) {
-            sb.append(Integer.toHexString((byteArray[i] & 0xFF) | 0x100).substring(1, 3));
-        }
-        return sb.toString();
+    public CryptoException(final CryptoError cryptoError) {
+        super(cryptoError.asMessage());
+        this.cryptoError = cryptoError;
+    }
+
+    public CryptoException(final CryptoError cryptoError, final Throwable cause) {
+        super(cryptoError.asMessage(), cause);
+        this.cryptoError = cryptoError;
+    }
+
+    public CryptoError getCryptoError() {
+        return cryptoError;
     }
 }
-//TODO: make this work with large byte arrays, maybe with a pipeline 

@@ -19,34 +19,25 @@
  */
 package ro.kuberam.libs.java.crypto.digitalSignature;
 
+import java.io.IOException;
 import java.security.Key;
 import java.security.KeyException;
 import java.security.PublicKey;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.crypto.AlgorithmMethod;
-import javax.xml.crypto.KeySelector;
-import javax.xml.crypto.KeySelectorException;
-import javax.xml.crypto.KeySelectorResult;
-import javax.xml.crypto.XMLCryptoContext;
-import javax.xml.crypto.XMLStructure;
-import javax.xml.crypto.dsig.Reference;
-import javax.xml.crypto.dsig.SignatureMethod;
-import javax.xml.crypto.dsig.XMLSignature;
-import javax.xml.crypto.dsig.XMLSignatureFactory;
+import javax.xml.crypto.*;
+import javax.xml.crypto.dsig.*;
 import javax.xml.crypto.dsig.dom.DOMValidateContext;
 import javax.xml.crypto.dsig.keyinfo.KeyInfo;
 import javax.xml.crypto.dsig.keyinfo.KeyValue;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.xpath.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import ro.kuberam.libs.java.crypto.CryptoException;
 
 /**
  * Cryptographic extension functions.
@@ -58,7 +49,7 @@ public class ValidateXmlSignature {
 
     private static final Logger LOG = LogManager.getLogger(ValidateXmlSignature.class);
 
-    public static Boolean validate(Document inputDoc) throws Exception {
+    public static Boolean validate(Document inputDoc) throws CryptoException, IOException, XMLSignatureException {
 
         // Find Signature element
         if (LOG.isDebugEnabled()) {
@@ -66,47 +57,50 @@ public class ValidateXmlSignature {
         }
         //NodeList nl = inputDoc.getElementsByTagName("Signature");
         //NodeList nl = inputDoc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
-
-        XPathFactory factory = XPathFactory.newInstance();
-        XPath xpath = factory.newXPath();
-        // Find the node to be signed by PATH
-        XPathExpression expr = xpath.compile("//*[local-name() = 'Signature' and namespace-uri() = '" + XMLSignature.XMLNS + "']");
-        Node nl = (Node) expr.evaluate(inputDoc, XPathConstants.NODE);
+        try {
+            XPathFactory factory = XPathFactory.newInstance();
+            XPath xpath = factory.newXPath();
+            // Find the node to be signed by PATH
+            XPathExpression expr = xpath.compile("//*[local-name() = 'Signature' and namespace-uri() = '" + XMLSignature.XMLNS + "']");
+            Node nl = (Node) expr.evaluate(inputDoc, XPathConstants.NODE);
 
 //		if (nl.getLength() == 0) {
 //			throw new XPathException(ErrorMessages.err_CX15);
 //		}
 
-        // Create a DOM XMLSignatureFactory that will be used to unmarshal the
-        // document containing the XMLSignature
-        XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Claudius test: " + nl.getNodeName());
-        }
-        // Create a DOMValidateContext and specify a KeyValue KeySelector
-        // and document context
-        DOMValidateContext valContext = new DOMValidateContext(new KeyValueKeySelector(), nl);
-
-        // unmarshal the XMLSignature
-        XMLSignature signature = fac.unmarshalXMLSignature(valContext);
-
-        // Validate the XMLSignature (generated above)
-        boolean coreValidity = signature.validate(valContext);
-
-        // Check core validation status
-        if (coreValidity == false) {
-            System.err.println("Signature failed core validation");
-            boolean sv = signature.getSignatureValue().validate(valContext);
-            System.out.println("signature validation status: " + sv);
-            // check the validation status of each Reference
-            Iterator iterator = signature.getSignedInfo().getReferences().iterator();
-            for (int j = 0; iterator.hasNext(); j++) {
-                boolean refValid = ((Reference) iterator.next()).validate(valContext);
-                System.out.println("ref[" + j + "] validity status: " + refValid);
+            // Create a DOM XMLSignatureFactory that will be used to unmarshal the
+            // document containing the XMLSignature
+            XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Claudius test: " + nl.getNodeName());
             }
-        }
+            // Create a DOMValidateContext and specify a KeyValue KeySelector
+            // and document context
+            DOMValidateContext valContext = new DOMValidateContext(new KeyValueKeySelector(), nl);
 
-        return coreValidity;
+            // unmarshal the XMLSignature
+            XMLSignature signature = fac.unmarshalXMLSignature(valContext);
+
+            // Validate the XMLSignature (generated above)
+            boolean coreValidity = signature.validate(valContext);
+
+            // Check core validation status
+            if (coreValidity == false) {
+                System.err.println("Signature failed core validation");
+                boolean sv = signature.getSignatureValue().validate(valContext);
+                System.out.println("signature validation status: " + sv);
+                // check the validation status of each Reference
+                Iterator iterator = signature.getSignedInfo().getReferences().iterator();
+                for (int j = 0; iterator.hasNext(); j++) {
+                    boolean refValid = ((Reference) iterator.next()).validate(valContext);
+                    System.out.println("ref[" + j + "] validity status: " + refValid);
+                }
+            }
+
+            return coreValidity;
+        } catch (final XPathExpressionException | MarshalException e) {
+            throw new IOException(e);
+        }
     }
 
     /**

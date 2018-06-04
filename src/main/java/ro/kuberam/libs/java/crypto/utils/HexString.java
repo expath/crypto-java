@@ -17,30 +17,24 @@
  * along with this library; if not, write to the Free Software Foundation,
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package ro.kuberam.libs.java.crypto.digest;
+package ro.kuberam.libs.java.crypto.utils;
 
-import java.io.IOException;
-import java.io.InputStream;
+public class HexString {
 
-import ro.kuberam.libs.java.crypto.CryptoError;
-import ro.kuberam.libs.java.crypto.CryptoException;
-import org.junit.Test;
-
-import ro.kuberam.tests.junit.BaseTest;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-public class HashBinaryWithWrongAlgorithm extends BaseTest {
-
-    @Test
-    public void hashBinaryWithWrongAlgorithm() throws IOException {
-        try (final InputStream input = getClass().getResourceAsStream("../../keystore.ks");) {
-            final String result = Hash.hashBinary(input, "SHA-17", "base64");
-            fail("Algorithm should have been unknown");
-        } catch (final CryptoException e) {
-            assertEquals(CryptoError.UNKNOWN_ALGORITH, e.getCryptoError());
-
+    public static String fromBytes(final byte[] data) {
+        final StringBuilder buf = new StringBuilder();
+        for (int i = 0; i < data.length; i++) {
+            int halfbyte = (data[i] >>> 4) & 0x0F;
+            int two_halfs = 0;
+            do {
+                if ((0 <= halfbyte) && (halfbyte <= 9)) {
+                    buf.append((char) ('0' + halfbyte));
+                } else {
+                    buf.append((char) ('a' + (halfbyte - 10)));
+                }
+                halfbyte = data[i] & 0x0F;
+            } while (two_halfs++ < 1);
         }
+        return buf.toString();
     }
 }

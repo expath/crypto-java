@@ -40,9 +40,9 @@ public class Parameters {
         return canonicalizationAlgorithm;
     }
 
-    public void setCanonicalizationAlgorithm(final String canonicalizationAlgorithm) throws Exception {
+    public void setCanonicalizationAlgorithm(final String canonicalizationAlgorithm) throws CryptoException {
         if (!contains(CANONICALIZATION_ALGORITHM_VALUES, canonicalizationAlgorithm)) {
-            throw new Exception(ErrorMessages.error_unknownAlgorithm);
+            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH);
         }
 
         if (canonicalizationAlgorithm.equals("exclusive")) {
@@ -60,9 +60,9 @@ public class Parameters {
         return digestAlgorithm;
     }
 
-    public void setDigestAlgorithm(final String digestAlgorithm) throws Exception {
+    public void setDigestAlgorithm(final String digestAlgorithm) throws CryptoException {
         if (!contains(DIGEST_ALGORITHM_VALUES, digestAlgorithm)) {
-            throw new Exception(ErrorMessages.error_unknownAlgorithm);
+            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH);
         }
 
         if (digestAlgorithm.equals("SHA256")) {
@@ -78,9 +78,9 @@ public class Parameters {
         return signatureAlgorithm;
     }
 
-    public void setSignatureAlgorithm(final String signatureAlgorithm) throws Exception {
+    public void setSignatureAlgorithm(final String signatureAlgorithm) throws CryptoException {
         if (!contains(SIGNATURE_ALGORITHM_VALUES, signatureAlgorithm)) {
-            throw new Exception(ErrorMessages.error_unknownAlgorithm);
+            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH);
         }
 
         if (signatureAlgorithm.equals("DSA_SHA1")) {
@@ -103,7 +103,7 @@ public class Parameters {
         return signatureType;
     }
 
-    public void setSignatureType(final String signatureType) throws Exception {
+    public void setSignatureType(final String signatureType) {
         for (String e : SIGNATURE_TYPE_VALUES) {
             System.out.println("SIGNATURE_TYPE_VALUES = " + e);
         }
