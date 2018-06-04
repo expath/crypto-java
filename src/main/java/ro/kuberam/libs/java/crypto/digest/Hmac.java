@@ -35,6 +35,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ro.kuberam.libs.java.crypto.ErrorMessages;
 import ro.kuberam.libs.java.crypto.ExpathCryptoModule;
+import ro.kuberam.libs.java.crypto.utils.Buffer;
 
 public class Hmac {
 
@@ -128,7 +129,7 @@ public class Hmac {
             final Mac mac = Mac.getInstance(algorithm);
             mac.init(signingKey);
 
-            final byte[] buf = new byte[16 * 1024]; // 16 KB
+            final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
             int read = -1;
             while((read = data.read(buf)) > -1) {
                 mac.update(buf, 0, read);

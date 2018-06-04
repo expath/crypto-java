@@ -27,6 +27,8 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ro.kuberam.libs.java.crypto.ErrorMessages;
+import ro.kuberam.libs.java.crypto.utils.Buffer;
+import ro.kuberam.libs.java.crypto.utils.HexString;
 
 import javax.annotation.Nullable;
 import java.util.Base64;
@@ -60,7 +62,7 @@ public class Hash {
         if (actualFormat.equals("base64")) {
             return Base64.getEncoder().encodeToString(resultBytes);
         } else {
-            return convertToHex(resultBytes);
+            return HexString.fromBytes(resultBytes);
         }
     }
 
@@ -78,7 +80,7 @@ public class Hash {
         final byte[] resultBytes;
         final MessageDigest messageDigester = getMessageDigester(algorithm);
 
-        final byte[] buf = new byte[16 * 1024]; // 16 KB
+        final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
         int read = -1;
         while((read = data.read(buf)) > -1) {
             messageDigester.update(buf, 0, read);
@@ -89,7 +91,7 @@ public class Hash {
         if (actualFormat.equals("base64")) {
             result = Base64.getEncoder().encodeToString(resultBytes);
         } else {
-            result = convertToHex(resultBytes);
+            result = HexString.fromBytes(resultBytes);
         }
 
         if (LOG.isDebugEnabled()) {
@@ -105,21 +107,5 @@ public class Hash {
         } catch (final NoSuchAlgorithmException ex) {
             throw new Exception(ErrorMessages.error_unknownAlgorithm);
         }
-    }
-
-    private static String convertToHex(final byte[] data) {
-        final StringBuilder buf = new StringBuilder();
-        for (int i = 0; i < data.length; i++) {
-            int halfbyte = (data[i] >>> 4) & 0x0F;
-            int two_halfs = 0;
-            do {
-                if ((0 <= halfbyte) && (halfbyte <= 9))
-                    buf.append((char) ('0' + halfbyte));
-                else
-                    buf.append((char) ('a' + (halfbyte - 10)));
-                halfbyte = data[i] & 0x0F;
-            } while (two_halfs++ < 1);
-        }
-        return buf.toString();
     }
 }

@@ -19,14 +19,22 @@
  */
 package ro.kuberam.libs.java.crypto.utils;
 
-public class ByteArray2HexString {
+public class HexString {
 
-    public String convert(final byte[] byteArray) {
-        final StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < byteArray.length; ++i) {
-            sb.append(Integer.toHexString((byteArray[i] & 0xFF) | 0x100).substring(1, 3));
+    public static String fromBytes(final byte[] data) {
+        final StringBuilder buf = new StringBuilder();
+        for (int i = 0; i < data.length; i++) {
+            int halfbyte = (data[i] >>> 4) & 0x0F;
+            int two_halfs = 0;
+            do {
+                if ((0 <= halfbyte) && (halfbyte <= 9)) {
+                    buf.append((char) ('0' + halfbyte));
+                } else {
+                    buf.append((char) ('a' + (halfbyte - 10)));
+                }
+                halfbyte = data[i] & 0x0F;
+            } while (two_halfs++ < 1);
         }
-        return sb.toString();
+        return buf.toString();
     }
 }
-//TODO: make this work with large byte arrays, maybe with a pipeline 
