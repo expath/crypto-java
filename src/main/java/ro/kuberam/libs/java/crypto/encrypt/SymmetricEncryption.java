@@ -19,8 +19,10 @@
  */
 package ro.kuberam.libs.java.crypto.encrypt;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -35,6 +37,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import ro.kuberam.libs.java.crypto.ErrorMessages;
+import ro.kuberam.libs.java.crypto.utils.Buffer;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -43,7 +46,15 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class SymmetricEncryption {
 
-    public static String encryptString(final String input, final String plainKey, final String transformationName, final String iv, final String provider) throws Exception {
+    public static String encryptString(final String input, final String plainKey, final String transformationName,
+            final String iv, final String provider) throws Exception {
+        try (final InputStream bais = new ByteArrayInputStream(input.getBytes(UTF_8))) {
+            return encrypt(bais, plainKey, transformationName, iv, provider);
+        }
+    }
+
+    public static String encrypt(final InputStream input, final String plainKey, final String transformationName,
+            final String iv, final String provider) throws Exception {
         final String algorithm = (transformationName.contains("/")) ? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
         final String actualProvider = Optional.ofNullable(provider)
                 .filter(str -> !str.isEmpty())
@@ -75,7 +86,13 @@ public class SymmetricEncryption {
         }
 
         try {
-            final byte[] resultBytes = cipher.doFinal(input.getBytes());
+            final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
+            int read = -1;
+            while((read = input.read(buf)) > -1) {
+                cipher.update(buf, 0, read);
+            }
+
+            final byte[] resultBytes = cipher.doFinal();
             return getString(resultBytes);
         } catch (final IllegalBlockSizeException ex) {
             throw new Exception(ErrorMessages.error_blockSize);
@@ -84,7 +101,15 @@ public class SymmetricEncryption {
         }
     }
 
-    public static String decryptString(final String encryptedInput, final String plainKey, final String transformationName, final String iv, final String provider) throws Exception {
+    public static String decryptString(final String encryptedInput, final String plainKey,
+            final String transformationName, final String iv, final String provider) throws Exception {
+        try (final InputStream bais = new ByteArrayInputStream(getBytes(encryptedInput))) {
+            return decrypt(bais, plainKey, transformationName, iv, provider);
+        }
+    }
+
+    public static String decrypt(final InputStream encryptedInput, final String plainKey,
+            final String transformationName, final String iv, final String provider) throws Exception {
         final String algorithm = (transformationName.contains("/")) ? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
         final String actualProvider = Optional.ofNullable(provider)
                 .filter(str -> !str.isEmpty())
@@ -115,7 +140,14 @@ public class SymmetricEncryption {
             }
         }
         try {
-            final byte[] resultBytes = cipher.doFinal(getBytes(encryptedInput));
+
+            final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
+            int read = -1;
+            while((read = encryptedInput.read(buf)) > -1) {
+                cipher.update(buf, 0, read);
+            }
+
+            final byte[] resultBytes = cipher.doFinal();
             return new String(resultBytes, UTF_8);
         } catch (final IllegalBlockSizeException ex) {
             throw new Exception(ErrorMessages.error_blockSize);

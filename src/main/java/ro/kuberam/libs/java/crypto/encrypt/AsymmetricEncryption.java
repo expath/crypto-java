@@ -19,8 +19,10 @@
  */
 package ro.kuberam.libs.java.crypto.encrypt;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -38,6 +40,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import ro.kuberam.libs.java.crypto.ErrorMessages;
+import ro.kuberam.libs.java.crypto.utils.Buffer;
 
 import java.util.Base64;
 
@@ -48,7 +51,15 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class AsymmetricEncryption {
 
-    public static String encryptString(final String input, final String publicKey, final String transformationName) throws Exception {
+    public static String encryptString(final String input, final String publicKey, final String transformationName)
+            throws Exception {
+        try (final InputStream bais = new ByteArrayInputStream(input.getBytes(UTF_8))) {
+            return encrypt(bais, publicKey, transformationName);
+        }
+    }
+
+    public static String encrypt(final InputStream input, final String publicKey, final String transformationName)
+            throws Exception {
         final String algorithm = (transformationName.contains("/"))
                 ? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
 
@@ -72,7 +83,12 @@ public class AsymmetricEncryption {
 
         final byte[] resultBytes;
         try {
-            resultBytes = cipher.doFinal(input.getBytes());
+            final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
+            int read = -1;
+            while((read = input.read(buf)) > -1) {
+                cipher.update(buf, 0, read);
+            }
+            resultBytes = cipher.doFinal();
         } catch (final IllegalBlockSizeException ex) {
             throw new Exception(ErrorMessages.error_blockSize);
         } catch (final BadPaddingException ex) {
@@ -82,8 +98,15 @@ public class AsymmetricEncryption {
         return getString(resultBytes);
     }
 
-    public static String decryptString(final String encryptedInput, final String plainKey, final String transformationName, final String iv,
-                                       @Nullable final String provider) throws Exception {
+    public static String decryptString(final String encryptedInput, final String plainKey,
+            final String transformationName, final String iv, @Nullable final String provider) throws Exception {
+        try (final InputStream bais = new ByteArrayInputStream(getBytes(encryptedInput))) {
+            return decrypt(bais, plainKey, transformationName, iv, provider);
+        }
+    }
+
+    public static String decrypt(final InputStream encryptedInput, final String plainKey,
+            final String transformationName, final String iv, @Nullable final String provider) throws Exception {
         final String algorithm = (transformationName.contains("/"))
                 ? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
 
@@ -117,7 +140,13 @@ public class AsymmetricEncryption {
         }
 
         try {
-            final byte[] resultBytes = cipher.doFinal(getBytes(encryptedInput));
+            final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
+            int read = -1;
+            while((read = encryptedInput.read(buf)) > -1) {
+                cipher.update(buf, 0, read);
+            }
+
+            final byte[] resultBytes = cipher.doFinal();
             return new String(resultBytes, UTF_8);
         } catch (final IllegalBlockSizeException ex) {
             throw new Exception(ErrorMessages.error_blockSize);
@@ -148,5 +177,4 @@ public class AsymmetricEncryption {
             return bos.toByteArray();
         }
     }
-
 }
