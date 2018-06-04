@@ -24,8 +24,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
@@ -36,7 +38,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import ro.kuberam.libs.java.crypto.ErrorMessages;
+import ro.kuberam.libs.java.crypto.CryptoError;
+import ro.kuberam.libs.java.crypto.CryptoException;
 import ro.kuberam.libs.java.crypto.utils.Buffer;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -47,14 +50,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class SymmetricEncryption {
 
     public static String encryptString(final String input, final String plainKey, final String transformationName,
-            final String iv, final String provider) throws Exception {
+            final String iv, final String provider) throws CryptoException, IOException {
         try (final InputStream bais = new ByteArrayInputStream(input.getBytes(UTF_8))) {
             return encrypt(bais, plainKey, transformationName, iv, provider);
         }
     }
 
     public static String encrypt(final InputStream input, final String plainKey, final String transformationName,
-            final String iv, final String provider) throws Exception {
+            final String iv, final String provider) throws CryptoException, IOException {
         final String algorithm = (transformationName.contains("/")) ? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
         final String actualProvider = Optional.ofNullable(provider)
                 .filter(str -> !str.isEmpty())
@@ -63,10 +66,12 @@ public class SymmetricEncryption {
         final Cipher cipher;
         try {
             cipher = Cipher.getInstance(transformationName, actualProvider);
-        } catch (final NoSuchAlgorithmException ex) {
-            throw new Exception(ErrorMessages.error_unknownAlgorithm);
-        } catch (final NoSuchPaddingException ex) {
-            throw new Exception(ErrorMessages.error_noPadding);
+        } catch (final NoSuchProviderException e) {
+            throw new CryptoException(CryptoError.NO_PROVIDER, e);
+        } catch (final NoSuchAlgorithmException e) {
+            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+        } catch (final NoSuchPaddingException e) {
+            throw new CryptoException(CryptoError.INEXISTENT_PADDING, e);
         }
 
         final SecretKeySpec skeySpec = new SecretKeySpec(plainKey.getBytes(UTF_8), algorithm);
@@ -74,14 +79,16 @@ public class SymmetricEncryption {
             final IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(UTF_8), 0, 16);
             try {
                 cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ivSpec);
-            } catch (InvalidKeyException ex) {
-                throw new Exception(ErrorMessages.error_cryptoKey);
+            } catch (final InvalidAlgorithmParameterException e) {
+                throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+            } catch (final InvalidKeyException e) {
+                throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
             }
         } else {
             try {
                 cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-            } catch (final InvalidKeyException ex) {
-                throw new Exception(ErrorMessages.error_cryptoKey);
+            } catch (final InvalidKeyException e) {
+                throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
             }
         }
 
@@ -94,22 +101,22 @@ public class SymmetricEncryption {
 
             final byte[] resultBytes = cipher.doFinal();
             return getString(resultBytes);
-        } catch (final IllegalBlockSizeException ex) {
-            throw new Exception(ErrorMessages.error_blockSize);
-        } catch (final BadPaddingException ex) {
-            throw new Exception(ErrorMessages.error_incorrectPadding);
+        } catch (final IllegalBlockSizeException e) {
+            throw new CryptoException(CryptoError.BLOCK_SIZE, e);
+        } catch (final BadPaddingException e) {
+            throw new CryptoException(CryptoError.INCORRECT_PADDING, e);
         }
     }
 
     public static String decryptString(final String encryptedInput, final String plainKey,
-            final String transformationName, final String iv, final String provider) throws Exception {
+            final String transformationName, final String iv, final String provider) throws CryptoException, IOException {
         try (final InputStream bais = new ByteArrayInputStream(getBytes(encryptedInput))) {
             return decrypt(bais, plainKey, transformationName, iv, provider);
         }
     }
 
     public static String decrypt(final InputStream encryptedInput, final String plainKey,
-            final String transformationName, final String iv, final String provider) throws Exception {
+            final String transformationName, final String iv, final String provider) throws CryptoException, IOException {
         final String algorithm = (transformationName.contains("/")) ? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
         final String actualProvider = Optional.ofNullable(provider)
                 .filter(str -> !str.isEmpty())
@@ -118,10 +125,12 @@ public class SymmetricEncryption {
         final Cipher cipher;
         try {
             cipher = Cipher.getInstance(transformationName, actualProvider);
-        } catch (final NoSuchAlgorithmException ex) {
-            throw new Exception(ErrorMessages.error_unknownAlgorithm);
-        } catch (final NoSuchPaddingException ex) {
-            throw new Exception(ErrorMessages.error_noPadding);
+        } catch (final NoSuchProviderException e) {
+            throw new CryptoException(CryptoError.NO_PROVIDER, e);
+        } catch (final NoSuchAlgorithmException e) {
+            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+        } catch (final NoSuchPaddingException e) {
+            throw new CryptoException(CryptoError.INEXISTENT_PADDING, e);
         }
 
         final SecretKeySpec skeySpec = new SecretKeySpec(plainKey.getBytes(StandardCharsets.UTF_8), algorithm);
@@ -129,14 +138,16 @@ public class SymmetricEncryption {
             final IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(StandardCharsets.UTF_8), 0, 16);
             try {
                 cipher.init(Cipher.DECRYPT_MODE, skeySpec, ivSpec);
-            } catch (final InvalidKeyException ex) {
-                throw new Exception(ErrorMessages.error_cryptoKey);
+            } catch (final InvalidAlgorithmParameterException e) {
+                throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+            } catch (final InvalidKeyException e) {
+                throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
             }
         } else {
             try {
                 cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-            } catch (final InvalidKeyException ex) {
-                throw new Exception(ErrorMessages.error_cryptoKey);
+            } catch (final InvalidKeyException e) {
+                throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
             }
         }
         try {
@@ -149,10 +160,10 @@ public class SymmetricEncryption {
 
             final byte[] resultBytes = cipher.doFinal();
             return new String(resultBytes, UTF_8);
-        } catch (final IllegalBlockSizeException ex) {
-            throw new Exception(ErrorMessages.error_blockSize);
-        } catch (final BadPaddingException ex) {
-            throw new Exception(ErrorMessages.error_incorrectPadding);
+        } catch (final IllegalBlockSizeException e) {
+            throw new CryptoException(CryptoError.BLOCK_SIZE, e);
+        } catch (final BadPaddingException e) {
+            throw new CryptoException(CryptoError.INCORRECT_PADDING, e);
         }
     }
 

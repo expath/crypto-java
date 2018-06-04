@@ -19,6 +19,7 @@
  */
 package ro.kuberam.libs.java.crypto.digest;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -33,7 +34,8 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ro.kuberam.libs.java.crypto.ErrorMessages;
+import ro.kuberam.libs.java.crypto.CryptoError;
+import ro.kuberam.libs.java.crypto.CryptoException;
 import ro.kuberam.libs.java.crypto.ExpathCryptoModule;
 import ro.kuberam.libs.java.crypto.utils.Buffer;
 
@@ -41,7 +43,7 @@ public class Hmac {
 
     private static final Logger LOG = LogManager.getLogger(Hmac.class);
 
-    public static String hmac(final byte[] data, final byte[] secretKey, final String algorithm, @Nullable final String format) throws Exception {
+    public static String hmac(final byte[] data, final byte[] secretKey, final String algorithm, @Nullable final String format) throws CryptoException {
 
         // TODO: validate the format
         final String actualFormat = Optional.ofNullable(format)
@@ -68,7 +70,7 @@ public class Hmac {
         return result;
     }
 
-    public static String hmac(final InputStream data, final byte[] secretKey, final String algorithm, @Nullable final String format) throws Exception {
+    public static String hmac(final InputStream data, final byte[] secretKey, final String algorithm, @Nullable final String format) throws CryptoException, IOException {
 
         // TODO: validate the format
         final String actualFormat = Optional.ofNullable(format)
@@ -95,7 +97,7 @@ public class Hmac {
         return result;
     }
 
-    public static byte[] hmac(final byte[] data, final byte[] secretKey, String algorithm) throws Exception {
+    public static byte[] hmac(final byte[] data, final byte[] secretKey, String algorithm) throws CryptoException {
         final Map<String, String> javaStandardAlgorithmNames = ExpathCryptoModule.javaStandardAlgorithmNames;
 
         if (javaStandardAlgorithmNames.containsKey(algorithm)) {
@@ -109,14 +111,14 @@ public class Hmac {
             mac.init(signingKey);
             return mac.doFinal(data);
 
-        } catch (final NoSuchAlgorithmException ex) {
-            throw new Exception(ErrorMessages.error_unknownAlgorithm);
-        } catch (final InvalidKeyException ex) {
-            throw new Exception(ErrorMessages.error_invalidKey);
+        } catch (final NoSuchAlgorithmException e) {
+            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+        } catch (final InvalidKeyException e) {
+            throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
         }
     }
 
-    public static byte[] hmac(final InputStream data, final byte[] secretKey, String algorithm) throws Exception {
+    public static byte[] hmac(final InputStream data, final byte[] secretKey, String algorithm) throws CryptoException, IOException {
         final Map<String, String> javaStandardAlgorithmNames = ExpathCryptoModule.javaStandardAlgorithmNames;
 
         if (javaStandardAlgorithmNames.containsKey(algorithm)) {
@@ -137,10 +139,10 @@ public class Hmac {
 
             return mac.doFinal();
 
-        } catch (final NoSuchAlgorithmException ex) {
-            throw new Exception(ErrorMessages.error_unknownAlgorithm);
-        } catch (final InvalidKeyException ex) {
-            throw new Exception(ErrorMessages.error_invalidKey);
+        } catch (final NoSuchAlgorithmException e) {
+            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+        } catch (final InvalidKeyException e) {
+            throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
         }
     }
 }

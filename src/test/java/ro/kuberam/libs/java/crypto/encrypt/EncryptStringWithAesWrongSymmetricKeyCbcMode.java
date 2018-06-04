@@ -19,27 +19,31 @@
  */
 package ro.kuberam.libs.java.crypto.encrypt;
 
-import ro.kuberam.libs.java.crypto.ErrorMessages;
+import ro.kuberam.libs.java.crypto.CryptoError;
+import ro.kuberam.libs.java.crypto.CryptoException;
 import ro.kuberam.libs.java.crypto.digest.Hash;
 import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
 
-import static org.junit.Assert.assertTrue;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class EncryptStringWithAesWrongSymmetricKeyCbcMode extends BaseTest {
 
     @Test
-    public void encryptStringWithAesWrongSymmetricKey() throws Exception {
+    public void encryptStringWithAesWrongSymmetricKey() throws IOException, CryptoException {
         final String input = "Short string for tests.";
         final String plainKey = "12345678901234567";
         final String iv = Hash.hashString("initialization vector", "MD5", "");
 
         try {
-            final String result = SymmetricEncryption.encryptString(input, plainKey, "AES/CBC/PKCS5Padding", iv, "SunJCE");
-            assertTrue(false);
-        } catch (final Exception e) {
-            assertTrue(e.getLocalizedMessage().equals(ErrorMessages.error_cryptoKey));
+            SymmetricEncryption.encryptString(input, plainKey, "AES/CBC/PKCS5Padding", iv, "SunJCE");
+            fail("Key should have been invalid");
+        } catch (final CryptoException e) {
+            assertEquals(CryptoError.INVALID_CRYPTO_KEY, e.getCryptoError());
         }
     }
 }

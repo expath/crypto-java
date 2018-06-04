@@ -22,7 +22,7 @@ package ro.kuberam.libs.java.crypto;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ParametersTest {
 
@@ -32,9 +32,9 @@ public class ParametersTest {
 
         try {
             parameters.setCanonicalizationAlgorithm("inclusive-with-commentss");
-            assertTrue(false);
-        } catch (final Exception e) {
-            assertTrue(e.getLocalizedMessage().contains(ErrorMessages.error_unknownAlgorithm));
+            fail("Algorithm should have been unknown");
+        } catch (final CryptoException e) {
+            assertEquals(CryptoError.UNKNOWN_ALGORITH, e.getCryptoError());
         }
     }
 
@@ -50,9 +50,9 @@ public class ParametersTest {
 
         try {
             parameters.setDigestAlgorithm("SHA1008");
-            assertTrue(false);
-        } catch (final Exception e) {
-            assertTrue(e.getLocalizedMessage().contains(ErrorMessages.error_unknownAlgorithm));
+            fail("Algorithm should have been unknown");
+        } catch (final CryptoException e) {
+            assertEquals(CryptoError.UNKNOWN_ALGORITH, e.getCryptoError());
         }
     }
 
@@ -69,9 +69,9 @@ public class ParametersTest {
 
         try {
             parameters.setSignatureAlgorithm("RSA_SHA1008");
-            assertTrue(false);
-        } catch (final Exception e) {
-            assertTrue(e.getLocalizedMessage().contains(ErrorMessages.error_unknownAlgorithm));
+            fail("Algorithm should have been unknown");
+        } catch (final CryptoException e) {
+            assertEquals(CryptoError.UNKNOWN_ALGORITH, e.getCryptoError());
         }
     }
 

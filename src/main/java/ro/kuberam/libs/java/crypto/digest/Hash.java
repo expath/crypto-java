@@ -19,6 +19,7 @@
  */
 package ro.kuberam.libs.java.crypto.digest;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -26,7 +27,8 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ro.kuberam.libs.java.crypto.ErrorMessages;
+import ro.kuberam.libs.java.crypto.CryptoError;
+import ro.kuberam.libs.java.crypto.CryptoException;
 import ro.kuberam.libs.java.crypto.utils.Buffer;
 import ro.kuberam.libs.java.crypto.utils.HexString;
 
@@ -43,11 +45,11 @@ public class Hash {
 
     private static final Logger LOG = LogManager.getLogger(Hash.class);
 
-    public static String hashString(final String data, final String algorithm) throws Exception {
+    public static String hashString(final String data, final String algorithm) throws CryptoException {
         return hashString(data, algorithm, null);
     }
 
-    public static String hashString(final String data, final String algorithm, final @Nullable String format) throws Exception {
+    public static String hashString(final String data, final String algorithm, final @Nullable String format) throws CryptoException {
 
         // TODO: validate the format
         final String actualFormat = Optional.ofNullable(format)
@@ -66,11 +68,11 @@ public class Hash {
         }
     }
 
-    public static String hashBinary(final InputStream data, final String algorithm) throws Exception {
+    public static String hashBinary(final InputStream data, final String algorithm) throws CryptoException, IOException {
         return hashBinary(data, algorithm, null);
     }
 
-    public static String hashBinary(final InputStream data, final String algorithm, @Nullable final String format) throws Exception {
+    public static String hashBinary(final InputStream data, final String algorithm, @Nullable final String format) throws CryptoException, IOException {
 
         // TODO: validate the format
         final String actualFormat = Optional.ofNullable(format)
@@ -101,11 +103,11 @@ public class Hash {
         return result;
     }
 
-    private static MessageDigest getMessageDigester(final String algorithm) throws Exception {
+    private static MessageDigest getMessageDigester(final String algorithm) throws CryptoException {
         try {
             return MessageDigest.getInstance(algorithm);
-        } catch (final NoSuchAlgorithmException ex) {
-            throw new Exception(ErrorMessages.error_unknownAlgorithm);
+        } catch (final NoSuchAlgorithmException e) {
+            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
         }
     }
 }

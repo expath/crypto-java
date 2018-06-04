@@ -17,30 +17,22 @@
  * along with this library; if not, write to the Free Software Foundation,
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package ro.kuberam.libs.java.crypto.digest;
+package ro.kuberam.libs.java.crypto;
 
-import java.io.IOException;
-import java.io.InputStream;
+public class CryptoException extends Exception {
+    private final CryptoError cryptoError;
 
-import ro.kuberam.libs.java.crypto.CryptoError;
-import ro.kuberam.libs.java.crypto.CryptoException;
-import org.junit.Test;
+    public CryptoException(final CryptoError cryptoError) {
+        super(cryptoError.asMessage());
+        this.cryptoError = cryptoError;
+    }
 
-import ro.kuberam.tests.junit.BaseTest;
+    public CryptoException(final CryptoError cryptoError, final Throwable cause) {
+        super(cryptoError.asMessage(), cause);
+        this.cryptoError = cryptoError;
+    }
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-public class HashBinaryWithWrongAlgorithm extends BaseTest {
-
-    @Test
-    public void hashBinaryWithWrongAlgorithm() throws IOException {
-        try (final InputStream input = getClass().getResourceAsStream("../../keystore.ks");) {
-            final String result = Hash.hashBinary(input, "SHA-17", "base64");
-            fail("Algorithm should have been unknown");
-        } catch (final CryptoException e) {
-            assertEquals(CryptoError.UNKNOWN_ALGORITH, e.getCryptoError());
-
-        }
+    public CryptoError getCryptoError() {
+        return cryptoError;
     }
 }

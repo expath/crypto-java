@@ -19,24 +19,27 @@
  */
 package ro.kuberam.libs.java.crypto.digest;
 
+import java.io.IOException;
 import java.io.InputStream;
 
-import ro.kuberam.libs.java.crypto.ErrorMessages;
 import org.junit.Test;
 
+import ro.kuberam.libs.java.crypto.CryptoError;
+import ro.kuberam.libs.java.crypto.CryptoException;
 import ro.kuberam.tests.junit.BaseTest;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class HashBinaryWithWrongAlgorithmAndDefaultFormat extends BaseTest {
 
     @Test
-    public void hashBinaryWithWrongAlgorithm() throws Exception {
+    public void hashBinaryWithWrongAlgorithm() throws IOException {
         try (final InputStream input = getClass().getResourceAsStream("../../keystore.ks")) {
-            final String result = Hash.hashBinary(input, "SHA-17");
-            assertTrue(false);
-        } catch (final Exception e) {
-            assertTrue(e.getLocalizedMessage().equals(ErrorMessages.error_unknownAlgorithm));
+            Hash.hashBinary(input, "SHA-17");
+            fail("algorithm should have been unknown");
+        } catch (final CryptoException e) {
+            assertEquals(CryptoError.UNKNOWN_ALGORITH, e.getCryptoError());
         }
     }
 }
