@@ -4,31 +4,13 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<prerequisites>
-		<maven>${mavenVersion}</maven>
-	</prerequisites>
-
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-		<relativePath />
-	</parent>
-
 	<groupId>ro.kuberam.libs.java</groupId>
 	<artifactId>crypto</artifactId>
-	<version>1.4-SNAPSHOT</version>
-
+	<version>1.5</version>
 	<name>EXPath Cryptographic Module</name>
 	<description>Java Library providing an EXPath Cryptographic Module</description>
 	<url>http://kuberam.ro/specs/expath/crypto/crypto.html</url>
 	<inceptionYear>2015</inceptionYear>
-
-	<organization>
-		<name>Kuberam</name>
-		<url>http://kuberam.ro</url>
-	</organization>
-
 	<licenses>
 		<license>
 			<name>GNU Lesser General Public License version 2.1</name>
@@ -37,19 +19,52 @@
 		</license>
 	</licenses>
 
+	<organization>
+		<name>Kuberam</name>
+		<url>http://kuberam.ro</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>claudius</id>
+			<name>Claudius Teodorescu</name>
+			<email>claudius.teodorescu@gmail.com</email>
+		</developer>
+	</developers>
+
+	<contributors>
+		<contributor>
+			<name>Adam Retter</name>
+		</contributor>
+	</contributors>
+
 	<scm>
 		<connection>scm:git:https://github.com/claudius108/crypto-java-lib.git</connection>
 		<developerConnection>scm:git:https://github.com/claudius108/crypto-java-lib.git</developerConnection>
 		<url>scm:git:https://github.com/claudius108/crypto-java-lib.git</url>
 	</scm>
 
+	<prerequisites>
+		<maven>${mavenVersion}</maven>
+	</prerequisites>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.source>1.8</project.build.source>
-		<project.build.target>1.8</project.build.target>
-
-		<mavenVersion>3.3.3</mavenVersion>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.version>3.5.2</maven.version>
 	</properties>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh-snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh-releases</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<dependencies>
 		<dependency>
@@ -88,6 +103,15 @@
 	</dependencies>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.sonatype.plugins</groupId>
+					<artifactId>nexus-staging-maven-plugin</artifactId>
+					<version>1.6.8</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>com.mycila</groupId>
@@ -135,15 +159,6 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.7.0</version>
-				<configuration>
-					<source>${project.build.source}</source>
-					<target>${project.build.target}</target>
-					<encoding>${project.build.sourceEncoding}</encoding>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>com.code54.mojo</groupId>
