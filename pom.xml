@@ -6,7 +6,7 @@
 
 	<groupId>ro.kuberam.libs.java</groupId>
 	<artifactId>crypto</artifactId>
-	<version>1.5</version>
+	<version>1.6</version>
 	<name>EXPath Cryptographic Module</name>
 	<description>Java Library providing an EXPath Cryptographic Module</description>
 	<url>http://kuberam.ro/specs/expath/crypto/crypto.html</url>
