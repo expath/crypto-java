@@ -84,10 +84,7 @@ public class ListProviders {
             xmlWriter.close();
 
             final StreamResult resultAsStreamResult = new StreamResult(writer);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("The list with cryptographic providers was generated in "
-                        + (new Date().getTime() - startTime) + " ms.");
-            }
+            LOG.debug("The list with cryptographic providers was generated in {} ms.", () -> (new Date().getTime() - startTime));
 
             return resultAsStreamResult;
         }

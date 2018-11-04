@@ -39,75 +39,72 @@ import java.util.Optional;
 /**
  * Implements the crypto:hash() function.
  *
- * @author <a href="mailto:claudius.teodorescu@gmail.com">Claudius Teodorescu</a>
+ * @author <a href="mailto:claudius.teodorescu@gmail.com">Claudius
+ *         Teodorescu</a>
  */
 public class Hash {
 
-    private static final Logger LOG = LogManager.getLogger(Hash.class);
+	private static final Logger LOG = LogManager.getLogger(Hash.class);
 
-    public static String hashString(final String data, final String algorithm) throws CryptoException {
-        return hashString(data, algorithm, null);
-    }
+	public static String hashString(final String data, final String algorithm) throws CryptoException {
+		return hashString(data, algorithm, null);
+	}
 
-    public static String hashString(final String data, final String algorithm, final @Nullable String format) throws CryptoException {
+	public static String hashString(final String data, final String algorithm, final @Nullable String format)
+			throws CryptoException {
 
-        // TODO: validate the format
-        final String actualFormat = Optional.ofNullable(format)
-                .filter(str -> !str.isEmpty())
-                .orElse("base64");    // default to Base64
+		// TODO: validate the format
+		final String actualFormat = Optional.ofNullable(format).filter(str -> !str.isEmpty()).orElse("base64");
 
-        final MessageDigest messageDigester = getMessageDigester(algorithm);
-        messageDigester.update(data.getBytes(StandardCharsets.UTF_8));
+		final MessageDigest messageDigester = getMessageDigester(algorithm);
+		messageDigester.update(data.getBytes(StandardCharsets.UTF_8));
 
-        final byte[] resultBytes = messageDigester.digest();
+		final byte[] resultBytes = messageDigester.digest();
 
-        if (actualFormat.equals("base64")) {
-            return Base64.getEncoder().encodeToString(resultBytes);
-        } else {
-            return HexString.fromBytes(resultBytes);
-        }
-    }
+		if (actualFormat.equals("base64")) {
+			return Base64.getEncoder().encodeToString(resultBytes);
+		} else {
+			return HexString.fromBytes(resultBytes);
+		}
+	}
 
-    public static String hashBinary(final InputStream data, final String algorithm) throws CryptoException, IOException {
-        return hashBinary(data, algorithm, null);
-    }
+	public static String hashBinary(final InputStream data, final String algorithm)
+			throws CryptoException, IOException {
+		return hashBinary(data, algorithm, null);
+	}
 
-    public static String hashBinary(final InputStream data, final String algorithm, @Nullable final String format) throws CryptoException, IOException {
+	public static String hashBinary(final InputStream data, final String algorithm, @Nullable final String format)
+			throws CryptoException, IOException {
 
-        // TODO: validate the format
-        final String actualFormat = Optional.ofNullable(format)
-                .filter(str -> !str.isEmpty())
-                .orElse("base64");    // default to Base64
+		// TODO: validate the format
+		final String actualFormat = Optional.ofNullable(format).filter(str -> !str.isEmpty()).orElse("base64");
 
-        final byte[] resultBytes;
-        final MessageDigest messageDigester = getMessageDigester(algorithm);
+		final byte[] resultBytes;
+		final MessageDigest messageDigester = getMessageDigester(algorithm);
 
-        final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
-        int read = -1;
-        while((read = data.read(buf)) > -1) {
-            messageDigester.update(buf, 0, read);
-        }
-        resultBytes = messageDigester.digest();
+		final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
+		int read = -1;
+		while ((read = data.read(buf)) > -1) {
+			messageDigester.update(buf, 0, read);
+		}
+		resultBytes = messageDigester.digest();
 
-        final String result;
-        if (actualFormat.equals("base64")) {
-            result = Base64.getEncoder().encodeToString(resultBytes);
-        } else {
-            result = HexString.fromBytes(resultBytes);
-        }
+		final String result;
+		if (actualFormat.equals("base64")) {
+			result = Base64.getEncoder().encodeToString(resultBytes);
+		} else {
+			result = HexString.fromBytes(resultBytes);
+		}
+		LOG.debug("hash value is = {}", () -> result);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("hash value is: '" + result);
-        }
+		return result;
+	}
 
-        return result;
-    }
-
-    private static MessageDigest getMessageDigester(final String algorithm) throws CryptoException {
-        try {
-            return MessageDigest.getInstance(algorithm);
-        } catch (final NoSuchAlgorithmException e) {
-            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-        }
-    }
+	private static MessageDigest getMessageDigester(final String algorithm) throws CryptoException {
+		try {
+			return MessageDigest.getInstance(algorithm);
+		} catch (final NoSuchAlgorithmException e) {
+			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+		}
+	}
 }

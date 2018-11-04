@@ -29,6 +29,7 @@ import java.security.Provider;
 import java.security.Security;
 import java.util.Date;
 
+import javax.xml.crypto.dsig.XMLSignature;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -64,10 +65,7 @@ public class ListServices {
             xmlWriter.close();
 
             final StreamResult resultAsStreamResult = new StreamResult(writer);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("The list with cryptographic services for provider " + providerName + " was generated in "
-                        + (new Date().getTime() - startTime) + " ms.");
-            }
+            LOG.debug("The list with cryptographic services for provider {} was generated in {} ms.", () -> providerName, () -> (new Date().getTime() - startTime));
 
             return resultAsStreamResult;
         }

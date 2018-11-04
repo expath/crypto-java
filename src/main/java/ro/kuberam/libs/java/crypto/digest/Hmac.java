@@ -34,6 +34,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import ro.kuberam.libs.java.crypto.CryptoError;
 import ro.kuberam.libs.java.crypto.CryptoException;
 import ro.kuberam.libs.java.crypto.ExpathCryptoModule;
@@ -41,108 +42,95 @@ import ro.kuberam.libs.java.crypto.utils.Buffer;
 
 public class Hmac {
 
-    private static final Logger LOG = LogManager.getLogger(Hmac.class);
+	private static final Logger LOG = LogManager.getLogger(Hmac.class);
 
-    public static String hmac(final byte[] data, final byte[] secretKey, final String algorithm, @Nullable final String format) throws CryptoException {
+	public static String hmac(final byte[] data, final byte[] secretKey, final String algorithm,
+			@Nullable final String format) throws CryptoException {
 
-        // TODO: validate the format
-        final String actualFormat = Optional.ofNullable(format)
-                .filter(str -> !str.isEmpty())
-                .orElse("base64");    // default to Base64
+		// TODO: validate the format
+		final String actualFormat = Optional.ofNullable(format).filter(str -> !str.isEmpty()).orElse("base64");
+		LOG.debug("secretKey = {}", () -> secretKey);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("secretKey = " + secretKey);
-        }
+		final byte[] resultBytes = hmac(data, secretKey, algorithm);
 
-        final byte[] resultBytes = hmac(data, secretKey, algorithm);
+		final String result;
+		if (actualFormat.equals("base64")) {
+			result = Base64.getEncoder().encodeToString(resultBytes);
+		} else {
+			result = DatatypeConverter.printHexBinary(resultBytes).toLowerCase();
+		}
+		LOG.debug("result = {}", () -> result);
 
-        final String result;
-        if (actualFormat.equals("base64")) {
-            result = Base64.getEncoder().encodeToString(resultBytes);
-        } else {
-            result = DatatypeConverter.printHexBinary(resultBytes).toLowerCase();
-        }
+		return result;
+	}
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("result = " + result);
-        }
+	public static String hmac(final InputStream data, final byte[] secretKey, final String algorithm,
+			@Nullable final String format) throws CryptoException, IOException {
 
-        return result;
-    }
+		// TODO: validate the format
+		final String actualFormat = Optional.ofNullable(format).filter(str -> !str.isEmpty()).orElse("base64");
+		LOG.debug("secretKey = {}", () -> secretKey);
 
-    public static String hmac(final InputStream data, final byte[] secretKey, final String algorithm, @Nullable final String format) throws CryptoException, IOException {
+		final byte[] resultBytes = hmac(data, secretKey, algorithm);
 
-        // TODO: validate the format
-        final String actualFormat = Optional.ofNullable(format)
-                .filter(str -> !str.isEmpty())
-                .orElse("base64");    // default to Base64
+		final String result;
+		if (actualFormat.equals("base64")) {
+			result = Base64.getEncoder().encodeToString(resultBytes);
+		} else {
+			result = DatatypeConverter.printHexBinary(resultBytes).toLowerCase();
+		}
+		LOG.debug("result = {}", () -> result);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("secretKey = " + secretKey);
-        }
+		return result;
+	}
 
-        final byte[] resultBytes = hmac(data, secretKey, algorithm);
+	public static byte[] hmac(final byte[] data, final byte[] secretKey, String algorithm) throws CryptoException {
+		final Map<String, String> javaStandardAlgorithmNames = ExpathCryptoModule.javaStandardAlgorithmNames;
 
-        final String result;
-        if (actualFormat.equals("base64")) {
-            result = Base64.getEncoder().encodeToString(resultBytes);
-        } else {
-            result = DatatypeConverter.printHexBinary(resultBytes).toLowerCase();
-        }
+		if (javaStandardAlgorithmNames.containsKey(algorithm)) {
+			algorithm = javaStandardAlgorithmNames.get(algorithm);
+		}
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("result = " + result);
-        }
+		final SecretKeySpec signingKey = new SecretKeySpec(secretKey, algorithm);
 
-        return result;
-    }
+		try {
+			final Mac mac = Mac.getInstance(algorithm);
+			mac.init(signingKey);
+			return mac.doFinal(data);
 
-    public static byte[] hmac(final byte[] data, final byte[] secretKey, String algorithm) throws CryptoException {
-        final Map<String, String> javaStandardAlgorithmNames = ExpathCryptoModule.javaStandardAlgorithmNames;
+		} catch (final NoSuchAlgorithmException e) {
+			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+		} catch (final InvalidKeyException e) {
+			throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
+		}
+	}
 
-        if (javaStandardAlgorithmNames.containsKey(algorithm)) {
-            algorithm = javaStandardAlgorithmNames.get(algorithm);
-        }
+	public static byte[] hmac(final InputStream data, final byte[] secretKey, String algorithm)
+			throws CryptoException, IOException {
+		final Map<String, String> javaStandardAlgorithmNames = ExpathCryptoModule.javaStandardAlgorithmNames;
 
-        final SecretKeySpec signingKey = new SecretKeySpec(secretKey, algorithm);
+		if (javaStandardAlgorithmNames.containsKey(algorithm)) {
+			algorithm = javaStandardAlgorithmNames.get(algorithm);
+		}
 
-        try {
-            final Mac mac = Mac.getInstance(algorithm);
-            mac.init(signingKey);
-            return mac.doFinal(data);
+		final SecretKeySpec signingKey = new SecretKeySpec(secretKey, algorithm);
 
-        } catch (final NoSuchAlgorithmException e) {
-            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-        } catch (final InvalidKeyException e) {
-            throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
-        }
-    }
+		try {
+			final Mac mac = Mac.getInstance(algorithm);
+			mac.init(signingKey);
 
-    public static byte[] hmac(final InputStream data, final byte[] secretKey, String algorithm) throws CryptoException, IOException {
-        final Map<String, String> javaStandardAlgorithmNames = ExpathCryptoModule.javaStandardAlgorithmNames;
+			final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
+			int read = -1;
+			while ((read = data.read(buf)) > -1) {
+				mac.update(buf, 0, read);
+			}
 
-        if (javaStandardAlgorithmNames.containsKey(algorithm)) {
-            algorithm = javaStandardAlgorithmNames.get(algorithm);
-        }
+			return mac.doFinal();
 
-        final SecretKeySpec signingKey = new SecretKeySpec(secretKey, algorithm);
-
-        try {
-            final Mac mac = Mac.getInstance(algorithm);
-            mac.init(signingKey);
-
-            final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
-            int read = -1;
-            while((read = data.read(buf)) > -1) {
-                mac.update(buf, 0, read);
-            }
-
-            return mac.doFinal();
-
-        } catch (final NoSuchAlgorithmException e) {
-            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-        } catch (final InvalidKeyException e) {
-            throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
-        }
-    }
+		} catch (final NoSuchAlgorithmException e) {
+			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+		} catch (final InvalidKeyException e) {
+			throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
+		}
+	}
 }

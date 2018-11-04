@@ -42,119 +42,120 @@ import ro.kuberam.libs.java.crypto.CryptoException;
 /**
  * Cryptographic extension functions.
  *
- * @author <a href="mailto:claudius.teodorescu@gmail.com">Claudius Teodorescu</a>
+ * @author <a href="mailto:claudius.teodorescu@gmail.com">Claudius
+ *         Teodorescu</a>
  */
 
 public class ValidateXmlSignature {
 
-    private static final Logger LOG = LogManager.getLogger(ValidateXmlSignature.class);
+	private static final Logger LOG = LogManager.getLogger(ValidateXmlSignature.class);
 
-    public static Boolean validate(Document inputDoc) throws CryptoException, IOException, XMLSignatureException {
+	public static Boolean validate(Document inputDoc) throws CryptoException, IOException, XMLSignatureException {
 
-        // Find Signature element
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Claudius test: " + inputDoc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature").getLength());
-        }
-        //NodeList nl = inputDoc.getElementsByTagName("Signature");
-        //NodeList nl = inputDoc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
-        try {
-            XPathFactory factory = XPathFactory.newInstance();
-            XPath xpath = factory.newXPath();
-            // Find the node to be signed by PATH
-            XPathExpression expr = xpath.compile("//*[local-name() = 'Signature' and namespace-uri() = '" + XMLSignature.XMLNS + "']");
-            Node nl = (Node) expr.evaluate(inputDoc, XPathConstants.NODE);
+		// Find Signature element
+		LOG.debug("Claudius test: {}", () -> inputDoc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature").getLength());
 
-//		if (nl.getLength() == 0) {
-//			throw new XPathException(ErrorMessages.err_CX15);
-//		}
+		// NodeList nl = inputDoc.getElementsByTagName("Signature");
+		// NodeList nl = inputDoc.getElementsByTagNameNS(XMLSignature.XMLNS,
+		// "Signature");
+		try {
+			XPathFactory factory = XPathFactory.newInstance();
+			XPath xpath = factory.newXPath();
+			// Find the node to be signed by PATH
+			XPathExpression expr = xpath
+					.compile("//*[local-name() = 'Signature' and namespace-uri() = '" + XMLSignature.XMLNS + "']");
+			Node nl = (Node) expr.evaluate(inputDoc, XPathConstants.NODE);
 
-            // Create a DOM XMLSignatureFactory that will be used to unmarshal the
-            // document containing the XMLSignature
-            XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Claudius test: " + nl.getNodeName());
-            }
-            // Create a DOMValidateContext and specify a KeyValue KeySelector
-            // and document context
-            DOMValidateContext valContext = new DOMValidateContext(new KeyValueKeySelector(), nl);
+			// if (nl.getLength() == 0) {
+			// throw new XPathException(ErrorMessages.err_CX15);
+			// }
 
-            // unmarshal the XMLSignature
-            XMLSignature signature = fac.unmarshalXMLSignature(valContext);
+			// Create a DOM XMLSignatureFactory that will be used to unmarshal the
+			// document containing the XMLSignature
+			XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
+			LOG.debug("Claudius test: {}", () -> nl.getNodeName());
 
-            // Validate the XMLSignature (generated above)
-            boolean coreValidity = signature.validate(valContext);
+			// Create a DOMValidateContext and specify a KeyValue KeySelector
+			// and document context
+			DOMValidateContext valContext = new DOMValidateContext(new KeyValueKeySelector(), nl);
 
-            // Check core validation status
-            if (coreValidity == false) {
-                System.err.println("Signature failed core validation");
-                boolean sv = signature.getSignatureValue().validate(valContext);
-                System.out.println("signature validation status: " + sv);
-                // check the validation status of each Reference
-                Iterator iterator = signature.getSignedInfo().getReferences().iterator();
-                for (int j = 0; iterator.hasNext(); j++) {
-                    boolean refValid = ((Reference) iterator.next()).validate(valContext);
-                    System.out.println("ref[" + j + "] validity status: " + refValid);
-                }
-            }
+			// unmarshal the XMLSignature
+			XMLSignature signature = fac.unmarshalXMLSignature(valContext);
 
-            return coreValidity;
-        } catch (final XPathExpressionException | MarshalException e) {
-            throw new IOException(e);
-        }
-    }
+			// Validate the XMLSignature (generated above)
+			boolean coreValidity = signature.validate(valContext);
 
-    /**
-     * KeySelector which retrieves the public key out of the KeyValue element
-     * and returns it. NOTE: If the key algorithm doesn't match signature
-     * algorithm, then the public key will be ignored.
-     */
-    private static class KeyValueKeySelector extends KeySelector {
-        public KeySelectorResult select(KeyInfo keyInfo, KeySelector.Purpose purpose, AlgorithmMethod method, XMLCryptoContext context)
-                throws KeySelectorException {
-            if (keyInfo == null) {
-                throw new KeySelectorException("Null KeyInfo object!");
-            }
-            SignatureMethod sm = (SignatureMethod) method;
-            List list = keyInfo.getContent();
+			// Check core validation status
+			if (coreValidity == false) {
+				System.err.println("Signature failed core validation");
+				boolean sv = signature.getSignatureValue().validate(valContext);
+				System.out.println("signature validation status: " + sv);
+				// check the validation status of each Reference
+				Iterator iterator = signature.getSignedInfo().getReferences().iterator();
+				for (int j = 0; iterator.hasNext(); j++) {
+					boolean refValid = ((Reference) iterator.next()).validate(valContext);
+					System.out.println("ref[" + j + "] validity status: " + refValid);
+				}
+			}
 
-            for (int i = 0; i < list.size(); i++) {
-                XMLStructure xmlStructure = (XMLStructure) list.get(i);
-                if (xmlStructure instanceof KeyValue) {
-                    PublicKey pk = null;
-                    try {
-                        pk = ((KeyValue) xmlStructure).getPublicKey();
-                    } catch (KeyException ke) {
-                        throw new KeySelectorException(ke);
-                    }
-                    // make sure algorithm is compatible with method
-                    if (algEquals(sm.getAlgorithm(), pk.getAlgorithm())) {
-                        return new SimpleKeySelectorResult(pk);
-                    }
-                }
-            }
-            throw new KeySelectorException("No KeyValue element found!");
-        }
+			return coreValidity;
+		} catch (final XPathExpressionException | MarshalException e) {
+			throw new IOException(e);
+		}
+	}
 
-        static boolean algEquals(String algURI, String algName) {
-            if (algName.equalsIgnoreCase("DSA") && algURI.equalsIgnoreCase(SignatureMethod.DSA_SHA1)) {
-                return true;
-            } else if (algName.equalsIgnoreCase("RSA") && algURI.equalsIgnoreCase(SignatureMethod.RSA_SHA1)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
+	/**
+	 * KeySelector which retrieves the public key out of the KeyValue element and
+	 * returns it. NOTE: If the key algorithm doesn't match signature algorithm,
+	 * then the public key will be ignored.
+	 */
+	private static class KeyValueKeySelector extends KeySelector {
+		public KeySelectorResult select(KeyInfo keyInfo, KeySelector.Purpose purpose, AlgorithmMethod method,
+				XMLCryptoContext context) throws KeySelectorException {
+			if (keyInfo == null) {
+				throw new KeySelectorException("Null KeyInfo object!");
+			}
+			SignatureMethod sm = (SignatureMethod) method;
+			List list = keyInfo.getContent();
 
-    private static class SimpleKeySelectorResult implements KeySelectorResult {
-        private PublicKey pk;
+			for (int i = 0; i < list.size(); i++) {
+				XMLStructure xmlStructure = (XMLStructure) list.get(i);
+				if (xmlStructure instanceof KeyValue) {
+					PublicKey pk = null;
+					try {
+						pk = ((KeyValue) xmlStructure).getPublicKey();
+					} catch (KeyException ke) {
+						throw new KeySelectorException(ke);
+					}
+					// make sure algorithm is compatible with method
+					if (algEquals(sm.getAlgorithm(), pk.getAlgorithm())) {
+						return new SimpleKeySelectorResult(pk);
+					}
+				}
+			}
+			throw new KeySelectorException("No KeyValue element found!");
+		}
 
-        SimpleKeySelectorResult(PublicKey pk) {
-            this.pk = pk;
-        }
+		static boolean algEquals(String algURI, String algName) {
+			if (algName.equalsIgnoreCase("DSA") && algURI.equalsIgnoreCase(SignatureMethod.DSA_SHA1)) {
+				return true;
+			} else if (algName.equalsIgnoreCase("RSA") && algURI.equalsIgnoreCase(SignatureMethod.RSA_SHA1)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
 
-        public Key getKey() {
-            return pk;
-        }
-    }
+	private static class SimpleKeySelectorResult implements KeySelectorResult {
+		private PublicKey pk;
+
+		SimpleKeySelectorResult(PublicKey pk) {
+			this.pk = pk;
+		}
+
+		public Key getKey() {
+			return pk;
+		}
+	}
 }
