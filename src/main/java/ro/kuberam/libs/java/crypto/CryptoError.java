@@ -1,7 +1,7 @@
 /**
  * EXPath Cryptographic Module
  * Java Library providing an EXPath Cryptographic Module
- * Copyright (C) 2015 Kuberam
+ * Copyright (C) 2015 Claudius Teodorescu
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -20,36 +20,43 @@
 package ro.kuberam.libs.java.crypto;
 
 public enum CryptoError {
+	
+    UNKNOWN_ALGORITH("crypto:unknown-algorithm", "The specified algorithm is not supported."),
+    SIGNATURE_TYPE("crypto:signature-type", "The specified signature type is not supported."),
+    UNREADABLE_KEYSTORE("crypto:unreadable-keystore", "I/O error while reading keystore, or the password is incorrect."),
+    DENIED_KEYSTORE("crypto:denied-keystore", "Permission denied to read keystore."),
+    KEYSTORE_URL("crypto:keystore-url", "The keystore URL is invalid."),
+    KEYSTORE_TYPE("crypto:keystore-type", "The keystore type is not supported."),
+    ALIAS_KEY("crypto:alias-key", "Cannot find key for alias in given keystore."),
+    SIGNATURE_ELEMENT("crypto:signature-element", "Cannot find Signature element."),
+    INEXISTENT_PADDING("crypto:inexistent-padding", "No such padding."),
+    INCORRECT_PADDING("crypto:incorrect-padding", "Incorrect padding."),
+    ENCRYPTION_TYPE("crypto:encryption-type", "The encryption type is not supported."),
+    INVALID_CRYPTO_KEY("crypto:invalid-crypto-key", "The cryptographic key is invalid."),
+    BLOCK_SIZE("crypto:block-size", "Illegal block size."),
+    DECRYPTION_TYPE("crypto:decryption-type", "The decryption type is not supported."),
+    NO_PROVIDER("crypto:no-provider", "The provider is not set."),
+    INPUT_RESOURCES("crypto.input-resources", "The 'enveloped' and 'enveloping' signatures have to be applied to only one resource."),
+    INCORRECT_INITIALIZATION_VECTOR("crypto:incorrect-initialization-vector", "The initialization vector is not correct");
 
-    UNKNOWN_ALGORITH("The specified algorithm is not supported"),
-    SIGNATURE_TYPE("The specified signature type is not supported."),
-    UNREADABLE_KEYSTORE("I/O error while reading keystore, or the password is incorrect."),
-    DENIED_KEYSTORE("Permission denied to read keystore."),
-    KEYSTORE_URL("The keystore URL is invalid."),
-    KEYSTORE_TYPE("The keystore type is not supported."),
-    ALIAS_KEY("Cannot find key for alias in given keystore."),
-    INVALID_KEY("The specified key is invalid."),
-    SIGNATURE_ELEMENT("Cannot find Signature element."),
-    INEXISTENT_PADDING("No such padding."),
-    INCORRECT_PADDING("Incorrect padding."),
-    ENCRYPTION_TYPE("The encryption type is not supported."),
-    INVALID_CRYPTO_KEY("The cryptographic key is invalid."),
-    BLOCK_SIZE("Illegal block size."),
-    DECRYPTION_TYPE("The decryption type is not supported."),
-    NO_PROVIDER("The provider is not set."),
-    OUTPUT_FORMAT("The output format is not supported.");
+	private String code;
+    private String message;
 
-    private final String description;
-
-    CryptoError(final String description) {
-        this.description = description;
+    CryptoError(String code, String message) {
+    	this.code = code;
+        this.message = message;
     }
-
-    public String asMessage() {
-        return asMessage("crypto");
+    
+    public String getCode() {
+        return this.code;
     }
-
-    public String asMessage(final String nsPrefix) {
-        return nsPrefix + ':' + name().toLowerCase().replace('_', '-') + ": " + description;
+    
+    public String getMessage() {
+        return this.message;
     }
+    
+    public String getDescription() {
+        return this.code + ", " + this.message;
+    }    
+    
 }
