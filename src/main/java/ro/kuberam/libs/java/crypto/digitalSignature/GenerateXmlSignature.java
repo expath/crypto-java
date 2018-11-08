@@ -122,7 +122,7 @@ public class GenerateXmlSignature {
                 final KeyStore keyStore;
                 try {
                     keyStore = KeyStore.getInstance(certificateDetails[0]);
-                } catch (final Exception e) {
+                } catch (Exception e) {
                     throw new CryptoException(CryptoError.KEYSTORE_TYPE, e);
                 }
                 keyStore.load(keyStoreInputStream, certificateDetails[1].toCharArray());
@@ -209,16 +209,16 @@ public class GenerateXmlSignature {
             } else {
                 return serializer.writeToString(sigParent);
             }
-        } catch (final NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
+        } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
             throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-        } catch (final CertificateException e) {
+        } catch (CertificateException e) {
             // TODO error code needs improving
             throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
-        } catch (final KeyStoreException e) {
+        } catch (KeyStoreException e) {
             throw new CryptoException(CryptoError.UNREADABLE_KEYSTORE, e);
-        } catch (final UnrecoverableKeyException | KeyException e) {
-            throw new CryptoException(CryptoError.INVALID_KEY, e);
-        } catch (final ParserConfigurationException | XPathExpressionException | MarshalException e) {
+        } catch (UnrecoverableKeyException | KeyException e) {
+            throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
+        } catch (ParserConfigurationException | XPathExpressionException | MarshalException e) {
             throw new IOException(e);
         }
     }

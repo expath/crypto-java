@@ -20,19 +20,20 @@
 package ro.kuberam.libs.java.crypto;
 
 public class CryptoException extends Exception {
-    private final CryptoError cryptoError;
+	private static final long serialVersionUID = -2606956271206243301L;
+	private final CryptoError cryptoError;
 
-    public CryptoException(final CryptoError cryptoError) {
-        super(cryptoError.asMessage());
-        this.cryptoError = cryptoError;
-    }
+	public CryptoException(final CryptoError cryptoError) {
+		super(cryptoError.getDescription());
+		this.cryptoError = cryptoError;
+	}
 
-    public CryptoException(final CryptoError cryptoError, final Throwable cause) {
-        super(cryptoError.asMessage(), cause);
-        this.cryptoError = cryptoError;
-    }
+	public CryptoException(final CryptoError cryptoError, final Throwable cause) {
+		super(cryptoError.getDescription(), cause);
+		this.cryptoError = cryptoError;
+	}
 
-    public CryptoError getCryptoError() {
-        return cryptoError;
-    }
+	public CryptoError getCryptoError() {
+		return cryptoError;
+	}
 }
