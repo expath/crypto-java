@@ -44,7 +44,7 @@ import java.util.Optional;
  */
 public class Hash {
 
-	private static final Logger LOG = LogManager.getLogger(Hash.class);
+	private static Logger LOG = LogManager.getLogger(Hash.class);
 
 	public static String hashString(final String data, final String algorithm) throws CryptoException {
 		return hashString(data, algorithm, null);
@@ -103,7 +103,7 @@ public class Hash {
 	private static MessageDigest getMessageDigester(final String algorithm) throws CryptoException {
 		try {
 			return MessageDigest.getInstance(algorithm);
-		} catch (final NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
 		}
 	}

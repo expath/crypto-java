@@ -173,12 +173,12 @@ public class X509KeySelector extends KeySelector {
                         if (ksr != null) {
                             return ksr;
                         }
-                    } catch (final Exception e) {
+                    } catch (Exception e) {
                         throw new KeySelectorException(e);
                     }
                 }
             }
-        } catch (final KeyStoreException kse) {
+        } catch (KeyStoreException kse) {
             // throw exception if keystore is uninitialized
             throw new KeySelectorException(kse);
         }
@@ -312,7 +312,7 @@ public class X509KeySelector extends KeySelector {
                     xcs.setSerialNumber(xis.getSerialNumber());
                     xcs.setIssuer(new X500Principal
                             (xis.getIssuerName()).getName());
-                } catch (final IOException ioe) {
+                } catch (IOException ioe) {
                     throw new KeySelectorException(ioe);
                 }
                 ksr = keyStoreSelect(xcs);
@@ -323,7 +323,7 @@ public class X509KeySelector extends KeySelector {
                 try {
                     xcs.setSubjectPublicKeyAlgID(algOID);
                     xcs.setSubject(new X500Principal(sn).getName());
-                } catch (final IOException ioe) {
+                } catch (IOException ioe) {
                     throw new KeySelectorException(ioe);
                 }
                 ksr = keyStoreSelect(xcs);
@@ -333,7 +333,7 @@ public class X509KeySelector extends KeySelector {
                 final X509CertSelector xcs = new X509CertSelector();
                 try {
                     xcs.setSubjectPublicKeyAlgID(algOID);
-                } catch (final IOException ioe) {
+                } catch (IOException ioe) {
                     throw new KeySelectorException(ioe);
                 }
                 // DER-encode ski - required by X509CertSelector

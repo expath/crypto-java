@@ -26,15 +26,15 @@ import javax.xml.crypto.dsig.Transform;
 
 public class Parameters {
     private String canonicalizationAlgorithm = CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS;
-    private static final String[] CANONICALIZATION_ALGORITHM_VALUES = {"exclusive",
+    private static String[] CANONICALIZATION_ALGORITHM_VALUES = {"exclusive",
             "exclusive-with-comments", "inclusive", "inclusive-with-comments"};
     private String digestAlgorithm = DigestMethod.SHA1;
-    private static final String[] DIGEST_ALGORITHM_VALUES = {"SHA1", "SHA256", "SHA512"};
+    private static String[] DIGEST_ALGORITHM_VALUES = {"SHA1", "SHA256", "SHA512"};
     private String signatureAlgorithm = SignatureMethod.RSA_SHA1;
-    private static final String[] SIGNATURE_ALGORITHM_VALUES = {"DSA_SHA1", "RSA_SHA1"};
+    private static String[] SIGNATURE_ALGORITHM_VALUES = {"DSA_SHA1", "RSA_SHA1"};
     private String signatureNamespacePrefix = "dsig";
     private String signatureType = "enveloped";
-    private static final String[] SIGNATURE_TYPE_VALUES = {"enveloping", "enveloped", "detached"};
+    private static String[] SIGNATURE_TYPE_VALUES = {"enveloping", "enveloped", "detached"};
 
     public String getCanonicalizationAlgorithm() {
         return canonicalizationAlgorithm;

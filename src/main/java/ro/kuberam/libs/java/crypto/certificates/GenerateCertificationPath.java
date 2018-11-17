@@ -26,14 +26,15 @@ import java.util.Arrays;
 
 public class GenerateCertificationPath {
 
-    public static CertPath createCertPath(final java.security.cert.Certificate[] certs) {
+    public static CertPath createCertPath(java.security.cert.Certificate[] certs) {
         try {
-            final CertificateFactory certFact = CertificateFactory.getInstance("X.509");
-            final CertPath path = certFact.generateCertPath(Arrays.asList(certs));
+            CertificateFactory certFact = CertificateFactory.getInstance("X.509");
+            CertPath path = certFact.generateCertPath(Arrays.asList(certs));
+            
             return path;
-        } catch (final java.security.cert.CertificateEncodingException e) {
-        } catch (final CertificateException e) {
+        } catch (CertificateException e) {
         }
+        
         return null;
     }
 

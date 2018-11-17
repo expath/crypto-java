@@ -55,7 +55,7 @@ public class ListTrustedCertificateAuthorities {
                 final X509Certificate cert = ta.getTrustedCert();
                 System.out.println(cert.getIssuerDN());
             }
-        } catch (final CertificateException | KeyStoreException | InvalidAlgorithmParameterException | NoSuchAlgorithmException | IOException e) {
+        } catch (CertificateException | KeyStoreException | InvalidAlgorithmParameterException | NoSuchAlgorithmException | IOException e) {
             //what?
         }
     }

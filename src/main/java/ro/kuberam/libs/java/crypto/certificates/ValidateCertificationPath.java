@@ -69,7 +69,7 @@ public class ValidateCertificationPath {
             final PKIXCertPathValidatorResult pkixResult = (PKIXCertPathValidatorResult) result;
             final TrustAnchor ta = pkixResult.getTrustAnchor();
             java.security.cert.X509Certificate cert = ta.getTrustedCert();
-        } catch (final CertificateException | KeyStoreException | NoSuchAlgorithmException | CertPathValidatorException | InvalidAlgorithmParameterException e) {
+        } catch (CertificateException | KeyStoreException | NoSuchAlgorithmException | CertPathValidatorException | InvalidAlgorithmParameterException e) {
         }
         return null;
 

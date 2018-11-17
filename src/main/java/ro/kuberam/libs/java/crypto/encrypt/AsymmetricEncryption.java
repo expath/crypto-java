@@ -65,9 +65,9 @@ public class AsymmetricEncryption {
         final Cipher cipher;
         try {
             cipher = Cipher.getInstance(transformationName);
-        } catch (final NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-        } catch (final NoSuchPaddingException e) {
+        } catch (NoSuchPaddingException e) {
             throw new CryptoException(CryptoError.INEXISTENT_PADDING, e);
         }
 
@@ -76,9 +76,9 @@ public class AsymmetricEncryption {
         try {
             final PublicKey publicKey1 = KeyFactory.getInstance(algorithm).generatePublic(publicKeySpecification);
             cipher.init(Cipher.ENCRYPT_MODE, publicKey1);
-        } catch (final NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-        } catch (final InvalidKeyException | InvalidKeySpecException e) {
+        } catch (InvalidKeyException | InvalidKeySpecException e) {
             throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
         }
 
@@ -90,9 +90,9 @@ public class AsymmetricEncryption {
                 cipher.update(buf, 0, read);
             }
             resultBytes = cipher.doFinal();
-        } catch (final IllegalBlockSizeException e) {
+        } catch (IllegalBlockSizeException e) {
             throw new CryptoException(CryptoError.BLOCK_SIZE, e);
-        } catch (final BadPaddingException e) {
+        } catch (BadPaddingException e) {
             throw new CryptoException(CryptoError.INCORRECT_PADDING, e);
         }
 
@@ -118,11 +118,11 @@ public class AsymmetricEncryption {
         final Cipher cipher;
         try {
             cipher = Cipher.getInstance(transformationName, actualProvider);
-        } catch (final NoSuchProviderException e) {
+        } catch (NoSuchProviderException e) {
             throw new CryptoException(CryptoError.NO_PROVIDER, e);
-        } catch (final NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-        } catch (final NoSuchPaddingException e) {
+        } catch (NoSuchPaddingException e) {
             throw new CryptoException(CryptoError.INEXISTENT_PADDING, e);
         }
 
@@ -131,15 +131,15 @@ public class AsymmetricEncryption {
             final IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(UTF_8), 0, 16);
             try {
                 cipher.init(Cipher.DECRYPT_MODE, skeySpec, ivSpec);
-            } catch (final InvalidAlgorithmParameterException e) {
+            } catch (InvalidAlgorithmParameterException e) {
                 throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-            } catch (final InvalidKeyException e) {
+            } catch (InvalidKeyException e) {
                 throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
             }
         } else {
             try {
                 cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-            } catch (final InvalidKeyException e) {
+            } catch (InvalidKeyException e) {
                 throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
             }
         }
@@ -153,9 +153,9 @@ public class AsymmetricEncryption {
 
             final byte[] resultBytes = cipher.doFinal();
             return new String(resultBytes, UTF_8);
-        } catch (final IllegalBlockSizeException e) {
+        } catch (IllegalBlockSizeException e) {
             throw new CryptoException(CryptoError.BLOCK_SIZE, e);
-        } catch (final BadPaddingException e) {
+        } catch (BadPaddingException e) {
             throw new CryptoException(CryptoError.INCORRECT_PADDING, e);
         }
     }

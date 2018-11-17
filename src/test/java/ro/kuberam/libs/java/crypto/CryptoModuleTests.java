@@ -48,7 +48,7 @@ public class CryptoModuleTests extends BaseTest {
             new Thread(() -> {
                 try {
                     outp.write(message.getBytes(StandardCharsets.UTF_8));
-                } catch (final IOException e) {
+                } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
@@ -183,7 +183,7 @@ public class CryptoModuleTests extends BaseTest {
 
             final byte byteArray[] = outputStream.toByteArray();
             System.out.println(UUID.nameUUIDFromBytes(byteArray).toString());
-        } catch (final IOException e) {
+        } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

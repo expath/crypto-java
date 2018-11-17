@@ -47,7 +47,7 @@ class ReceiverThread extends Thread {
         //Reading data from the stream
         try {
             System.out.println(in.readDouble() + " " + in.readChar() + " " + in.readInt());
-        } catch (final Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -70,7 +70,7 @@ class SenderThread extends Thread {
             out.writeDouble(123.45);
             out.writeChar('c');
             out.writeInt(67);
-        } catch (final Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

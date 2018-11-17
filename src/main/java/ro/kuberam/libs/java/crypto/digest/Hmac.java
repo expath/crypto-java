@@ -42,7 +42,7 @@ import ro.kuberam.libs.java.crypto.utils.Buffer;
 
 public class Hmac {
 
-	private static final Logger LOG = LogManager.getLogger(Hmac.class);
+	private static Logger LOG = LogManager.getLogger(Hmac.class);
 
 	public static String hmac(final byte[] data, final byte[] secretKey, final String algorithm,
 			@Nullable final String format) throws CryptoException {
@@ -98,9 +98,9 @@ public class Hmac {
 			mac.init(signingKey);
 			return mac.doFinal(data);
 
-		} catch (final NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-		} catch (final InvalidKeyException e) {
+		} catch (InvalidKeyException e) {
 			throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
 		}
 	}
@@ -127,9 +127,9 @@ public class Hmac {
 
 			return mac.doFinal();
 
-		} catch (final NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-		} catch (final InvalidKeyException e) {
+		} catch (InvalidKeyException e) {
 			throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
 		}
 	}

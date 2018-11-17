@@ -199,7 +199,7 @@ public class GenerateXmlSignature {
             final DOMImplementationRegistry registry;
             try {
                 registry = DOMImplementationRegistry.newInstance();
-            } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
                 throw new IOException(e);
             }
             final DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");

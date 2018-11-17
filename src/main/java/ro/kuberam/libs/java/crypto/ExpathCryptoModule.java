@@ -42,7 +42,7 @@ public class ExpathCryptoModule {
     static {
         try (final InputStream propertiesIs = ExpathCryptoModule.class.getResourceAsStream("lib.properties")) {
             libProperties.load(propertiesIs);
-        } catch (final Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

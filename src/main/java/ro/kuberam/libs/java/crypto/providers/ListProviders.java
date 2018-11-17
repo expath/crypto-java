@@ -38,9 +38,9 @@ import org.apache.logging.log4j.Logger;
 import ro.kuberam.libs.java.crypto.ExpathCryptoModule;
 
 public class ListProviders {
-    private static final Logger LOG = LogManager.getLogger(ListProviders.class);
-    private static final String moduleNsUri = ExpathCryptoModule.NAMESPACE_URI;
-    private static final String modulePrefix = ExpathCryptoModule.PREFIX;
+    private static Logger LOG = LogManager.getLogger(ListProviders.class);
+    private static String moduleNsUri = ExpathCryptoModule.NAMESPACE_URI;
+    private static String modulePrefix = ExpathCryptoModule.PREFIX;
 
     public static StreamResult listProviders() throws XMLStreamException,
             FactoryConfigurationError, IOException {

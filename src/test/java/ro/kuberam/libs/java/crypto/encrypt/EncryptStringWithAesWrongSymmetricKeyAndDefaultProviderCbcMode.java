@@ -42,7 +42,7 @@ public class EncryptStringWithAesWrongSymmetricKeyAndDefaultProviderCbcMode exte
         try {
             SymmetricEncryption.encryptString(input, plainKey, "AES/CBC/PKCS5Padding", iv, "");
             fail("key should have been invalid");
-        } catch (final CryptoException e) {
+        } catch (CryptoException e) {
             assertEquals(CryptoError.INVALID_CRYPTO_KEY, e.getCryptoError());
         }
     }

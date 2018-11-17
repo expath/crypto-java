@@ -20,7 +20,7 @@
 package ro.kuberam.libs.java.crypto;
 
 public class CryptoException extends Exception {
-	private static final long serialVersionUID = -2606956271206243301L;
+	private static long serialVersionUID = -2606956271206243301L;
 	private final CryptoError cryptoError;
 
 	public CryptoException(final CryptoError cryptoError) {

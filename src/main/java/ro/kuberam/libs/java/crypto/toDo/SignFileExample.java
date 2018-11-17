@@ -43,14 +43,14 @@ import org.w3c.dom.*;
  * Sign XML file.
  */
 public class SignFileExample {
-    private static final String KEY_STORE_TYPE = "JKS";
-    private static final String KEY_STORE_NAME = "/home/claudius/mykeystoreEXist.ks";
-    private static final String KEY_STORE_PASS = "ab987c";
-    private static final String PRIVATE_KEY_PASS = "kpi135";
-    private static final String KEY_ALIAS = "eXist";
+    private static String KEY_STORE_TYPE = "JKS";
+    private static String KEY_STORE_NAME = "/home/claudius/mykeystoreEXist.ks";
+    private static String KEY_STORE_PASS = "ab987c";
+    private static String PRIVATE_KEY_PASS = "kpi135";
+    private static String KEY_ALIAS = "eXist";
 
-    private static final String PATH = "/PatientRecord/Account";
-    private static final String ID = "acct";
+    private static String PATH = "/PatientRecord/Account";
+    private static String ID = "acct";
 
     private static enum SignatureType {
         SIGN_BY_ID,

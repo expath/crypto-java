@@ -24,7 +24,7 @@ import java.security.cert.X509Certificate;
 
 public class ValidateCertificate {
 
-    private static final String CERT_DIR = "/data/certs/";
+    private static String CERT_DIR = "/data/certs/";
 
     public static void main(final String[] args) throws Exception {
         final ValidateCertificate verifyCertificate = new ValidateCertificate();

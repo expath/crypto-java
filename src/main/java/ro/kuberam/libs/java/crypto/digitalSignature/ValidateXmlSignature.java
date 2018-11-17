@@ -48,7 +48,7 @@ import ro.kuberam.libs.java.crypto.CryptoException;
 
 public class ValidateXmlSignature {
 
-	private static final Logger LOG = LogManager.getLogger(ValidateXmlSignature.class);
+	private static Logger LOG = LogManager.getLogger(ValidateXmlSignature.class);
 
 	public static Boolean validate(Document inputDoc) throws CryptoException, IOException, XMLSignatureException {
 
@@ -99,7 +99,7 @@ public class ValidateXmlSignature {
 			}
 
 			return coreValidity;
-		} catch (final XPathExpressionException | MarshalException e) {
+		} catch (XPathExpressionException | MarshalException e) {
 			throw new IOException(e);
 		}
 	}

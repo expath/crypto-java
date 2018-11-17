@@ -38,7 +38,7 @@ public class HashBinaryWithWrongAlgorithm extends BaseTest {
         try (final InputStream input = getClass().getResourceAsStream("../../keystore.ks");) {
             final String result = Hash.hashBinary(input, "SHA-17", "base64");
             fail("Algorithm should have been unknown");
-        } catch (final CryptoException e) {
+        } catch (CryptoException e) {
             assertEquals(CryptoError.UNKNOWN_ALGORITH, e.getCryptoError());
 
         }

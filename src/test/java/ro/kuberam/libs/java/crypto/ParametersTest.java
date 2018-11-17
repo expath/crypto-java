@@ -33,7 +33,7 @@ public class ParametersTest {
         try {
             parameters.setCanonicalizationAlgorithm("inclusive-with-commentss");
             fail("Algorithm should have been unknown");
-        } catch (final CryptoException e) {
+        } catch (CryptoException e) {
             assertEquals(CryptoError.UNKNOWN_ALGORITH, e.getCryptoError());
         }
     }
@@ -51,7 +51,7 @@ public class ParametersTest {
         try {
             parameters.setDigestAlgorithm("SHA1008");
             fail("Algorithm should have been unknown");
-        } catch (final CryptoException e) {
+        } catch (CryptoException e) {
             assertEquals(CryptoError.UNKNOWN_ALGORITH, e.getCryptoError());
         }
     }
@@ -70,7 +70,7 @@ public class ParametersTest {
         try {
             parameters.setSignatureAlgorithm("RSA_SHA1008");
             fail("Algorithm should have been unknown");
-        } catch (final CryptoException e) {
+        } catch (CryptoException e) {
             assertEquals(CryptoError.UNKNOWN_ALGORITH, e.getCryptoError());
         }
     }

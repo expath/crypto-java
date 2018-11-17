@@ -50,7 +50,7 @@ class PipeIO {
     static {
         try {
             outputPipe.connect(inputPipe);
-        } catch (final IOException ex) {
+        } catch (IOException ex) {
             System.out.println("IOException in static initializer");
         }
     }
@@ -76,7 +76,7 @@ class PipeOutput extends PipeIO implements Runnable {
                 System.out.println(name + " wrote " + s.charAt(i));
             }
             outputPipe.write('!');
-        } catch (final IOException ex) {
+        } catch (IOException ex) {
             System.out.println("IOException in PipeOutput");
         }
     }
@@ -103,7 +103,7 @@ class PipeInput extends PipeIO implements Runnable {
                     }
                 }
             }
-        } catch (final IOException ex) {
+        } catch (IOException ex) {
             System.out.println("IOException in PipeOutput");
         }
     }

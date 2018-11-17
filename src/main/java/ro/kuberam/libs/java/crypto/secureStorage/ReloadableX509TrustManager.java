@@ -91,7 +91,7 @@ class ReloadableX509TrustManager implements X509TrustManager {
 //				tempCertList.add(cert);
             }
             reloadTrustManager();
-        } catch (final Exception ex) { /* ... */
+        } catch (Exception ex) { /* ... */
             //what?
         }
     }
@@ -108,7 +108,7 @@ class ReloadableX509TrustManager implements X509TrustManager {
             throws CertificateException {
         try {
             trustManager.checkServerTrusted(chain, authType);
-        } catch (final CertificateException cx) {
+        } catch (CertificateException cx) {
             addServerCertAndReload(chain[0], true);
             trustManager.checkServerTrusted(chain, authType);
         }
