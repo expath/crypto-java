@@ -28,17 +28,23 @@ import static org.junit.Assert.assertEquals;
 
 public class EncryptAndDecryptStringWithAesSymmetricKeyAndDefaultProviderCbcMode extends BaseTest {
 
-    @Test
-    public void encryptStringWithAesSymmetricKey() throws Exception {
-        String input = "Short string for tests.";
-        String plainKey = "1234567890123456";
-        String transformationName = "AES/CBC/PKCS5Padding";
-        String iv = Hash.hashString("initialization vector", "MD5", "");
+	@Test
+	public void encryptStringWithAesSymmetricKey() throws Exception {
+		String input = "Short string for tests.";
+		String plainKey = "1234567890123456";
+		String transformationName = "AES/CBC/PKCS5Padding";
+		String iv = Hash.hashString("initialization vector", "MD5", "hex");
+		
 
-        String encryptionResult = SymmetricEncryption.encryptString(input, plainKey, transformationName, iv, "");
-        assertEquals("51-143-171-200-187-20-34-252-231-243-254-42-36-13-9-123-191-251-243-42-3-238-193-13-155-168-139-67-135-3-143-54", encryptionResult);
-        
-        String decryptionResult = SymmetricEncryption.decryptString(encryptionResult, plainKey, transformationName, iv, "");
-        
-        System.out.println(decryptionResult);    }
+		String encryptionResult = SymmetricEncryption.encryptString(input, plainKey, transformationName, iv, "");
+		System.out.println(encryptionResult);
+		assertEquals(
+				"51-143-171-200-187-20-34-252-231-243-254-42-36-13-9-123-191-251-243-42-3-238-193-13-155-168-139-67-135-3-143-54",
+				encryptionResult);
+
+		String decryptionResult = SymmetricEncryption.decryptString(encryptionResult, plainKey, transformationName, iv,
+				"");
+
+		System.out.println(decryptionResult);
+	}
 }
