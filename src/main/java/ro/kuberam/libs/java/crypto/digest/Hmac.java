@@ -68,12 +68,12 @@ public class Hmac {
 			@Nullable final String format) throws CryptoException, IOException {
 
 		// TODO: validate the format
-		final String actualFormat = Optional.ofNullable(format).filter(str -> !str.isEmpty()).orElse("base64");
+		String actualFormat = Optional.ofNullable(format).filter(str -> !str.isEmpty()).orElse("base64");
 		LOG.debug("secretKey = {}", () -> secretKey);
 
-		final byte[] resultBytes = hmac(data, secretKey, algorithm);
+		byte[] resultBytes = hmac(data, secretKey, algorithm);
 
-		final String result;
+		String result;
 		if (actualFormat.equals("base64")) {
 			result = Base64.getEncoder().encodeToString(resultBytes);
 		} else {
@@ -116,10 +116,10 @@ public class Hmac {
 		final SecretKeySpec signingKey = new SecretKeySpec(secretKey, algorithm);
 
 		try {
-			final Mac mac = Mac.getInstance(algorithm);
+			Mac mac = Mac.getInstance(algorithm);
 			mac.init(signingKey);
 
-			final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
+			byte[] buf = new byte[Buffer.TRANSFER_SIZE];
 			int read = -1;
 			while ((read = data.read(buf)) > -1) {
 				mac.update(buf, 0, read);

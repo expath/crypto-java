@@ -21,10 +21,8 @@ package ro.kuberam.libs.java.crypto.encrypt;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -41,7 +39,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import ro.kuberam.libs.java.crypto.CryptoError;
 import ro.kuberam.libs.java.crypto.CryptoException;
-import ro.kuberam.libs.java.crypto.utils.Buffer;
 
 /**
  * @author <a href="mailto:claudius.teodorescu@gmail.com">Claudius
@@ -49,40 +46,23 @@ import ro.kuberam.libs.java.crypto.utils.Buffer;
  */
 public class SymmetricEncryption {
 
-	public static String encryptString(final String input, final String plainKey, final String transformationName,
+	public static byte[] encrypt(byte[] input, String plainKey, String transformationName, String iv, String provider)
+			throws CryptoException, IOException {
+		return operation(input, plainKey, transformationName, iv, provider, Cipher.ENCRYPT_MODE);
+	}
+
+	public static byte[] decrypt(byte[] encryptedInput, final String plainKey, final String transformationName,
 			final String iv, final String provider) throws CryptoException, IOException {
-		try (final InputStream bais = new ByteArrayInputStream(input.getBytes(UTF_8))) {
-			return operation(Cipher.ENCRYPT_MODE, bais, plainKey, transformationName, iv, provider);
-		}
+		return operation(encryptedInput, plainKey, transformationName, iv, provider, Cipher.DECRYPT_MODE);
 	}
 
-	public static String encryptBinary(final InputStream input, final String plainKey, final String transformationName,
-			final String iv, final String provider) throws CryptoException, IOException {
-		return operation(Cipher.ENCRYPT_MODE, input, plainKey, transformationName, iv, provider);
-	}
-
-	public static String decryptString(final String encryptedInput, final String plainKey,
-			final String transformationName, final String iv, final String provider)
-			throws CryptoException, IOException {
-		try (final InputStream bais = new ByteArrayInputStream(getBytes(encryptedInput))) {
-			return operation(Cipher.DECRYPT_MODE, bais, plainKey, transformationName, iv, provider);
-		}
-	}
-
-	public static String decryptBinary(final InputStream encryptedInput, final String plainKey,
-			final String transformationName, final String iv, final String provider)
-			throws CryptoException, IOException {
-		return operation(Cipher.DECRYPT_MODE, encryptedInput, plainKey, transformationName, iv, provider);
-	}
-
-	public static String operation(final int operationType, final InputStream input, final String plainKey,
-			final String transformationName, final String iv, final String provider)
-			throws CryptoException, IOException {
-		final String algorithm = (transformationName.contains("/"))
+	public static byte[] operation(byte[] input, String secretKey, String transformationName, String iv,
+			String provider, int operationType) throws CryptoException, IOException {
+		String algorithm = (transformationName.contains("/"))
 				? transformationName.substring(0, transformationName.indexOf("/"))
 				: transformationName;
-		final String actualProvider = Optional.ofNullable(provider).filter(str -> !str.isEmpty()).orElse("SunJCE");
-		final Cipher cipher;
+		String actualProvider = Optional.ofNullable(provider).filter(str -> !str.isEmpty()).orElse("SunJCE");
+		Cipher cipher;
 		ByteArrayOutputStream resultBaos = new ByteArrayOutputStream();
 
 		try {
@@ -95,7 +75,7 @@ public class SymmetricEncryption {
 			throw new CryptoException(CryptoError.INEXISTENT_PADDING, e);
 		}
 
-		final SecretKeySpec skeySpec = new SecretKeySpec(plainKey.getBytes(UTF_8), algorithm);
+		SecretKeySpec skeySpec = generateSecretKey(secretKey, algorithm);
 		if (transformationName.contains("/")) {
 			final IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(UTF_8), 0, 16);
 			try {
@@ -114,17 +94,17 @@ public class SymmetricEncryption {
 		}
 
 		try {
-			final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
-			int read = -1;
-			while ((read = input.read(buf)) > -1) {
-				byte[] tmpBuffer = cipher.update(buf, 0, read);
-				resultBaos.write(tmpBuffer);
-			}
+			// final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
+			// int read = -1;
+			// while ((read = input.read(buf)) > -1) {
+			// byte[] tmpBuffer = cipher.update(buf, 0, read);
+			// resultBaos.write(tmpBuffer);
+			// }
+			//
+			// byte[] finalBuffer = cipher.doFinal();
+			// resultBaos.write(finalBuffer);
 
-			byte[] finalBuffer = cipher.doFinal();
-			resultBaos.write(finalBuffer);
-
-			return getString(resultBaos.toByteArray());
+			return cipher.doFinal(input);
 		} catch (IllegalBlockSizeException e) {
 			throw new CryptoException(CryptoError.BLOCK_SIZE, e);
 		} catch (BadPaddingException e) {
@@ -153,6 +133,10 @@ public class SymmetricEncryption {
 			}
 			return bos.toByteArray();
 		}
+	}
+
+	private static SecretKeySpec generateSecretKey(String secretKey, String algorithm) {
+		return new SecretKeySpec(secretKey.getBytes(UTF_8), algorithm);
 	}
 
 }
