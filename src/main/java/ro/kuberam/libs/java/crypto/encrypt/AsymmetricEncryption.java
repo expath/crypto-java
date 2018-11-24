@@ -46,140 +46,143 @@ import java.util.Base64;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * @author <a href="mailto:claudius.teodorescu@gmail.com">Claudius Teodorescu</a>
+ * @author <a href="mailto:claudius.teodorescu@gmail.com">Claudius
+ *         Teodorescu</a>
  */
 public class AsymmetricEncryption {
 
-    public static String encryptString(final String input, final String publicKey, final String transformationName)
-            throws CryptoException, IOException {
-        try (final InputStream bais = new ByteArrayInputStream(input.getBytes(UTF_8))) {
-            return encrypt(bais, publicKey, transformationName);
-        }
-    }
+	public static String encryptString(final String input, final String publicKey, final String transformationName)
+			throws CryptoException, IOException {
+		try (InputStream bais = new ByteArrayInputStream(input.getBytes(UTF_8))) {
+			return encrypt(bais, publicKey, transformationName);
+		}
+	}
 
-    public static String encrypt(final InputStream input, final String publicKey, final String transformationName)
-            throws CryptoException, IOException {
-        final String algorithm = (transformationName.contains("/"))
-                ? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
+	public static String encrypt(final InputStream input, final String publicKey, final String transformationName)
+			throws CryptoException, IOException {
+		String algorithm = (transformationName.contains("/"))
+				? transformationName.substring(0, transformationName.indexOf("/"))
+				: transformationName;
 
-        final Cipher cipher;
-        try {
-            cipher = Cipher.getInstance(transformationName);
-        } catch (NoSuchAlgorithmException e) {
-            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-        } catch (NoSuchPaddingException e) {
-            throw new CryptoException(CryptoError.INEXISTENT_PADDING, e);
-        }
+		Cipher cipher;
+		try {
+			cipher = Cipher.getInstance(transformationName);
+		} catch (NoSuchAlgorithmException e) {
+			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+		} catch (NoSuchPaddingException e) {
+			throw new CryptoException(CryptoError.INEXISTENT_PADDING, e);
+		}
 
-        final X509EncodedKeySpec publicKeySpecification = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKey));
+		final X509EncodedKeySpec publicKeySpecification = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKey));
 
-        try {
-            final PublicKey publicKey1 = KeyFactory.getInstance(algorithm).generatePublic(publicKeySpecification);
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey1);
-        } catch (NoSuchAlgorithmException e) {
-            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-        } catch (InvalidKeyException | InvalidKeySpecException e) {
-            throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
-        }
+		try {
+			final PublicKey publicKey1 = KeyFactory.getInstance(algorithm).generatePublic(publicKeySpecification);
+			cipher.init(Cipher.ENCRYPT_MODE, publicKey1);
+		} catch (NoSuchAlgorithmException e) {
+			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+		} catch (InvalidKeyException | InvalidKeySpecException e) {
+			throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
+		}
 
-        final byte[] resultBytes;
-        try {
-            final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
-            int read = -1;
-            while((read = input.read(buf)) > -1) {
-                cipher.update(buf, 0, read);
-            }
-            resultBytes = cipher.doFinal();
-        } catch (IllegalBlockSizeException e) {
-            throw new CryptoException(CryptoError.BLOCK_SIZE, e);
-        } catch (BadPaddingException e) {
-            throw new CryptoException(CryptoError.INCORRECT_PADDING, e);
-        }
+		byte[] resultBytes;
+		try {
+			byte[] buf = new byte[Buffer.TRANSFER_SIZE];
+			int read = -1;
+			while ((read = input.read(buf)) > -1) {
+				cipher.update(buf, 0, read);
+			}
+			resultBytes = cipher.doFinal();
+		} catch (IllegalBlockSizeException e) {
+			throw new CryptoException(CryptoError.BLOCK_SIZE, e);
+		} catch (BadPaddingException e) {
+			throw new CryptoException(CryptoError.INCORRECT_PADDING, e);
+		}
 
-        return getString(resultBytes);
-    }
+		return getString(resultBytes);
+	}
 
-    public static String decryptString(final String encryptedInput, final String plainKey,
-            final String transformationName, final String iv, @Nullable final String provider) throws CryptoException, IOException {
-        try (final InputStream bais = new ByteArrayInputStream(getBytes(encryptedInput))) {
-            return decrypt(bais, plainKey, transformationName, iv, provider);
-        }
-    }
+	public static String decryptString(final String encryptedInput, final String plainKey,
+			final String transformationName, final String iv, @Nullable final String provider)
+			throws CryptoException, IOException {
+		try (InputStream bais = new ByteArrayInputStream(getBytes(encryptedInput))) {
+			return decrypt(bais, plainKey, transformationName, iv, provider);
+		}
+	}
 
-    public static String decrypt(final InputStream encryptedInput, final String plainKey,
-            final String transformationName, final String iv, @Nullable final String provider) throws CryptoException, IOException {
-        final String algorithm = (transformationName.contains("/"))
-                ? transformationName.substring(0, transformationName.indexOf("/")) : transformationName;
+	public static String decrypt(final InputStream encryptedInput, final String plainKey,
+			final String transformationName, final String iv, @Nullable final String provider)
+			throws CryptoException, IOException {
+		final String algorithm = (transformationName.contains("/"))
+				? transformationName.substring(0, transformationName.indexOf("/"))
+				: transformationName;
 
-        final String actualProvider = Optional.ofNullable(provider)
-                .filter(str -> !str.isEmpty())
-                .orElse("SunJCE");    // default to SunJCE
+		final String actualProvider = Optional.ofNullable(provider).filter(str -> !str.isEmpty()).orElse("SunJCE");
 
-        final Cipher cipher;
-        try {
-            cipher = Cipher.getInstance(transformationName, actualProvider);
-        } catch (NoSuchProviderException e) {
-            throw new CryptoException(CryptoError.NO_PROVIDER, e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-        } catch (NoSuchPaddingException e) {
-            throw new CryptoException(CryptoError.INEXISTENT_PADDING, e);
-        }
+		final Cipher cipher;
+		try {
+			cipher = Cipher.getInstance(transformationName, actualProvider);
+		} catch (NoSuchProviderException e) {
+			throw new CryptoException(CryptoError.NO_PROVIDER, e);
+		} catch (NoSuchAlgorithmException e) {
+			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+		} catch (NoSuchPaddingException e) {
+			throw new CryptoException(CryptoError.INEXISTENT_PADDING, e);
+		}
 
-        final SecretKeySpec skeySpec = new SecretKeySpec(plainKey.getBytes(UTF_8), algorithm);
-        if (transformationName.contains("/")) {
-            final IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(UTF_8), 0, 16);
-            try {
-                cipher.init(Cipher.DECRYPT_MODE, skeySpec, ivSpec);
-            } catch (InvalidAlgorithmParameterException e) {
-                throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-            } catch (InvalidKeyException e) {
-                throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
-            }
-        } else {
-            try {
-                cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-            } catch (InvalidKeyException e) {
-                throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
-            }
-        }
+		final SecretKeySpec skeySpec = new SecretKeySpec(plainKey.getBytes(UTF_8), algorithm);
+		if (transformationName.contains("/")) {
+			final IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(UTF_8), 0, 16);
+			try {
+				cipher.init(Cipher.DECRYPT_MODE, skeySpec, ivSpec);
+			} catch (InvalidAlgorithmParameterException e) {
+				throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+			} catch (InvalidKeyException e) {
+				throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
+			}
+		} else {
+			try {
+				cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+			} catch (InvalidKeyException e) {
+				throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
+			}
+		}
 
-        try {
-            final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
-            int read = -1;
-            while((read = encryptedInput.read(buf)) > -1) {
-                cipher.update(buf, 0, read);
-            }
+		try {
+			final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
+			int read = -1;
+			while ((read = encryptedInput.read(buf)) > -1) {
+				cipher.update(buf, 0, read);
+			}
 
-            final byte[] resultBytes = cipher.doFinal();
-            return new String(resultBytes, UTF_8);
-        } catch (IllegalBlockSizeException e) {
-            throw new CryptoException(CryptoError.BLOCK_SIZE, e);
-        } catch (BadPaddingException e) {
-            throw new CryptoException(CryptoError.INCORRECT_PADDING, e);
-        }
-    }
+			final byte[] resultBytes = cipher.doFinal();
+			return new String(resultBytes, UTF_8);
+		} catch (IllegalBlockSizeException e) {
+			throw new CryptoException(CryptoError.BLOCK_SIZE, e);
+		} catch (BadPaddingException e) {
+			throw new CryptoException(CryptoError.INCORRECT_PADDING, e);
+		}
+	}
 
-    public static String getString(final byte[] bytes) {
-        final StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < bytes.length; i++) {
-            final byte b = bytes[i];
-            sb.append((int) (0x00FF & b));
-            if (i + 1 < bytes.length) {
-                sb.append("-");
-            }
-        }
-        return sb.toString();
-    }
+	public static String getString(final byte[] bytes) {
+		final StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < bytes.length; i++) {
+			final byte b = bytes[i];
+			sb.append((int) (0x00FF & b));
+			if (i + 1 < bytes.length) {
+				sb.append("-");
+			}
+		}
+		return sb.toString();
+	}
 
-    public static byte[] getBytes(final String str) throws IOException {
-        final StringTokenizer st = new StringTokenizer(str, "-", false);
-        try (final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            while (st.hasMoreTokens()) {
-                final int i = Integer.parseInt(st.nextToken());
-                bos.write((byte) i);
-            }
-            return bos.toByteArray();
-        }
-    }
+	public static byte[] getBytes(final String str) throws IOException {
+		final StringTokenizer st = new StringTokenizer(str, "-", false);
+		try (final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+			while (st.hasMoreTokens()) {
+				final int i = Integer.parseInt(st.nextToken());
+				bos.write((byte) i);
+			}
+			return bos.toByteArray();
+		}
+	}
 }

@@ -19,31 +19,29 @@
  */
 package ro.kuberam.libs.java.crypto.encrypt;
 
-import ro.kuberam.libs.java.crypto.CryptoError;
-import ro.kuberam.libs.java.crypto.CryptoException;
-import ro.kuberam.libs.java.crypto.digest.Hash;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
 
-import java.io.IOException;
+import java.io.InputStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class EncryptStringWithAesWrongSymmetricKeyCbcMode extends BaseTest {
+public class AsymmetricEncryptionTest extends BaseTest {
 
-    @Test
-    public void encryptStringWithAesWrongSymmetricKey() throws IOException, CryptoException {
-        final String input = "Short string for tests.";
-        final String plainKey = "12345678901234567";
-        final String iv = Hash.hashString("initialization vector", "MD5", "");
+	@Test
+	public void encryptStringWithAesSymmetricKey() throws Exception {
+		String input = "Short string for tests.";
+		try (InputStream is = getClass().getResourceAsStream("../rsa-public-key.pub")) {
+			String publicKey = IOUtils.toString(is, UTF_8);
+			System.out.println("publicKey = " + publicKey);
 
-        try {
-            SymmetricEncryption.encryptString(input, plainKey, "AES/CBC/PKCS5Padding", iv, "SunJCE");
-            fail("Key should have been invalid");
-        } catch (CryptoException e) {
-            assertEquals(CryptoError.INVALID_CRYPTO_KEY, e.getCryptoError());
-        }
-    }
+			String result = AsymmetricEncryption.encryptString(input, publicKey,
+					"RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
+
+			System.out.println(result);
+		}
+	}
+
 }

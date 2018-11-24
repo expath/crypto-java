@@ -28,7 +28,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.Optional;
-import java.util.StringTokenizer;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -109,29 +108,6 @@ public class SymmetricEncryption {
 			throw new CryptoException(CryptoError.BLOCK_SIZE, e);
 		} catch (BadPaddingException e) {
 			throw new CryptoException(CryptoError.INCORRECT_PADDING, e);
-		}
-	}
-
-	public static String getString(final byte[] bytes) {
-		final StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < bytes.length; i++) {
-			final byte b = bytes[i];
-			sb.append((int) (0x00FF & b));
-			if (i + 1 < bytes.length) {
-				sb.append("-");
-			}
-		}
-		return sb.toString();
-	}
-
-	public static byte[] getBytes(final String str) throws IOException {
-		final StringTokenizer st = new StringTokenizer(str, "-", false);
-		try (final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-			while (st.hasMoreTokens()) {
-				final int i = Integer.parseInt(st.nextToken());
-				bos.write((byte) i);
-			}
-			return bos.toByteArray();
 		}
 	}
 
