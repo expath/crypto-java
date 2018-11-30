@@ -21,7 +21,6 @@ package ro.kuberam.libs.java.crypto.encrypt;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -62,7 +61,7 @@ public class SymmetricEncryption {
 				: transformationName;
 		String actualProvider = Optional.ofNullable(provider).filter(str -> !str.isEmpty()).orElse("SunJCE");
 		Cipher cipher;
-		ByteArrayOutputStream resultBaos = new ByteArrayOutputStream();
+		byte[] result;
 
 		try {
 			cipher = Cipher.getInstance(transformationName, actualProvider);
@@ -93,22 +92,14 @@ public class SymmetricEncryption {
 		}
 
 		try {
-			// final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
-			// int read = -1;
-			// while ((read = input.read(buf)) > -1) {
-			// byte[] tmpBuffer = cipher.update(buf, 0, read);
-			// resultBaos.write(tmpBuffer);
-			// }
-			//
-			// byte[] finalBuffer = cipher.doFinal();
-			// resultBaos.write(finalBuffer);
-
-			return cipher.doFinal(input);
+			result = cipher.doFinal(input);
 		} catch (IllegalBlockSizeException e) {
 			throw new CryptoException(CryptoError.BLOCK_SIZE, e);
 		} catch (BadPaddingException e) {
 			throw new CryptoException(CryptoError.INCORRECT_PADDING, e);
 		}
+
+		return result;
 	}
 
 	private static SecretKeySpec generateSecretKey(String secretKey, String algorithm) {
