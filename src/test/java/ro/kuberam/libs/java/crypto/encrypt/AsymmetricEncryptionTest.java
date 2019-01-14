@@ -19,25 +19,24 @@
  */
 package ro.kuberam.libs.java.crypto.encrypt;
 
-import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-
-import ro.kuberam.tests.junit.BaseTest;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.InputStream;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import org.apache.commons.io.IOUtils;
+import org.junit.Test;
 
-public class AsymmetricEncryptionTest extends BaseTest {
+import ro.kuberam.libs.java.crypto.CryptoModuleTests;
+
+public class AsymmetricEncryptionTest extends CryptoModuleTests {
 
 	@Test
 	public void encryptStringWithAesSymmetricKey() throws Exception {
-		String input = "Short string for tests.";
-		try (InputStream is = getClass().getResourceAsStream("../rsa-public-key.pub")) {
+		try (InputStream is = getClass().getResourceAsStream("../rsa-public-key.key")) {
 			String publicKey = IOUtils.toString(is, UTF_8);
 			System.out.println("publicKey = " + publicKey);
 
-			String result = AsymmetricEncryption.encryptString(input, publicKey,
+			String result = AsymmetricEncryption.encryptString(longInput, publicKey,
 					"RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
 
 			System.out.println(result);

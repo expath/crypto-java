@@ -73,7 +73,7 @@ public class AsymmetricEncryption {
 			throw new CryptoException(CryptoError.INEXISTENT_PADDING, e);
 		}
 
-		final X509EncodedKeySpec publicKeySpecification = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKey));
+		final X509EncodedKeySpec publicKeySpecification = new X509EncodedKeySpec(publicKey.getBytes(UTF_8));
 
 		try {
 			final PublicKey publicKey1 = KeyFactory.getInstance(algorithm).generatePublic(publicKeySpecification);

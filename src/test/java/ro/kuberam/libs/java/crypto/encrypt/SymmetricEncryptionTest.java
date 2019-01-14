@@ -29,18 +29,15 @@ import org.junit.Test;
 
 import ro.kuberam.libs.java.crypto.CryptoError;
 import ro.kuberam.libs.java.crypto.CryptoException;
+import ro.kuberam.libs.java.crypto.CryptoModuleTests;
 import ro.kuberam.libs.java.crypto.digest.Hash;
-import ro.kuberam.tests.junit.BaseTest;
 
-public class SymmetricEncryptionTest extends BaseTest {
+public class SymmetricEncryptionTest extends CryptoModuleTests {
 	private static String aesAlgorithmCbcMode = "AES/CBC/PKCS5Padding";
 	private static String aesAlgorithmEcbMode = "AES";
-	private static String longInput = "Long string for tests. Long string for tests. Long string for tests. Long string for tests. Long string for tests.";
-	private static byte[] longInputBytes = longInput.getBytes(UTF_8);
 	private static String key = "1234567890123456";
 	private static String wrongKey = "17";
 	private static String iv;
-	private static String sunProvider = "SunJCE";
 
 	@BeforeClass
 	public static void beforeClassFunction() {
