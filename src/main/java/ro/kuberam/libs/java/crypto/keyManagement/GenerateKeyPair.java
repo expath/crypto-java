@@ -24,7 +24,9 @@ import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 
 import ro.kuberam.libs.java.crypto.randomSequencesGeneration.RandomNumber;
@@ -33,37 +35,47 @@ import java.util.Base64;
 
 public class GenerateKeyPair {
 
-    public static KeyPair generate(final String algorithm) throws Exception {
-        final KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(algorithm);
-        keyGenerator.initialize(1024, RandomNumber.generate("SHA1PRNG", "SUN"));
-        return keyGenerator.generateKeyPair();
-    }
+	public static KeyPair generate(String algorithm) throws Exception {
+		KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(algorithm);
+		keyGenerator.initialize(1024, RandomNumber.generate("SHA1PRNG", "SUN"));
 
-    public static KeyPair generate(final long seed, final String algorithm, final String provider) throws Exception {
-        final KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(algorithm);
-        keyGenerator.initialize(1024, RandomNumber.generate(seed, "SHA1PRNG", provider));
-        return keyGenerator.generateKeyPair();
-    }
+		return keyGenerator.generateKeyPair();
+	}
 
-    public static String savePrivateKey(final PrivateKey priv) throws GeneralSecurityException {
-        final KeyFactory fact = KeyFactory.getInstance("RSA");
-        final PKCS8EncodedKeySpec spec = fact.getKeySpec(priv, PKCS8EncodedKeySpec.class);
-        final byte[] packed = spec.getEncoded();
-        final String key64 = Base64.getEncoder().encodeToString(packed);
-        Arrays.fill(packed, (byte) 0);
-        return key64;
-    }
+	public static KeyPair generate(long seed, String algorithm, String provider) throws Exception {
+		KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(algorithm);
+		keyGenerator.initialize(1024, RandomNumber.generate(seed, "SHA1PRNG", provider));
 
-    public static void main(final String args[]) throws Exception {
-        final KeyPair keyPair = generate("RSA");
+		return keyGenerator.generateKeyPair();
+	}
 
-        System.out.println("Private key:\n" + Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded()));
+	public static String savePrivateKey(PrivateKey priv) throws GeneralSecurityException {
+		KeyFactory fact = KeyFactory.getInstance("RSA");
+		PKCS8EncodedKeySpec spec = fact.getKeySpec(priv, PKCS8EncodedKeySpec.class);
+		byte[] packed = spec.getEncoded();
+		String key64 = Base64.getEncoder().encodeToString(packed);
+		Arrays.fill(packed, (byte) 0);
 
-        // System.out.println("Private key:\n" +
-        // savePrivateKey(keyPair.getPrivate()));
+		return key64;
+	}
 
-        System.out.println("Public key:\n" + Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded()));
-    }
+	public static String savePublicKey(PublicKey publ) throws GeneralSecurityException {
+		KeyFactory fact = KeyFactory.getInstance("RSA");
+		X509EncodedKeySpec spec = fact.getKeySpec(publ, X509EncodedKeySpec.class);
+
+		return Base64.getEncoder().encodeToString(spec.getEncoded());
+	}
+
+	public static void main(final String args[]) throws Exception {
+		final KeyPair keyPair = generate("RSA");
+
+		System.out.println("Private key:\n" + Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded()));
+
+		// System.out.println("Private key:\n" +
+		// savePrivateKey(keyPair.getPrivate()));
+
+		System.out.println("Public key:\n" + Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded()));
+	}
 
 }
 
@@ -85,15 +97,6 @@ public class GenerateKeyPair {
 // KeyFactory fact = KeyFactory.getInstance("DSA");
 // return fact.generatePublic(spec);
 // }
-//
-// public static String savePublicKey(PublicKey publ) throws
-// GeneralSecurityException {
-// KeyFactory fact = KeyFactory.getInstance("DSA");
-// X509EncodedKeySpec spec = fact.getKeySpec(publ,
-// X509EncodedKeySpec.class);
-// return base64Encode(spec.getEncoded());
-// }
-//
 //
 // public static void main(String[] args) throws Exception {
 // KeyPairGenerator gen = KeyPairGenerator.getInstance("DSA");

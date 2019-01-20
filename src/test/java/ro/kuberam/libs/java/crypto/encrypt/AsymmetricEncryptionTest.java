@@ -21,25 +21,95 @@ package ro.kuberam.libs.java.crypto.encrypt;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ro.kuberam.libs.java.crypto.CryptoModuleTests;
 
 public class AsymmetricEncryptionTest extends CryptoModuleTests {
 
+	@Ignore
 	@Test
 	public void encryptStringWithAesSymmetricKey() throws Exception {
-		try (InputStream is = getClass().getResourceAsStream("../rsa-public-key.key")) {
-			String publicKey = IOUtils.toString(is, UTF_8);
-			System.out.println("publicKey = " + publicKey);
+		try (InputStream is = getClass().getResourceAsStream("../rsa-private-key.key")) {
+			String privateKey = IOUtils.toString(is, UTF_8);
+			System.out.println("privateKey = " + privateKey);
 
-			String result = AsymmetricEncryption.encryptString(longInput, publicKey,
+			String result = AsymmetricEncryption.encryptString(longInput, privateKey,
 					"RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
 
 			System.out.println(result);
+		}
+	}
+
+	@Test
+	public void testFilesList() throws IOException {
+		Path directory = Paths.get("/home/claudius/backup");
+		String prefix = "full-backup";
+		String suffix = "4.4.0";
+		int zipFilesMax = 12;
+
+//		Arrays.asList(1, 2, 3, 4, 5).stream().forEach(i -> {
+//			try {
+//				Files.createDirectory(directory.resolve("full-backup-2018010" + i + "-4.4.0"));
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		});
+
+		Predicate<Path> filter = path -> {
+			String entryName = path.getFileName().toString();
+
+			return entryName.startsWith(prefix) && entryName.endsWith(suffix);
+		};
+
+		List<Path> entriesPaths = list(directory, filter);
+		int entriesNumber = entriesPaths.size();
+		int numberOfEntriesToBeDeleted = entriesNumber - zipFilesMax + 1;
+
+		Comparator<Path> timestampComparator = new Comparator<Path>() {
+			public int compare(Path o1, Path o2) {
+				int result = 0;
+
+				try {
+					result = Files.getLastModifiedTime(o1).compareTo(Files.getLastModifiedTime(o2));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				return result;
+			}
+		};
+
+		if (numberOfEntriesToBeDeleted > 0) {
+			entriesPaths.stream().sorted(timestampComparator).limit(numberOfEntriesToBeDeleted).forEach(path -> {
+				System.out.println(path);
+//				try {
+//					Files.delete(path);
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+			});
+		}
+
+	}
+
+	private List<Path> list(Path directory, Predicate<Path> filter) throws IOException {
+		try (final Stream<Path> entries = Files.list(directory).filter(filter)) {
+			return entries.collect(Collectors.toList());
 		}
 	}
 
