@@ -39,7 +39,7 @@ public class HashBinaryWithWrongAlgorithmAndDefaultFormat extends BaseTest {
             Hash.hashBinary(input, "SHA-17");
             fail("algorithm should have been unknown");
         } catch (CryptoException e) {
-            assertEquals(CryptoError.UNKNOWN_ALGORITH, e.getCryptoError());
+            assertEquals(CryptoError.NoSuchAlgorithmException, e.getCryptoError());
         }
     }
 }

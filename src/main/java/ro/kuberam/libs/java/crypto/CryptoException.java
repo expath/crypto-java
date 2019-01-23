@@ -26,7 +26,7 @@ public class CryptoException extends Exception {
 	private static final long serialVersionUID = -2606956271206243301L;
 	private CryptoError cryptoError;
 
-	public CryptoException(final CryptoError cryptoError) {
+	public CryptoException(CryptoError cryptoError) {
 		super(cryptoError.getDescription());
 		this.cryptoError = cryptoError;
 	}
@@ -35,6 +35,10 @@ public class CryptoException extends Exception {
 		super(cryptoError.getDescription(), cause);
 		this.cryptoError = cryptoError;
 	}
+	
+	public CryptoException(Throwable cause) {
+		super(CryptoError.valueOf(cause.getClass().getSimpleName()).getDescription(), cause);
+	}	
 
 	public CryptoError getCryptoError() {
 		return cryptoError;

@@ -80,7 +80,7 @@ public class SymmetricEncryptionTest extends CryptoModuleTests {
 			byte[] encryptionResult = SymmetricEncryption.encrypt(longInputBytes, key, aesAlgorithmCbcMode, iv, "");
 			SymmetricEncryption.decrypt(encryptionResult, wrongKey, aesAlgorithmCbcMode, iv, "");
 		} catch (CryptoException e) {
-			assertEquals(CryptoError.INVALID_CRYPTO_KEY, e.getCryptoError());
+			assertEquals(CryptoError.InvalidKeySpecException, e.getCryptoError());
 		}
 	}
 }

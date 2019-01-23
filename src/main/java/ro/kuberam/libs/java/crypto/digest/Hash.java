@@ -104,7 +104,7 @@ public class Hash {
 		try {
 			return MessageDigest.getInstance(algorithm);
 		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+			throw new CryptoException(CryptoError.NoSuchAlgorithmException, e);
 		}
 	}
 }

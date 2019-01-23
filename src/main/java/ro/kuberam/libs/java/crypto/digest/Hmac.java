@@ -99,9 +99,9 @@ public class Hmac {
 			return mac.doFinal(data);
 
 		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+			throw new CryptoException(CryptoError.NoSuchAlgorithmException, e);
 		} catch (InvalidKeyException e) {
-			throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
+			throw new CryptoException(CryptoError.InvalidKeySpecException, e);
 		}
 	}
 
@@ -128,9 +128,9 @@ public class Hmac {
 			return mac.doFinal();
 
 		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
+			throw new CryptoException(CryptoError.NoSuchAlgorithmException, e);
 		} catch (InvalidKeyException e) {
-			throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
+			throw new CryptoException(CryptoError.InvalidKeySpecException, e);
 		}
 	}
 }

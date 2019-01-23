@@ -19,17 +19,24 @@
  */
 package ro.kuberam.libs.java.crypto.encrypt;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Optional;
 import java.util.StringTokenizer;
-import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 import javax.crypto.BadPaddingException;
@@ -39,14 +46,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import ro.kuberam.libs.java.crypto.CryptoError;
 import ro.kuberam.libs.java.crypto.CryptoException;
-import ro.kuberam.libs.java.crypto.ExceptionClasses;
 import ro.kuberam.libs.java.crypto.utils.Buffer;
-
-import java.util.Base64;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * @author <a href="mailto:claudius.teodorescu@gmail.com">Claudius
@@ -71,17 +72,15 @@ public class AsymmetricEncryption {
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName);
-		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-		} catch (NoSuchPaddingException e) {
-			throw new CryptoException(CryptoError.INEXISTENT_PADDING, e);
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			throw new CryptoException(e);
 		}
 
 		try {
 			PrivateKey publicKey1 = loadPrivateKey(privateKey, algorithm, provider);
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey1);
 		} catch (InvalidKeyException e) {
-			throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
+			throw new CryptoException(e);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -94,10 +93,8 @@ public class AsymmetricEncryption {
 				cipher.update(buf, 0, read);
 			}
 			resultBytes = cipher.doFinal();
-		} catch (IllegalBlockSizeException e) {
-			throw new CryptoException(CryptoError.BLOCK_SIZE, e);
-		} catch (BadPaddingException e) {
-			throw new CryptoException(CryptoError.INCORRECT_PADDING, e);
+		} catch (IllegalBlockSizeException | BadPaddingException e) {
+			throw new CryptoException(e);
 		}
 
 		return getString(resultBytes);
@@ -123,12 +120,8 @@ public class AsymmetricEncryption {
 		final Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName, actualProvider);
-		} catch (NoSuchProviderException e) {
-			throw new CryptoException(CryptoError.NO_PROVIDER, e);
-		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-		} catch (NoSuchPaddingException e) {
-			throw new CryptoException(CryptoError.INEXISTENT_PADDING, e);
+		} catch (NoSuchProviderException | NoSuchAlgorithmException | NoSuchPaddingException e) {
+			throw new CryptoException(e);
 		}
 
 		final SecretKeySpec skeySpec = new SecretKeySpec(plainKey.getBytes(UTF_8), algorithm);
@@ -136,16 +129,14 @@ public class AsymmetricEncryption {
 			final IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(UTF_8), 0, 16);
 			try {
 				cipher.init(Cipher.DECRYPT_MODE, skeySpec, ivSpec);
-			} catch (InvalidAlgorithmParameterException e) {
-				throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-			} catch (InvalidKeyException e) {
-				throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
+			} catch (InvalidAlgorithmParameterException | InvalidKeyException e) {
+				throw new CryptoException(e);
 			}
 		} else {
 			try {
 				cipher.init(Cipher.DECRYPT_MODE, skeySpec);
 			} catch (InvalidKeyException e) {
-				throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
+				throw new CryptoException(e);
 			}
 		}
 
@@ -158,10 +149,8 @@ public class AsymmetricEncryption {
 
 			final byte[] resultBytes = cipher.doFinal();
 			return new String(resultBytes, UTF_8);
-		} catch (IllegalBlockSizeException e) {
-			throw new CryptoException(CryptoError.BLOCK_SIZE, e);
-		} catch (BadPaddingException e) {
-			throw new CryptoException(CryptoError.INCORRECT_PADDING, e);
+		} catch (IllegalBlockSizeException | BadPaddingException e) {
+			throw new CryptoException(e);
 		}
 	}
 
@@ -188,54 +177,35 @@ public class AsymmetricEncryption {
 		}
 	}
 
-	private PublicKey loadPublicKey(String publicKey, String algorithm, String provider)
-			throws InvalidKeySpecException {
+	private PublicKey loadPublicKey(String publicKey, String algorithm, String provider) throws CryptoException {
 		byte[] keyBytes = publicKey.getBytes(UTF_8);
 		X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
 		KeyFactory kf = null;
+		PublicKey key = null;
+
 		try {
 			kf = KeyFactory.getInstance(algorithm, provider);
-		} catch (NoSuchAlgorithmException e) {
-			try {
-				throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-			} catch (CryptoException e1) {
-				e1.printStackTrace();
-			}
-		} catch (NoSuchProviderException e) {
-			e.printStackTrace();
+			key = kf.generatePublic(spec);
+		} catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException e) {
+			throw new CryptoException(e);
 		}
 
-		return kf.generatePublic(spec);
+		return key;
 	}
 
-	private static PrivateKey loadPrivateKey(String keyString, String algorithm, String provider) {
+	private static PrivateKey loadPrivateKey(String keyString, String algorithm, String provider)
+			throws CryptoException {
 		byte[] keyBytes = keyString.getBytes(UTF_8);
 		PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
 		KeyFactory kf;
-		PrivateKey key;
+		PrivateKey key = null;
+		System.out.println("algorithm2 = " + algorithm);
 
 		try {
 			kf = KeyFactory.getInstance(algorithm, provider);
 			key = kf.generatePrivate(spec);
 		} catch (NoSuchProviderException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-			try {
-				switch (e.getClass().getCanonicalName()) {
-				case ExceptionClasses.NoSuchProviderException:
-					throw new CryptoException(CryptoError.NO_PROVIDER, e);
-					break;
-				case ExceptionClasses.NoSuchAlgorithmException:
-					throw new CryptoException(CryptoError.UNKNOWN_ALGORITH, e);
-					break;
-				case ExceptionClasses.InvalidKeySpecException:
-					throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
-					break;
-				default:
-					e.printStackTrace();
-					break;
-				}
-			} catch (CryptoException ge) {
-				ge.printStackTrace();
-			}
+			throw new CryptoException(e);
 		}
 
 		return key;

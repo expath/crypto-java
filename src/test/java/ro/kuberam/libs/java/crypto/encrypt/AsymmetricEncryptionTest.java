@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -41,7 +40,6 @@ import ro.kuberam.libs.java.crypto.CryptoModuleTests;
 
 public class AsymmetricEncryptionTest extends CryptoModuleTests {
 
-	@Ignore
 	@Test
 	public void encryptStringWithAesSymmetricKey() throws Exception {
 		try (InputStream is = getClass().getResourceAsStream("../rsa-private-key.key")) {
@@ -55,6 +53,7 @@ public class AsymmetricEncryptionTest extends CryptoModuleTests {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void testFilesList() throws IOException {
 		Path directory = Paths.get("/home/claudius/backup");
