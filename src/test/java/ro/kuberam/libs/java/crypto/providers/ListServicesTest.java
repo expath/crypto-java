@@ -41,16 +41,16 @@ public class ListServicesTest extends BaseTest {
 
     private static String[] getServiceTypes() {
 
-        final Set<String> result = new HashSet<>();
+        Set<String> result = new HashSet<>();
 
         // All providers
-        final Provider[] providers = Security.getProviders();
+        Provider[] providers = Security.getProviders();
         for (int i = 0; i < providers.length; i++) {
 
             // Get services provided by each provider
             final Set<Object> keys = providers[i].keySet();
 
-            for (final Iterator it = keys.iterator(); it.hasNext(); ) {
+            for (Iterator<Object> it = keys.iterator(); it.hasNext(); ) {
 
                 String key = (String) it.next();
                 key = key.split(" ")[0];
@@ -60,7 +60,7 @@ public class ListServicesTest extends BaseTest {
                     key = key.substring(10);
                 }
 
-                final int ix = key.indexOf('.');
+                int ix = key.indexOf('.');
                 result.add(key.substring(0, ix));
             }
 
@@ -76,18 +76,18 @@ public class ListServicesTest extends BaseTest {
      * particular service type * @return String[] object that is a list of all
      * available * service type implementations.
      */
-    private static String[] getCryptoImpls(final String serviceType) {
+    private static String[] getCryptoImpls(String serviceType) {
 
-        final Set<String> result = new HashSet<>();
+        Set<String> result = new HashSet<>();
 
         // All providers
-        final Provider[] providers = Security.getProviders();
+        Provider[] providers = Security.getProviders();
         for (int i = 0; i < providers.length; i++) {
 
             // Get services provided by each provider
-            final Set<Object> keys = providers[i].keySet();
+            Set<Object> keys = providers[i].keySet();
 
-            for (final Iterator it = keys.iterator(); it.hasNext(); ) {
+            for (Iterator it = keys.iterator(); it.hasNext(); ) {
 
                 String key = (String) it.next();
 
@@ -117,7 +117,7 @@ public class ListServicesTest extends BaseTest {
         System.out.println("Service Types");
         System.out.println("-------------");
 
-        final String[] serviceTypes = getServiceTypes();
+        String[] serviceTypes = getServiceTypes();
         Arrays.sort(serviceTypes);
 
         for (int i = 0; i < serviceTypes.length; i++) {
@@ -144,7 +144,7 @@ public class ListServicesTest extends BaseTest {
             System.out.println();
             System.out.println("  - " + serviceTypes[i]);
 
-            final String[] serviceTypeImpls = getCryptoImpls(serviceTypes[i]);
+            String[] serviceTypeImpls = getCryptoImpls(serviceTypes[i]);
             Arrays.sort(serviceTypeImpls);
 
             for (int j = 0; j < serviceTypeImpls.length; j++) {
@@ -156,7 +156,7 @@ public class ListServicesTest extends BaseTest {
 
     }
 
-    public static void main(final String[] args) {
+    public static void main(String[] args) {
         listServiceTypes();
         listCryptoImpls();
     }

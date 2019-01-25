@@ -26,7 +26,7 @@ public enum CryptoError {
     UNREADABLE_KEYSTORE("crypto:unreadable-keystore", "I/O error while reading keystore, or the password is incorrect."),
     DENIED_KEYSTORE("crypto:denied-keystore", "Permission denied to read keystore."),
     KEYSTORE_URL("crypto:keystore-url", "The keystore URL is invalid."),
-    KEYSTORE_TYPE("crypto:keystore-type", "The keystore type is not supported."),
+    KeyStoreException("crypto:keystore-type", "The keystore type is not supported."),
     ALIAS_KEY("crypto:alias-key", "Cannot find key for alias in given keystore."),
     SIGNATURE_ELEMENT("crypto:signature-element", "Cannot find Signature element."),
     NoSuchPaddingException("crypto:inexistent-padding", "No such padding."),

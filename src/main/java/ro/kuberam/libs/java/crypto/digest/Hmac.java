@@ -98,10 +98,8 @@ public class Hmac {
 			mac.init(signingKey);
 			return mac.doFinal(data);
 
-		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(CryptoError.NoSuchAlgorithmException, e);
-		} catch (InvalidKeyException e) {
-			throw new CryptoException(CryptoError.InvalidKeySpecException, e);
+		} catch (NoSuchAlgorithmException | InvalidKeyException e) {
+			throw new CryptoException(e);
 		}
 	}
 
@@ -127,10 +125,8 @@ public class Hmac {
 
 			return mac.doFinal();
 
-		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(CryptoError.NoSuchAlgorithmException, e);
-		} catch (InvalidKeyException e) {
-			throw new CryptoException(CryptoError.InvalidKeySpecException, e);
+		} catch (NoSuchAlgorithmException | InvalidKeyException e) {
+			throw new CryptoException(e);
 		}
 	}
 }

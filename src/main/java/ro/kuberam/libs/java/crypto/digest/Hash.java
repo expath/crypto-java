@@ -24,17 +24,17 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+import java.util.Optional;
+
+import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ro.kuberam.libs.java.crypto.CryptoError;
+
 import ro.kuberam.libs.java.crypto.CryptoException;
 import ro.kuberam.libs.java.crypto.utils.Buffer;
 import ro.kuberam.libs.java.crypto.utils.HexString;
-
-import javax.annotation.Nullable;
-import java.util.Base64;
-import java.util.Optional;
 
 /**
  * Implements the crypto:hash() function.
@@ -104,7 +104,7 @@ public class Hash {
 		try {
 			return MessageDigest.getInstance(algorithm);
 		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(CryptoError.NoSuchAlgorithmException, e);
+			throw new CryptoException(e);
 		}
 	}
 }

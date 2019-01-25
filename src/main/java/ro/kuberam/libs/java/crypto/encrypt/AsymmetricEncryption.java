@@ -55,7 +55,7 @@ import ro.kuberam.libs.java.crypto.utils.Buffer;
  */
 public class AsymmetricEncryption {
 
-	public static String encryptString(final String input, final String publicKey, final String transformationName)
+	public static String encryptString(String input, String publicKey, String transformationName)
 			throws CryptoException, IOException {
 		try (InputStream bais = new ByteArrayInputStream(input.getBytes(UTF_8))) {
 			return encrypt(bais, publicKey, transformationName);
@@ -64,10 +64,8 @@ public class AsymmetricEncryption {
 
 	public static String encrypt(InputStream input, String privateKey, String transformationName)
 			throws CryptoException, IOException {
-		String algorithm = (transformationName.contains("/"))
-				? transformationName.substring(0, transformationName.indexOf("/"))
-				: transformationName;
-		String provider = "SUN";
+		String algorithm = transformationName.split("/")[0];
+		String provider = "SunJCE";
 
 		Cipher cipher;
 		try {
@@ -77,8 +75,8 @@ public class AsymmetricEncryption {
 		}
 
 		try {
-			PrivateKey publicKey1 = loadPrivateKey(privateKey, algorithm, provider);
-			cipher.init(Cipher.ENCRYPT_MODE, publicKey1);
+			PrivateKey privateKey1 = loadPrivateKey(privateKey, algorithm, provider);
+			cipher.init(Cipher.ENCRYPT_MODE, privateKey1);
 		} catch (InvalidKeyException e) {
 			throw new CryptoException(e);
 		} catch (Exception e) {
@@ -100,33 +98,31 @@ public class AsymmetricEncryption {
 		return getString(resultBytes);
 	}
 
-	public static String decryptString(final String encryptedInput, final String plainKey,
-			final String transformationName, final String iv, @Nullable final String provider)
+	public static String decryptString(String encryptedInput, String plainKey,
+			String transformationName, String iv, @Nullable String provider)
 			throws CryptoException, IOException {
 		try (InputStream bais = new ByteArrayInputStream(getBytes(encryptedInput))) {
 			return decrypt(bais, plainKey, transformationName, iv, provider);
 		}
 	}
 
-	public static String decrypt(final InputStream encryptedInput, final String plainKey,
-			final String transformationName, final String iv, @Nullable final String provider)
+	public static String decrypt(InputStream encryptedInput, String plainKey,
+			String transformationName, String iv, @Nullable String provider)
 			throws CryptoException, IOException {
-		final String algorithm = (transformationName.contains("/"))
-				? transformationName.substring(0, transformationName.indexOf("/"))
-				: transformationName;
+		String algorithm = transformationName.split("/")[0];
 
-		final String actualProvider = Optional.ofNullable(provider).filter(str -> !str.isEmpty()).orElse("SunJCE");
+		String actualProvider = Optional.ofNullable(provider).filter(str -> !str.isEmpty()).orElse("SunJCE");
 
-		final Cipher cipher;
+		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName, actualProvider);
 		} catch (NoSuchProviderException | NoSuchAlgorithmException | NoSuchPaddingException e) {
 			throw new CryptoException(e);
 		}
 
-		final SecretKeySpec skeySpec = new SecretKeySpec(plainKey.getBytes(UTF_8), algorithm);
+		SecretKeySpec skeySpec = new SecretKeySpec(plainKey.getBytes(UTF_8), algorithm);
 		if (transformationName.contains("/")) {
-			final IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(UTF_8), 0, 16);
+			IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(UTF_8), 0, 16);
 			try {
 				cipher.init(Cipher.DECRYPT_MODE, skeySpec, ivSpec);
 			} catch (InvalidAlgorithmParameterException | InvalidKeyException e) {
@@ -141,23 +137,23 @@ public class AsymmetricEncryption {
 		}
 
 		try {
-			final byte[] buf = new byte[Buffer.TRANSFER_SIZE];
+			byte[] buf = new byte[Buffer.TRANSFER_SIZE];
 			int read = -1;
 			while ((read = encryptedInput.read(buf)) > -1) {
 				cipher.update(buf, 0, read);
 			}
 
-			final byte[] resultBytes = cipher.doFinal();
+			byte[] resultBytes = cipher.doFinal();
 			return new String(resultBytes, UTF_8);
 		} catch (IllegalBlockSizeException | BadPaddingException e) {
 			throw new CryptoException(e);
 		}
 	}
 
-	public static String getString(final byte[] bytes) {
-		final StringBuilder sb = new StringBuilder();
+	public static String getString(byte[] bytes) {
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < bytes.length; i++) {
-			final byte b = bytes[i];
+			byte b = bytes[i];
 			sb.append((int) (0x00FF & b));
 			if (i + 1 < bytes.length) {
 				sb.append("-");
@@ -166,11 +162,11 @@ public class AsymmetricEncryption {
 		return sb.toString();
 	}
 
-	public static byte[] getBytes(final String str) throws IOException {
-		final StringTokenizer st = new StringTokenizer(str, "-", false);
-		try (final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+	public static byte[] getBytes(String str) throws IOException {
+		StringTokenizer st = new StringTokenizer(str, "-", false);
+		try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 			while (st.hasMoreTokens()) {
-				final int i = Integer.parseInt(st.nextToken());
+				int i = Integer.parseInt(st.nextToken());
 				bos.write((byte) i);
 			}
 			return bos.toByteArray();
@@ -200,6 +196,7 @@ public class AsymmetricEncryption {
 		KeyFactory kf;
 		PrivateKey key = null;
 		System.out.println("algorithm2 = " + algorithm);
+		System.out.println("provider = " + provider);
 
 		try {
 			kf = KeyFactory.getInstance(algorithm, provider);

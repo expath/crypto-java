@@ -65,12 +65,8 @@ public class SymmetricEncryption {
 
 		try {
 			cipher = Cipher.getInstance(transformationName, actualProvider);
-		} catch (NoSuchProviderException e) {
-			throw new CryptoException(CryptoError.NoSuchProviderException, e);
-		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(CryptoError.NoSuchAlgorithmException, e);
-		} catch (NoSuchPaddingException e) {
-			throw new CryptoException(CryptoError.NoSuchPaddingException, e);
+		} catch (NoSuchProviderException | NoSuchAlgorithmException | NoSuchPaddingException e) {
+			throw new CryptoException(e);
 		}
 
 		SecretKeySpec skeySpec = generateSecretKey(secretKey, algorithm);
@@ -78,10 +74,8 @@ public class SymmetricEncryption {
 			final IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(UTF_8), 0, 16);
 			try {
 				cipher.init(operationType, skeySpec, ivSpec);
-			} catch (InvalidAlgorithmParameterException e) {
-				throw new CryptoException(CryptoError.NoSuchAlgorithmException, e);
-			} catch (InvalidKeyException e) {
-				throw new CryptoException(CryptoError.InvalidKeySpecException, e);
+			} catch (InvalidAlgorithmParameterException | InvalidKeyException e) {
+				throw new CryptoException(e);
 			}
 		} else {
 			try {
@@ -93,10 +87,8 @@ public class SymmetricEncryption {
 
 		try {
 			result = cipher.doFinal(input);
-		} catch (IllegalBlockSizeException e) {
-			throw new CryptoException(CryptoError.IllegalBlockSizeException, e);
-		} catch (BadPaddingException e) {
-			throw new CryptoException(CryptoError.BadPaddingException, e);
+		} catch (IllegalBlockSizeException | BadPaddingException e) {
+			throw new CryptoException(e);
 		}
 
 		return result;
