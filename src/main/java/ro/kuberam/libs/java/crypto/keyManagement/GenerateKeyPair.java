@@ -42,7 +42,7 @@ public class GenerateKeyPair {
 		return keyGenerator.generateKeyPair();
 	}
 
-	public static KeyPair generate(long seed, String algorithm, String provider) throws Exception {
+	public static KeyPair generate(String algorithm, long seed, String provider) throws Exception {
 		KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(algorithm);
 		keyGenerator.initialize(1024, RandomNumber.generate(seed, "SHA1PRNG", provider));
 

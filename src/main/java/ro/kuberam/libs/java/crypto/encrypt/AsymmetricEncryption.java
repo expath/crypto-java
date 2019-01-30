@@ -62,10 +62,10 @@ public class AsymmetricEncryption {
 		}
 	}
 
-	public static String encrypt(InputStream input, String privateKey, String transformationName)
+	public static String encrypt(InputStream input, String publicKey, String transformationName)
 			throws CryptoException, IOException {
 		String algorithm = transformationName.split("/")[0];
-		String provider = "SunJCE";
+		String provider = "SUN";
 
 		Cipher cipher;
 		try {
@@ -75,8 +75,8 @@ public class AsymmetricEncryption {
 		}
 
 		try {
-			PrivateKey privateKey1 = loadPrivateKey(privateKey, algorithm, provider);
-			cipher.init(Cipher.ENCRYPT_MODE, privateKey1);
+			PublicKey publicKey1 = loadPublicKey(publicKey, algorithm, provider);
+			cipher.init(Cipher.ENCRYPT_MODE, publicKey1);
 		} catch (InvalidKeyException e) {
 			throw new CryptoException(e);
 		} catch (Exception e) {
@@ -98,17 +98,15 @@ public class AsymmetricEncryption {
 		return getString(resultBytes);
 	}
 
-	public static String decryptString(String encryptedInput, String plainKey,
-			String transformationName, String iv, @Nullable String provider)
-			throws CryptoException, IOException {
+	public static String decryptString(String encryptedInput, String plainKey, String transformationName, String iv,
+			@Nullable String provider) throws CryptoException, IOException {
 		try (InputStream bais = new ByteArrayInputStream(getBytes(encryptedInput))) {
 			return decrypt(bais, plainKey, transformationName, iv, provider);
 		}
 	}
 
-	public static String decrypt(InputStream encryptedInput, String plainKey,
-			String transformationName, String iv, @Nullable String provider)
-			throws CryptoException, IOException {
+	public static String decrypt(InputStream encryptedInput, String plainKey, String transformationName, String iv,
+			@Nullable String provider) throws CryptoException, IOException {
 		String algorithm = transformationName.split("/")[0];
 
 		String actualProvider = Optional.ofNullable(provider).filter(str -> !str.isEmpty()).orElse("SunJCE");
@@ -173,38 +171,30 @@ public class AsymmetricEncryption {
 		}
 	}
 
-	private PublicKey loadPublicKey(String publicKey, String algorithm, String provider) throws CryptoException {
-		byte[] keyBytes = publicKey.getBytes(UTF_8);
+	private static PublicKey loadPublicKey(String keyString, String algorithm, String provider)
+			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
+		byte[] keyBytes = keyString.getBytes(UTF_8);
+		// provider = Optional.ofNullable(provider).filter(str ->
+		// !str.isEmpty()).orElse("SunRsaSign");
+		provider = "SunRsaSign";
+
 		X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-		KeyFactory kf = null;
-		PublicKey key = null;
+		KeyFactory kf = KeyFactory.getInstance(algorithm, provider);
 
-		try {
-			kf = KeyFactory.getInstance(algorithm, provider);
-			key = kf.generatePublic(spec);
-		} catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException e) {
-			throw new CryptoException(e);
-		}
-
-		return key;
+		return kf.generatePublic(spec);
 	}
 
 	private static PrivateKey loadPrivateKey(String keyString, String algorithm, String provider)
-			throws CryptoException {
+			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
 		byte[] keyBytes = keyString.getBytes(UTF_8);
+		// provider = Optional.ofNullable(provider).filter(str ->
+		// !str.isEmpty()).orElse("SunRsaSign");
+		provider = "SunRsaSign";
+
 		PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-		KeyFactory kf;
-		PrivateKey key = null;
-		System.out.println("algorithm2 = " + algorithm);
-		System.out.println("provider = " + provider);
 
-		try {
-			kf = KeyFactory.getInstance(algorithm, provider);
-			key = kf.generatePrivate(spec);
-		} catch (NoSuchProviderException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-			throw new CryptoException(e);
-		}
+		KeyFactory kf = KeyFactory.getInstance(algorithm, provider);
 
-		return key;
+		return kf.generatePrivate(spec);
 	}
 }

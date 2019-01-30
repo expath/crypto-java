@@ -41,12 +41,12 @@ import ro.kuberam.libs.java.crypto.CryptoModuleTests;
 public class AsymmetricEncryptionTest extends CryptoModuleTests {
 
 	@Test
-	public void encryptStringWithAesSymmetricKey() throws Exception {
-		try (InputStream is = getClass().getResourceAsStream("../rsa-private-key.key")) {
-			String privateKey = IOUtils.toString(is, UTF_8);
-			System.out.println("privateKey = " + privateKey);
+	public void encryptStringWithRsaAsymmetricKey() throws Exception {
+		try (InputStream is = getClass().getResourceAsStream("../rsa-public-key.key")) {
+			String publicKey = IOUtils.toString(is, UTF_8);
+			System.out.println("publicKey = " + publicKey);
 
-			String result = AsymmetricEncryption.encryptString(longInput, privateKey,
+			String result = AsymmetricEncryption.encryptString(longInput, publicKey,
 					"RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
 
 			System.out.println(result);
@@ -61,13 +61,14 @@ public class AsymmetricEncryptionTest extends CryptoModuleTests {
 		String suffix = "4.4.0";
 		int zipFilesMax = 12;
 
-//		Arrays.asList(1, 2, 3, 4, 5).stream().forEach(i -> {
-//			try {
-//				Files.createDirectory(directory.resolve("full-backup-2018010" + i + "-4.4.0"));
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		});
+		// Arrays.asList(1, 2, 3, 4, 5).stream().forEach(i -> {
+		// try {
+		// Files.createDirectory(directory.resolve("full-backup-2018010" + i +
+		// "-4.4.0"));
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
+		// });
 
 		Predicate<Path> filter = path -> {
 			String entryName = path.getFileName().toString();
@@ -96,11 +97,11 @@ public class AsymmetricEncryptionTest extends CryptoModuleTests {
 		if (numberOfEntriesToBeDeleted > 0) {
 			entriesPaths.stream().sorted(timestampComparator).limit(numberOfEntriesToBeDeleted).forEach(path -> {
 				System.out.println(path);
-//				try {
-//					Files.delete(path);
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
+				// try {
+				// Files.delete(path);
+				// } catch (IOException e) {
+				// e.printStackTrace();
+				// }
 			});
 		}
 
