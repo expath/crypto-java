@@ -32,14 +32,22 @@ import java.util.Arrays;
 import ro.kuberam.libs.java.crypto.randomSequencesGeneration.RandomNumber;
 
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GenerateKeyPair {
+	private static Base64.Encoder encoder = Base64.getEncoder();
 
-	public static KeyPair generate(String algorithm) throws Exception {
+	public static Map<String, String> run(String algorithm) throws Exception {
 		KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(algorithm);
-		keyGenerator.initialize(1024, RandomNumber.generate("SHA1PRNG", "SUN"));
+		keyGenerator.initialize(2048);
+		KeyPair keys = keyGenerator.generateKeyPair();
 
-		return keyGenerator.generateKeyPair();
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("private-key", outputPrivatekey(keys.getPrivate().getEncoded(), algorithm));
+		result.put("public-key", outputPublickey(keys.getPublic().getEncoded(), algorithm));
+
+		return result;
 	}
 
 	public static KeyPair generate(String algorithm, long seed, String provider) throws Exception {
@@ -47,6 +55,16 @@ public class GenerateKeyPair {
 		keyGenerator.initialize(1024, RandomNumber.generate(seed, "SHA1PRNG", provider));
 
 		return keyGenerator.generateKeyPair();
+	}
+
+	private static String outputPrivatekey(byte[] privateKey, String algorithm) {
+		return "-----BEGIN " + algorithm + " PRIVATE KEY-----\n" + encoder.encodeToString(privateKey)
+				+ "\n-----END " + algorithm + " PRIVATE KEY-----\n";
+	}
+
+	private static String outputPublickey(byte[] publicKey, String algorithm) {
+		return "-----BEGIN " + algorithm + " PUBLIC KEY-----\n" + encoder.encodeToString(publicKey)
+				+ "\n-----END " + algorithm + " PUBLIC KEY-----\n";
 	}
 
 	public static String savePrivateKey(PrivateKey priv) throws GeneralSecurityException {
@@ -65,18 +83,6 @@ public class GenerateKeyPair {
 
 		return Base64.getEncoder().encodeToString(spec.getEncoded());
 	}
-
-	public static void main(final String args[]) throws Exception {
-		final KeyPair keyPair = generate("RSA");
-
-		System.out.println("Private key:\n" + Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded()));
-
-		// System.out.println("Private key:\n" +
-		// savePrivateKey(keyPair.getPrivate()));
-
-		System.out.println("Public key:\n" + Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded()));
-	}
-
 }
 
 // public static PrivateKey loadPrivateKey(String key64) throws

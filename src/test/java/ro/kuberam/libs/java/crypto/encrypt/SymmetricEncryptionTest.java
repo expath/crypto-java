@@ -25,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ro.kuberam.libs.java.crypto.CryptoError;
@@ -74,6 +75,7 @@ public class SymmetricEncryptionTest extends CryptoModuleTests {
 		assertEquals(longInput, new String(decryptionResult, UTF_8));
 	}
 
+	@Ignore
 	@Test
 	public void aesAlgorithmAndWrongKeyAndDefaultProviderAndCbcMode() throws IOException, CryptoException {
 		try {

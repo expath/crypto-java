@@ -17,31 +17,21 @@
  * along with this library; if not, write to the Free Software Foundation,
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package ro.kuberam.libs.java.crypto.encrypt;
+package ro.kuberam.libs.java.crypto.keyManagement;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import java.util.Map;
 
-import java.io.InputStream;
-
-import org.apache.commons.io.IOUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import ro.kuberam.libs.java.crypto.CryptoModuleTests;
+import ro.kuberam.tests.junit.BaseTest;
 
-public class AsymmetricEncryptionTest extends CryptoModuleTests {
+public class GenerateKeyPairTest extends BaseTest {
 
-	@Ignore
 	@Test
-	public void encryptStringWithRsaAsymmetricKey() throws Exception {
-		try (InputStream is = getClass().getResourceAsStream("../rsa-private-key.key")) {
-			String privateKey = IOUtils.toString(is, UTF_8);
-			System.out.println("privateKey = " + privateKey);
+	public void rsaKeyPair() throws Exception {
+		Map<String, String> keys = GenerateKeyPair.run("RSA");
 
-			String result = AsymmetricEncryption.encryptString(longInput, privateKey,
-					"RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
-
-			System.out.println(result);
-		}
+		System.out.println("Private key:\n" + keys.get("private-key"));
+		System.out.println("Public key:\n" + keys.get("public-key"));
 	}
 }

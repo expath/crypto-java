@@ -62,7 +62,7 @@ public class AsymmetricEncryption {
 		}
 	}
 
-	public static String encrypt(InputStream input, String publicKey, String transformationName)
+	public static String encrypt(InputStream input, String privateKey, String transformationName)
 			throws CryptoException, IOException {
 		String algorithm = transformationName.split("/")[0];
 		String provider = "SUN";
@@ -75,8 +75,8 @@ public class AsymmetricEncryption {
 		}
 
 		try {
-			PublicKey publicKey1 = loadPublicKey(publicKey, algorithm, provider);
-			cipher.init(Cipher.ENCRYPT_MODE, publicKey1);
+			PrivateKey privateKey1 = loadPrivateKey(privateKey, algorithm, provider);
+			cipher.init(Cipher.ENCRYPT_MODE, privateKey1);
 		} catch (InvalidKeyException e) {
 			throw new CryptoException(e);
 		} catch (Exception e) {
