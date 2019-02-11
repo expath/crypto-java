@@ -25,7 +25,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -35,16 +34,13 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Optional;
+import java.util.Base64;
 import java.util.StringTokenizer;
 
-import javax.annotation.Nullable;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import ro.kuberam.libs.java.crypto.CryptoException;
 import ro.kuberam.libs.java.crypto.utils.Buffer;
@@ -55,97 +51,111 @@ import ro.kuberam.libs.java.crypto.utils.Buffer;
  */
 public class AsymmetricEncryption {
 
-	public static String encryptString(String input, String publicKey, String transformationName)
+	public static String encryptString(String data, String base64PublicKey, String transformationName)
 			throws CryptoException, IOException {
-		try (InputStream bais = new ByteArrayInputStream(input.getBytes(UTF_8))) {
-			return encrypt(bais, publicKey, transformationName);
+		String provider = "SUN";
+
+		try (InputStream bais = new ByteArrayInputStream(data.getBytes(UTF_8))) {
+			return encrypt(bais, base64PublicKey, transformationName, provider);
 		}
 	}
 
-	public static String encrypt(InputStream input, String privateKey, String transformationName)
+	public static String encryptString(String data, String base64PublicKey, String transformationName, String provider)
 			throws CryptoException, IOException {
+		InputStream dataIs = new ByteArrayInputStream(data.getBytes(UTF_8));
 		String algorithm = transformationName.split("/")[0];
-		String provider = "SUN";
+		byte[] resultBytes = null;
 
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName);
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-			throw new CryptoException(e);
-		}
+			PublicKey publicKey = loadPublicKey(base64PublicKey, algorithm, provider);
+			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
-		try {
-			PrivateKey privateKey1 = loadPrivateKey(privateKey, algorithm, provider);
-			cipher.init(Cipher.ENCRYPT_MODE, privateKey1);
-		} catch (InvalidKeyException e) {
+			byte[] buf = new byte[Buffer.TRANSFER_SIZE];
+			int read = -1;
+			while ((read = dataIs.read(buf)) > -1) {
+				cipher.update(buf, 0, read);
+			}
+			resultBytes = cipher.doFinal();
+		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
+				| InvalidKeyException e) {
 			throw new CryptoException(e);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		byte[] resultBytes;
+		return Base64.getEncoder().encodeToString(resultBytes);
+	}
+
+	public static String encrypt(InputStream data, String base64PublicKey, String transformationName, String provider)
+			throws CryptoException, IOException {
+		String algorithm = transformationName.split("/")[0];
+		byte[] resultBytes = null;
+
+		Cipher cipher;
 		try {
+			cipher = Cipher.getInstance(transformationName);
+			PublicKey publicKey = loadPublicKey(base64PublicKey, algorithm, provider);
+			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
 			byte[] buf = new byte[Buffer.TRANSFER_SIZE];
 			int read = -1;
-			while ((read = input.read(buf)) > -1) {
+			while ((read = data.read(buf)) > -1) {
 				cipher.update(buf, 0, read);
 			}
 			resultBytes = cipher.doFinal();
-		} catch (IllegalBlockSizeException | BadPaddingException e) {
+		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
+				| InvalidKeyException e) {
 			throw new CryptoException(e);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return getString(resultBytes);
 	}
 
-	public static String decryptString(String encryptedInput, String plainKey, String transformationName, String iv,
-			@Nullable String provider) throws CryptoException, IOException {
+	public static String decryptString(String encryptedInput, String base64PrivateKey, String transformationName)
+			throws CryptoException, IOException {
+		String provider = "SUN";
+
 		try (InputStream bais = new ByteArrayInputStream(getBytes(encryptedInput))) {
-			return decrypt(bais, plainKey, transformationName, iv, provider);
+			return decrypt(bais, base64PrivateKey, transformationName, provider);
 		}
 	}
 
-	public static String decrypt(InputStream encryptedInput, String plainKey, String transformationName, String iv,
-			@Nullable String provider) throws CryptoException, IOException {
-		String algorithm = transformationName.split("/")[0];
+	public static String decryptString(String data, String base64PrivateKey, String transformationName, String provider)
+			throws CryptoException, IOException {
+		try (InputStream bais = new ByteArrayInputStream(getBytes(data))) {
+			return decrypt(bais, base64PrivateKey, transformationName, provider);
+		}
+	}
 
-		String actualProvider = Optional.ofNullable(provider).filter(str -> !str.isEmpty()).orElse("SunJCE");
+	public static String decrypt(InputStream data, String base64PrivateKey, String transformationName, String provider)
+			throws CryptoException, IOException {
+		String algorithm = transformationName.split("/")[0];
+		byte[] resultBytes = null;
 
 		Cipher cipher;
 		try {
-			cipher = Cipher.getInstance(transformationName, actualProvider);
-		} catch (NoSuchProviderException | NoSuchAlgorithmException | NoSuchPaddingException e) {
-			throw new CryptoException(e);
-		}
+			cipher = Cipher.getInstance(transformationName);
+			PrivateKey publicKey = loadPrivateKey(base64PrivateKey, algorithm, provider);
+			cipher.init(Cipher.DECRYPT_MODE, publicKey);
 
-		SecretKeySpec skeySpec = new SecretKeySpec(plainKey.getBytes(UTF_8), algorithm);
-		if (transformationName.contains("/")) {
-			IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(UTF_8), 0, 16);
-			try {
-				cipher.init(Cipher.DECRYPT_MODE, skeySpec, ivSpec);
-			} catch (InvalidAlgorithmParameterException | InvalidKeyException e) {
-				throw new CryptoException(e);
-			}
-		} else {
-			try {
-				cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-			} catch (InvalidKeyException e) {
-				throw new CryptoException(e);
-			}
-		}
-
-		try {
 			byte[] buf = new byte[Buffer.TRANSFER_SIZE];
 			int read = -1;
-			while ((read = encryptedInput.read(buf)) > -1) {
+			while ((read = data.read(buf)) > -1) {
 				cipher.update(buf, 0, read);
 			}
-
-			byte[] resultBytes = cipher.doFinal();
-			return new String(resultBytes, UTF_8);
-		} catch (IllegalBlockSizeException | BadPaddingException e) {
+			resultBytes = cipher.doFinal();
+		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
+				| InvalidKeyException e) {
 			throw new CryptoException(e);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
+		return getString(resultBytes);
 	}
 
 	public static String getString(byte[] bytes) {
@@ -171,30 +181,28 @@ public class AsymmetricEncryption {
 		}
 	}
 
-	private static PublicKey loadPublicKey(String keyString, String algorithm, String provider)
+	private static PublicKey loadPublicKey(String base64PublicKey, String algorithm, String provider)
 			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
-		byte[] keyBytes = keyString.getBytes(UTF_8);
 		// provider = Optional.ofNullable(provider).filter(str ->
 		// !str.isEmpty()).orElse("SunRsaSign");
 		provider = "SunRsaSign";
 
-		X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+		X509EncodedKeySpec spec = new X509EncodedKeySpec(Base64.getDecoder().decode(base64PublicKey.getBytes(UTF_8)));
 		KeyFactory kf = KeyFactory.getInstance(algorithm, provider);
 
 		return kf.generatePublic(spec);
 	}
 
-	private static PrivateKey loadPrivateKey(String keyString, String algorithm, String provider)
+	private static PrivateKey loadPrivateKey(String base64PrivateKey, String algorithm, String provider)
 			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
-		byte[] keyBytes = keyString.getBytes(UTF_8);
 		// provider = Optional.ofNullable(provider).filter(str ->
 		// !str.isEmpty()).orElse("SunRsaSign");
 		provider = "SunRsaSign";
 
-		PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(base64PrivateKey.getBytes(UTF_8)));
 
 		KeyFactory kf = KeyFactory.getInstance(algorithm, provider);
 
-		return kf.generatePrivate(spec);
+		return kf.generatePrivate(keySpec);
 	}
 }

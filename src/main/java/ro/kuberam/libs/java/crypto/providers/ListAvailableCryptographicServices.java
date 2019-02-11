@@ -22,7 +22,7 @@
  * and open the template in the editor.
  */
 
-package ro.kuberam.libs.java.crypto.toDo;
+package ro.kuberam.libs.java.crypto.providers;
 
 /**
  * @author claudius

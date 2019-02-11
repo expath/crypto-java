@@ -21,27 +21,28 @@ package ro.kuberam.libs.java.crypto.encrypt;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-import org.apache.commons.io.IOUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ro.kuberam.libs.java.crypto.CryptoModuleTests;
 
 public class AsymmetricEncryptionTest extends CryptoModuleTests {
 
-	@Ignore
 	@Test
 	public void encryptStringWithRsaAsymmetricKey() throws Exception {
-		try (InputStream is = getClass().getResourceAsStream("../rsa-private-key.key")) {
-			String privateKey = IOUtils.toString(is, UTF_8);
-			System.out.println("privateKey = " + privateKey);
+		String transformation = "RSA/ECB/NoPadding";
+		String publicKey = new String(
+				Files.readAllBytes(Paths.get(getClass().getResource("../rsa-public-key.key").toURI())), UTF_8);		
+		String privateKey = new String(
+				Files.readAllBytes(Paths.get(getClass().getResource("../rsa-private-key.key").toURI())), UTF_8);
 
-			String result = AsymmetricEncryption.encryptString(longInput, privateKey,
-					"RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
 
-			System.out.println(result);
-		}
+		String encryptedText = AsymmetricEncryption.encryptString(longString, publicKey, transformation);
+		String decryptedText = AsymmetricEncryption.decryptString(encryptedText, privateKey, transformation);
+
+		System.out.println(encryptedText);
+		System.out.println(decryptedText);
 	}
 }

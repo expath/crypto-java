@@ -21,17 +21,29 @@ package ro.kuberam.libs.java.crypto;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import ro.kuberam.tests.junit.BaseTest;
 
 public class CryptoModuleTests extends BaseTest {
-	
-	protected static String longInput = "Long string for tests. Long string for tests. Long string for tests. Long string for tests. Long string for tests.";
-	protected static byte[] longInputBytes = longInput.getBytes(UTF_8);
+
+	protected static String longString = "Long string for tests. Long string for tests. Long string for tests. Long string for tests. Long string for tests.";
+	protected static String veryLongString;
+	protected static byte[] longInputBytes = longString.getBytes(UTF_8);
 	protected static String sunProvider = "SunJCE";
 	protected static Path rsaPrivateKeyFile = Paths.get("rsa-private-key.key").toAbsolutePath();
 	protected static Path rsaPublicKeyFile = Paths.get("rsa-public-key.key").toAbsolutePath();
+	
+	static {
+		try {
+			veryLongString = new String(
+					Files.readAllBytes(Paths.get(CryptoModuleTests.class.getResource("very-long-string.txt").toURI())), UTF_8);
+		} catch (IOException | URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
 }
-

@@ -54,7 +54,7 @@ public class SymmetricEncryptionTest extends CryptoModuleTests {
 		byte[] encryptionResult = SymmetricEncryption.encrypt(longInputBytes, key, aesAlgorithmCbcMode, iv, "");
 		byte[] decryptionResult = SymmetricEncryption.decrypt(encryptionResult, key, aesAlgorithmCbcMode, iv, "");
 
-		assertEquals(longInput, new String(decryptionResult, UTF_8));
+		assertEquals(longString, new String(decryptionResult, UTF_8));
 	}
 
 	@Test
@@ -64,7 +64,7 @@ public class SymmetricEncryptionTest extends CryptoModuleTests {
 		byte[] decryptionResult = SymmetricEncryption.decrypt(encryptionResult, key, aesAlgorithmCbcMode, iv,
 				sunProvider);
 
-		assertEquals(longInput, new String(decryptionResult, UTF_8));
+		assertEquals(longString, new String(decryptionResult, UTF_8));
 	}
 	
 	@Test
@@ -72,7 +72,7 @@ public class SymmetricEncryptionTest extends CryptoModuleTests {
 		byte[] encryptionResult = SymmetricEncryption.encrypt(longInputBytes, key, aesAlgorithmEcbMode, "", "");
 		byte[] decryptionResult = SymmetricEncryption.decrypt(encryptionResult, key, aesAlgorithmEcbMode, "", "");
 
-		assertEquals(longInput, new String(decryptionResult, UTF_8));
+		assertEquals(longString, new String(decryptionResult, UTF_8));
 	}
 
 	@Ignore

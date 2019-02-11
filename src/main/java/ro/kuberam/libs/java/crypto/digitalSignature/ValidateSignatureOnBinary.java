@@ -36,11 +36,12 @@ public class ValidateSignatureOnBinary {
 		return dsa.sign();
 	}
 
-	public static boolean validateSignatureOnBinary(final byte[] data, final PublicKey publicKey,
-			final byte[] signature, final String algorithm) throws Exception {
-		final Signature signer = Signature.getInstance(algorithm);
+	public static boolean validateSignatureOnBinary(byte[] data, PublicKey publicKey,
+			byte[] signature, String algorithm) throws Exception {
+		Signature signer = Signature.getInstance(algorithm);
 		signer.initVerify(publicKey);
 		signer.update(data);
+		
 		return signer.verify(signature);
 
 	}

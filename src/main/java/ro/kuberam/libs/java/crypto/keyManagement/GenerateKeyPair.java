@@ -27,13 +27,11 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Arrays;
-
-import ro.kuberam.libs.java.crypto.randomSequencesGeneration.RandomNumber;
-
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+
+import ro.kuberam.libs.java.crypto.randomSequencesGeneration.RandomNumber;
 
 public class GenerateKeyPair {
 	private static Base64.Encoder encoder = Base64.getEncoder();
@@ -68,17 +66,14 @@ public class GenerateKeyPair {
 	}
 
 	public static String savePrivateKey(PrivateKey priv) throws GeneralSecurityException {
-		KeyFactory fact = KeyFactory.getInstance("RSA");
+		KeyFactory fact = KeyFactory.getInstance("EllipticCurve");
 		PKCS8EncodedKeySpec spec = fact.getKeySpec(priv, PKCS8EncodedKeySpec.class);
-		byte[] packed = spec.getEncoded();
-		String key64 = Base64.getEncoder().encodeToString(packed);
-		Arrays.fill(packed, (byte) 0);
 
-		return key64;
+		return Base64.getEncoder().encodeToString(spec.getEncoded());
 	}
 
 	public static String savePublicKey(PublicKey publ) throws GeneralSecurityException {
-		KeyFactory fact = KeyFactory.getInstance("RSA");
+		KeyFactory fact = KeyFactory.getInstance("EllipticCurve");
 		X509EncodedKeySpec spec = fact.getKeySpec(publ, X509EncodedKeySpec.class);
 
 		return Base64.getEncoder().encodeToString(spec.getEncoded());
