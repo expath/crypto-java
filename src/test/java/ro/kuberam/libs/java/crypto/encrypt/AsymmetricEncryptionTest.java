@@ -20,6 +20,7 @@
 package ro.kuberam.libs.java.crypto.encrypt;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertEquals;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -32,17 +33,15 @@ public class AsymmetricEncryptionTest extends CryptoModuleTests {
 
 	@Test
 	public void encryptStringWithRsaAsymmetricKey() throws Exception {
-		String transformation = "RSA/ECB/NoPadding";
+		String transformation = "RSA/ECB/PKCS1Padding";
 		String publicKey = new String(
-				Files.readAllBytes(Paths.get(getClass().getResource("../rsa-public-key.key").toURI())), UTF_8);		
+				Files.readAllBytes(Paths.get(getClass().getResource("../rsa-public-key.key").toURI())), UTF_8);
 		String privateKey = new String(
 				Files.readAllBytes(Paths.get(getClass().getResource("../rsa-private-key.key").toURI())), UTF_8);
-
 
 		String encryptedText = AsymmetricEncryption.encryptString(longString, publicKey, transformation);
 		String decryptedText = AsymmetricEncryption.decryptString(encryptedText, privateKey, transformation);
 
-		System.out.println(encryptedText);
-		System.out.println(decryptedText);
+		assertEquals(longString, decryptedText);
 	}
 }
