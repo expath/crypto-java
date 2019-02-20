@@ -62,12 +62,12 @@ public class RSAUtil extends CryptoModuleTests {
     }
 
     public static String decrypt(String data, String base64PrivateKey) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
-        return decrypt(Base64.getDecoder().decode(data.getBytes()), getPrivateKey(base64PrivateKey));
+        return decrypt(Base64.getDecoder().decode(data), getPrivateKey(base64PrivateKey));
     }
 
     public static void main(String[] args) throws IllegalBlockSizeException, InvalidKeyException, NoSuchPaddingException, BadPaddingException {
         try {
-            String encryptedString = Base64.getEncoder().encodeToString(encrypt(veryLongString, publicKey));
+            String encryptedString = Base64.getEncoder().encodeToString(encrypt(longString, publicKey));
             System.out.println(encryptedString);
             String decryptedString = RSAUtil.decrypt(encryptedString, privateKey);
             System.out.println(decryptedString);

@@ -55,14 +55,12 @@ public class AsymmetricEncryption {
 			throws CryptoException, IOException {
 		String provider = "SUN";
 
-		try (InputStream bais = new ByteArrayInputStream(data.getBytes(UTF_8))) {
-			return encrypt(bais, base64PublicKey, transformationName, provider);
-		}
+		return encryptString(data, base64PublicKey, transformationName, provider);
 	}
 
 	public static String encryptString(String data, String base64PublicKey, String transformationName, String provider)
 			throws CryptoException, IOException {
-		InputStream dataIs = new ByteArrayInputStream(data.getBytes(UTF_8));
+		byte[] dataBytes = data.getBytes(UTF_8);
 		String algorithm = transformationName.split("/")[0];
 		byte[] resultBytes = null;
 
@@ -71,13 +69,7 @@ public class AsymmetricEncryption {
 			cipher = Cipher.getInstance(transformationName);
 			PublicKey publicKey = loadPublicKey(base64PublicKey, algorithm, provider);
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
-			byte[] buf = new byte[Buffer.TRANSFER_SIZE];
-			int read = -1;
-			while ((read = dataIs.read(buf)) > -1) {
-				cipher.update(buf, 0, read);
-			}
-			resultBytes = cipher.doFinal();
+			resultBytes = cipher.doFinal(dataBytes);
 		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeyException e) {
 			throw new CryptoException(e);
@@ -88,8 +80,36 @@ public class AsymmetricEncryption {
 		return Base64.getEncoder().encodeToString(resultBytes);
 	}
 
-	public static String encrypt(InputStream data, String base64PublicKey, String transformationName, String provider)
+	public static String decryptString(String encryptedData, String base64PrivateKey, String transformationName)
 			throws CryptoException, IOException {
+		String provider = "SUN";
+
+		return decryptString(encryptedData, base64PrivateKey, transformationName, provider);
+	}
+
+	public static String decryptString(String encryptedData, String base64PrivateKey, String transformationName,
+			String provider) throws CryptoException, IOException {
+		byte[] dataBytes = Base64.getDecoder().decode(encryptedData);
+		String algorithm = transformationName.split("/")[0];
+		byte[] resultBytes = null;
+
+		Cipher cipher;
+		try {
+			cipher = Cipher.getInstance(transformationName);
+			cipher.init(Cipher.DECRYPT_MODE, loadPrivateKey(base64PrivateKey, algorithm, provider));
+			resultBytes = cipher.doFinal(dataBytes);
+		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
+				| InvalidKeyException e) {
+			throw new CryptoException(e);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new String(resultBytes, UTF_8);
+	}
+
+	public static String encryptBinary(InputStream data, String base64PublicKey, String transformationName,
+			String provider) throws CryptoException, IOException {
 		String algorithm = transformationName.split("/")[0];
 		byte[] resultBytes = null;
 
@@ -115,32 +135,16 @@ public class AsymmetricEncryption {
 		return getString(resultBytes);
 	}
 
-	public static String decryptString(String encryptedInput, String base64PrivateKey, String transformationName)
-			throws CryptoException, IOException {
-		String provider = "SUN";
-
-		try (InputStream bais = new ByteArrayInputStream(getBytes(encryptedInput))) {
-			return decrypt(bais, base64PrivateKey, transformationName, provider);
-		}
-	}
-
-	public static String decryptString(String data, String base64PrivateKey, String transformationName, String provider)
-			throws CryptoException, IOException {
-		try (InputStream bais = new ByteArrayInputStream(getBytes(data))) {
-			return decrypt(bais, base64PrivateKey, transformationName, provider);
-		}
-	}
-
-	public static String decrypt(InputStream data, String base64PrivateKey, String transformationName, String provider)
-			throws CryptoException, IOException {
+	public static String decryptBinary(InputStream data, String base64PrivateKey, String transformationName,
+			String provider) throws CryptoException, IOException {
 		String algorithm = transformationName.split("/")[0];
 		byte[] resultBytes = null;
 
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName);
-			PrivateKey publicKey = loadPrivateKey(base64PrivateKey, algorithm, provider);
-			cipher.init(Cipher.DECRYPT_MODE, publicKey);
+			PrivateKey privateKey = loadPrivateKey(base64PrivateKey, algorithm, provider);
+			cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
 			byte[] buf = new byte[Buffer.TRANSFER_SIZE];
 			int read = -1;
@@ -199,7 +203,8 @@ public class AsymmetricEncryption {
 		// !str.isEmpty()).orElse("SunRsaSign");
 		provider = "SunRsaSign";
 
-		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(base64PrivateKey.getBytes(UTF_8)));
+		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(
+				Base64.getDecoder().decode(base64PrivateKey.getBytes(UTF_8)));
 
 		KeyFactory kf = KeyFactory.getInstance(algorithm, provider);
 
