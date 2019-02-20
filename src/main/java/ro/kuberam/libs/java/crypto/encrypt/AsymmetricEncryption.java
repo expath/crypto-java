@@ -210,3 +210,9 @@ public class AsymmetricEncryption {
 		return kf.generatePrivate(keySpec);
 	}
 }
+// move loadPublicKey() and loadPrivateKey() to Key management section
+// add providers to loadPublicKey() and loadPrivateKey()
+// test AsymmetricEncryption with ad-hoc generated keys
+// add AsymmetricEncryption for binaries
+// change the output of symmetric encryption to base64Binary string (and tests, too)
+// add / improve error message for AsymmetricEncryption when the text to be encrypted is larger that the key
