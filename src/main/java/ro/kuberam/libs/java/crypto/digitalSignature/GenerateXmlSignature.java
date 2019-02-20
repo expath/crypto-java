@@ -66,6 +66,17 @@ public class GenerateXmlSignature {
 			String signatureAlgorithm, String signatureNamespacePrefix, String signatureType, String xpathExprString,
 			String[] certificateDetails, InputStream keyStoreInputStream)
 			throws CryptoException, IOException, XMLSignatureException {
+		String mechanismType = "DOM";
+
+		return generate(inputDoc, mechanismType, canonicalizationAlgorithm, digestAlgorithm, signatureAlgorithm,
+				signatureNamespacePrefix, signatureType, xpathExprString, certificateDetails, keyStoreInputStream);
+
+	}
+
+	public static String generate(Document inputDoc, String mechanismType, String canonicalizationAlgorithm,
+			String digestAlgorithm, String signatureAlgorithm, String signatureNamespacePrefix, String signatureType,
+			String xpathExprString, String[] certificateDetails, InputStream keyStoreInputStream)
+			throws CryptoException, IOException, XMLSignatureException {
 
 		String canonicalizationAlgorithmURI = getCanonicalizationAlgorithmUri(canonicalizationAlgorithm);
 		String digestAlgorithmURI = getDigestAlgorithmURI(digestAlgorithm);
@@ -73,7 +84,7 @@ public class GenerateXmlSignature {
 		String keyPairAlgorithm = signatureAlgorithm.substring(0, 3);
 
 		// Create a DOM XMLSignatureFactory
-		XMLSignatureFactory sigFactory = XMLSignatureFactory.getInstance("DOM");
+		XMLSignatureFactory sigFactory = XMLSignatureFactory.getInstance(mechanismType);
 
 		// Create a Reference to the signed element
 		Node sigParent = null;
