@@ -42,6 +42,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import ro.kuberam.libs.java.crypto.CryptoException;
+import ro.kuberam.libs.java.crypto.keyManagement.LoadPrivateKey;
+import ro.kuberam.libs.java.crypto.keyManagement.LoadPublicKey;
 import ro.kuberam.libs.java.crypto.utils.Buffer;
 
 /**
@@ -66,7 +68,7 @@ public class AsymmetricEncryption {
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName);
-			PublicKey publicKey = loadPublicKey(base64PublicKey, algorithm, provider);
+			PublicKey publicKey = LoadPublicKey.run(base64PublicKey, algorithm, provider);
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			resultBytes = cipher.doFinal(dataBytes);
 		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
@@ -95,7 +97,7 @@ public class AsymmetricEncryption {
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName);
-			cipher.init(Cipher.DECRYPT_MODE, loadPrivateKey(base64PrivateKey, algorithm, provider));
+			cipher.init(Cipher.DECRYPT_MODE, LoadPrivateKey.run(base64PrivateKey, algorithm, provider));
 			resultBytes = cipher.doFinal(dataBytes);
 		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeyException e) {
@@ -115,7 +117,7 @@ public class AsymmetricEncryption {
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName);
-			PublicKey publicKey = loadPublicKey(base64PublicKey, algorithm, provider);
+			PublicKey publicKey = LoadPublicKey.run(base64PublicKey, algorithm, provider);
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
 			byte[] buf = new byte[Buffer.TRANSFER_SIZE];
@@ -142,7 +144,7 @@ public class AsymmetricEncryption {
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName);
-			PrivateKey privateKey = loadPrivateKey(base64PrivateKey, algorithm, provider);
+			PrivateKey privateKey = LoadPrivateKey.run(base64PrivateKey, algorithm, provider);
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
 			byte[] buf = new byte[Buffer.TRANSFER_SIZE];
@@ -183,34 +185,8 @@ public class AsymmetricEncryption {
 			return bos.toByteArray();
 		}
 	}
-
-	private static PublicKey loadPublicKey(String base64PublicKey, String algorithm, String provider)
-			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
-		// provider = Optional.ofNullable(provider).filter(str ->
-		// !str.isEmpty()).orElse("SunRsaSign");
-		provider = "SunRsaSign";
-
-		X509EncodedKeySpec spec = new X509EncodedKeySpec(Base64.getDecoder().decode(base64PublicKey.getBytes(UTF_8)));
-		KeyFactory kf = KeyFactory.getInstance(algorithm, provider);
-
-		return kf.generatePublic(spec);
-	}
-
-	private static PrivateKey loadPrivateKey(String base64PrivateKey, String algorithm, String provider)
-			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
-		// provider = Optional.ofNullable(provider).filter(str ->
-		// !str.isEmpty()).orElse("SunRsaSign");
-		provider = "SunRsaSign";
-
-		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(
-				Base64.getDecoder().decode(base64PrivateKey.getBytes(UTF_8)));
-
-		KeyFactory kf = KeyFactory.getInstance(algorithm, provider);
-
-		return kf.generatePrivate(keySpec);
-	}
 }
-// move loadPublicKey() and loadPrivateKey() to Key management section
+// move loadPrivateKey() to Key management section
 // add providers to loadPublicKey() and loadPrivateKey()
 // test AsymmetricEncryption with ad-hoc generated keys
 // add AsymmetricEncryption for binaries
