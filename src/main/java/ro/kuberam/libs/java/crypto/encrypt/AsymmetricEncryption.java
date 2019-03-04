@@ -47,23 +47,21 @@ import ro.kuberam.libs.java.crypto.utils.Buffer;
  */
 public class AsymmetricEncryption {
 
-	public static String encryptString(String data, String base64PublicKey, String transformationName)
+	public static String encryptString(String data, PublicKey publicKey, String transformationName)
 			throws CryptoException, IOException {
 		String provider = "SUN";
 
-		return encryptString(data, base64PublicKey, transformationName, provider);
+		return encryptString(data, publicKey, transformationName, provider);
 	}
 
-	public static String encryptString(String data, String base64PublicKey, String transformationName, String provider)
+	public static String encryptString(String data, PublicKey publicKey, String transformationName, String provider)
 			throws CryptoException, IOException {
 		byte[] dataBytes = data.getBytes(UTF_8);
-		String algorithm = transformationName.split("/")[0];
 		byte[] resultBytes = null;
 
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName);
-			PublicKey publicKey = LoadPublicKey.run(base64PublicKey, algorithm, provider);
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			resultBytes = cipher.doFinal(dataBytes);
 		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
@@ -76,23 +74,22 @@ public class AsymmetricEncryption {
 		return Base64.getEncoder().encodeToString(resultBytes);
 	}
 
-	public static String decryptString(String encryptedData, String base64PrivateKey, String transformationName)
+	public static String decryptString(String encryptedData, PrivateKey privateKey, String transformationName)
 			throws CryptoException, IOException {
 		String provider = "SUN";
 
-		return decryptString(encryptedData, base64PrivateKey, transformationName, provider);
+		return decryptString(encryptedData, privateKey, transformationName, provider);
 	}
 
-	public static String decryptString(String encryptedData, String base64PrivateKey, String transformationName,
+	public static String decryptString(String encryptedData, PrivateKey privateKey, String transformationName,
 			String provider) throws CryptoException, IOException {
 		byte[] dataBytes = Base64.getDecoder().decode(encryptedData);
-		String algorithm = transformationName.split("/")[0];
 		byte[] resultBytes = null;
 
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName);
-			cipher.init(Cipher.DECRYPT_MODE, LoadPrivateKey.run(base64PrivateKey, algorithm, provider));
+			cipher.init(Cipher.DECRYPT_MODE, privateKey);
 			resultBytes = cipher.doFinal(dataBytes);
 		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeyException e) {

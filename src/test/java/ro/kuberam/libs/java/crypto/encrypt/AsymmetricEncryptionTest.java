@@ -24,20 +24,29 @@ import static org.junit.Assert.assertEquals;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 import org.junit.Test;
 
 import ro.kuberam.libs.java.crypto.CryptoModuleTests;
+import ro.kuberam.libs.java.crypto.keyManagement.LoadPrivateKey;
+import ro.kuberam.libs.java.crypto.keyManagement.LoadPublicKey;
 
 public class AsymmetricEncryptionTest extends CryptoModuleTests {
 
 	@Test
 	public void encryptStringWithRsaAsymmetricKey() throws Exception {
 		String transformation = "RSA/ECB/PKCS1Padding";
-		String publicKey = new String(
+		String algorithm = "RSA";
+		
+		String base64PublicKey = new String(
 				Files.readAllBytes(Paths.get(getClass().getResource("../rsa-public-key.key").toURI())), UTF_8);
-		String privateKey = new String(
+		PublicKey publicKey = LoadPublicKey.run(base64PublicKey, algorithm, null);
+		
+		String base64PrivateKey = new String(
 				Files.readAllBytes(Paths.get(getClass().getResource("../rsa-private-key.key").toURI())), UTF_8);
+		PrivateKey privateKey = LoadPrivateKey.run(base64PrivateKey, algorithm, null);
 
 		String encryptedText = AsymmetricEncryption.encryptString(longString, publicKey, transformation);
 		String decryptedText = AsymmetricEncryption.decryptString(encryptedText, privateKey, transformation);
