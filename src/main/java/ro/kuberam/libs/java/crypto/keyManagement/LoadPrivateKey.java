@@ -9,13 +9,12 @@ import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
+import java.util.Optional;
 
 public class LoadPrivateKey {
 	public static PrivateKey run(String base64PrivateKey, String algorithm, String provider)
 			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
-		// provider = Optional.ofNullable(provider).filter(str ->
-		// !str.isEmpty()).orElse("SunRsaSign");
-		provider = "SunRsaSign";
+		provider = Optional.ofNullable(provider).filter(str -> !str.isEmpty()).orElse("SunRsaSign");
 
 		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(
 				Base64.getDecoder().decode(base64PrivateKey.getBytes(UTF_8)));

@@ -25,14 +25,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
-import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.StringTokenizer;
 
@@ -186,7 +181,6 @@ public class AsymmetricEncryption {
 		}
 	}
 }
-// move loadPrivateKey() to Key management section
 // add providers to loadPublicKey() and loadPrivateKey()
 // test AsymmetricEncryption with ad-hoc generated keys
 // add AsymmetricEncryption for binaries

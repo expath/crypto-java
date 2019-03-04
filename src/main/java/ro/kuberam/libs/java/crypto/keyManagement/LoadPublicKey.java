@@ -9,14 +9,13 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.Optional;
 
 public class LoadPublicKey {
 
 	public static PublicKey run(String base64PublicKey, String algorithm, String provider)
 			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
-		// provider = Optional.ofNullable(provider).filter(str ->
-		// !str.isEmpty()).orElse("SunRsaSign");
-		provider = "SunRsaSign";
+		provider = Optional.ofNullable(provider).filter(str -> !str.isEmpty()).orElse("SunRsaSign");
 
 		X509EncodedKeySpec spec = new X509EncodedKeySpec(Base64.getDecoder().decode(base64PublicKey.getBytes(UTF_8)));
 		KeyFactory kf = KeyFactory.getInstance(algorithm, provider);
