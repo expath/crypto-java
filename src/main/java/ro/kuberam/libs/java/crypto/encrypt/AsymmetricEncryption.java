@@ -37,8 +37,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import ro.kuberam.libs.java.crypto.CryptoException;
-import ro.kuberam.libs.java.crypto.keyManagement.LoadPrivateKey;
-import ro.kuberam.libs.java.crypto.keyManagement.LoadPublicKey;
+import ro.kuberam.libs.java.crypto.keyManagement.Load;
 import ro.kuberam.libs.java.crypto.utils.Buffer;
 
 /**
@@ -109,7 +108,7 @@ public class AsymmetricEncryption {
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName);
-			PublicKey publicKey = LoadPublicKey.run(base64PublicKey, algorithm, provider);
+			PublicKey publicKey = Load.publicKey(base64PublicKey, algorithm, provider);
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
 			byte[] buf = new byte[Buffer.TRANSFER_SIZE];
@@ -136,7 +135,7 @@ public class AsymmetricEncryption {
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName);
-			PrivateKey privateKey = LoadPrivateKey.run(base64PrivateKey, algorithm, provider);
+			PrivateKey privateKey = Load.privateKey(base64PrivateKey, algorithm, provider);
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
 			byte[] buf = new byte[Buffer.TRANSFER_SIZE];
@@ -179,7 +178,6 @@ public class AsymmetricEncryption {
 	}
 }
 // add providers to loadPublicKey() and loadPrivateKey()
-// test AsymmetricEncryption with ad-hoc generated keys
 // add AsymmetricEncryption for binaries
 // change the output of symmetric encryption to base64Binary string (and tests, too)
 // add / improve error message for AsymmetricEncryption when the text to be encrypted is larger that the key
