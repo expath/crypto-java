@@ -19,28 +19,37 @@
  */
 package ro.kuberam.libs.java.crypto;
 
-public class CryptoException extends Exception {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2606956271206243301L;
-	private CryptoError cryptoError;
+import javax.annotation.Nullable;
 
-	public CryptoException(CryptoError cryptoError) {
+public class CryptoException extends Exception {
+	private static final long serialVersionUID = -2606956271206243301L;
+	@Nullable private final CryptoError cryptoError;
+
+	public CryptoException(final CryptoError cryptoError) {
 		super(cryptoError.getDescription());
 		this.cryptoError = cryptoError;
 	}
 
-	public CryptoException(CryptoError cryptoError, Throwable cause) {
+	public CryptoException(final CryptoError cryptoError, final Throwable cause) {
 		super(cryptoError.getDescription(), cause);
 		this.cryptoError = cryptoError;
 	}
 	
-	public static CryptoException fromCause(final Throwable cause) {
-		final CryptoError cryptoError = CryptoError.valueOf(cause.getClass().getSimpleName());
-		return new CryptoException(cryptoError, cause);
-	}	
+	public CryptoException(final Throwable cause) {
+		super(getDesc(cause), cause);
+		this.cryptoError = CryptoError.describeException(cause);
+	}
 
+	private static String getDesc(final Throwable cause) {
+		final CryptoError cryptoError = CryptoError.describeException(cause);
+		if (cryptoError != null) {
+			return cryptoError.getDescription();
+		} else {
+			return cause.getMessage();
+		}
+	}
+
+	@Nullable
 	public CryptoError getCryptoError() {
 		return cryptoError;
 	}

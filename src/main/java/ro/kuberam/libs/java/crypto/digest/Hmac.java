@@ -98,7 +98,7 @@ public class Hmac {
 			return mac.doFinal(data);
 
 		} catch (NoSuchAlgorithmException | InvalidKeyException e) {
-			throw CryptoException.fromCause(e);
+			throw new CryptoException(e);
 		}
 	}
 
@@ -125,7 +125,7 @@ public class Hmac {
 			return mac.doFinal();
 
 		} catch (NoSuchAlgorithmException | InvalidKeyException e) {
-			throw CryptoException.fromCause(e);
+			throw new CryptoException(e);
 		}
 	}
 }

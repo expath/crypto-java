@@ -66,7 +66,7 @@ public class SymmetricEncryption {
 		try {
 			cipher = Cipher.getInstance(transformationName, actualProvider);
 		} catch (NoSuchProviderException | NoSuchAlgorithmException | NoSuchPaddingException e) {
-			throw CryptoException.fromCause(e);
+			throw new CryptoException(e);
 		}
 
 		SecretKeySpec skeySpec = generateSecretKey(secretKey, algorithm);
@@ -75,20 +75,20 @@ public class SymmetricEncryption {
 			try {
 				cipher.init(operationType, skeySpec, ivSpec);
 			} catch (InvalidAlgorithmParameterException | InvalidKeyException e) {
-				throw CryptoException.fromCause(e);
+				throw new CryptoException(e);
 			}
 		} else {
 			try {
 				cipher.init(operationType, skeySpec);
 			} catch (InvalidKeyException e) {
-				throw new CryptoException(CryptoError.InvalidKeySpecException, e);
+				throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
 			}
 		}
 
 		try {
 			result = cipher.doFinal(input);
 		} catch (IllegalBlockSizeException | BadPaddingException e) {
-			throw CryptoException.fromCause(e);
+			throw new CryptoException(e);
 		}
 
 		return result;

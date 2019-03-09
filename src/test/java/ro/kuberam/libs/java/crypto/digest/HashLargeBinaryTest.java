@@ -87,7 +87,7 @@ public class HashLargeBinaryTest {
     @Test
     public void hashLargeBinary() throws IOException, CryptoException {
         try (final InputStream is = Files.newInputStream(largeFile)) {
-            final String result = Hash.hashBinary(is, algorithm, format);
+            final String result = Hash.hashBinary(is, algorithm, null, format);
             assertEquals(expected, result);
         }
     }

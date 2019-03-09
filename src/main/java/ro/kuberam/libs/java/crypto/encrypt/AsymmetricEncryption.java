@@ -66,7 +66,7 @@ public class AsymmetricEncryption {
 			resultBytes = cipher.doFinal(dataBytes);
 		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeyException e) {
-			throw CryptoException.fromCause(e);
+			throw new CryptoException(e);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -93,7 +93,7 @@ public class AsymmetricEncryption {
 			resultBytes = cipher.doFinal(dataBytes);
 		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeyException e) {
-			throw CryptoException.fromCause(e);
+			throw new CryptoException(e);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -120,7 +120,7 @@ public class AsymmetricEncryption {
 			resultBytes = cipher.doFinal();
 		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeyException e) {
-			throw CryptoException.fromCause(e);
+			throw new CryptoException(e);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -147,7 +147,7 @@ public class AsymmetricEncryption {
 			resultBytes = cipher.doFinal();
 		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeyException e) {
-			throw CryptoException.fromCause(e);
+			throw new CryptoException(e);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

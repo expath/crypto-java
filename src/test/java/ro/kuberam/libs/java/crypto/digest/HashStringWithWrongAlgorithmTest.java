@@ -57,10 +57,10 @@ public class HashStringWithWrongAlgorithmTest {
     public void hashStringWithWrongAlgorithm() {
         try {
             final String input = "Short string for tests.";
-            Hash.hashString(input, algorithm, format);
+            Hash.hashString(input, algorithm, null, format);
             fail("Algorithm: " + algorithm + " should have been unknown");
         } catch (final CryptoException e) {
-            assertEquals(CryptoError.NoSuchAlgorithmException, e.getCryptoError());
+            assertEquals(CryptoError.UNKNOWN_ALGORITHM, e.getCryptoError());
         }
     }
 }

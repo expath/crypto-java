@@ -23,8 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
-import java.util.Base64;
-import java.util.Optional;
+import java.util.*;
 import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
@@ -116,7 +115,7 @@ public class Hash {
 				return MessageDigest.getInstance(algorithm);
 			}
 		} catch (final NoSuchAlgorithmException e) {
-			throw new CryptoException(CryptoError.NoSuchAlgorithmException, e);
+			throw new CryptoException(CryptoError.UNKNOWN_ALGORITHM, e);
 		} catch (final NoSuchProviderException e) {
 			throw new CryptoException(CryptoError.UNKNOWN_PROVIDER, e);
 		}

@@ -73,7 +73,7 @@ public class HashBinaryTest {
         try (final InputStream input = getClass().getResourceAsStream("../keystore.ks")) {
             assertNotNull(input);
 
-            final String result = Hash.hashBinary(input, algorithm, format);
+            final String result = Hash.hashBinary(input, algorithm, null, format);
             assertEquals(expected, result);
         }
     }
