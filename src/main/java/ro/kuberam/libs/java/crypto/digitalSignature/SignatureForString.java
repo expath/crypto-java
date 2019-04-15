@@ -17,23 +17,20 @@
  * along with this library; if not, write to the Free Software Foundation,
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package ro.kuberam.libs.java.crypto.keyManagement;
+package ro.kuberam.libs.java.crypto.digitalSignature;
 
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.security.PrivateKey;
+import java.security.Signature;
+import java.util.Base64;
 
-import org.junit.Test;
+public class SignatureForString {
 
-import ro.kuberam.tests.junit.BaseTest;
+	public static String generate(String data, PrivateKey privateKey, String algorithm) throws Exception {
+		Signature dsa = Signature.getInstance(algorithm);
+		dsa.initSign(privateKey);
+		dsa.update(data.getBytes(StandardCharsets.UTF_8));
 
-public class TranslateKeyTest extends BaseTest {
-
-	@Test
-	public void rsaKeyPair() throws Exception {
-		String algorithm = "DSA";
-		String keyGenerationProvider = "SUN";
-		Map<String, String> keys = GenerateKeyPair.run(algorithm, keyGenerationProvider);
-
-		System.out.println("Private key:\n" + keys.get("private-key"));
-		System.out.println("Public key:\n" + keys.get("public-key"));
+		return Base64.getEncoder().encodeToString(dsa.sign());
 	}
 }

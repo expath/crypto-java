@@ -23,6 +23,8 @@ import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -37,7 +39,19 @@ public class GenerateKeyPair {
 	private static Base64.Encoder encoder = Base64.getEncoder();
 
 	public static Map<String, String> run(String algorithm) throws Exception {
-		KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(algorithm);
+		KeyPairGenerator keyGenerator = getKeyPairGenerator(algorithm);
+		keyGenerator.initialize(2048);
+		KeyPair keys = keyGenerator.generateKeyPair();
+
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("private-key", outputPrivatekey(keys.getPrivate().getEncoded(), algorithm));
+		result.put("public-key", outputPublickey(keys.getPublic().getEncoded(), algorithm));
+
+		return result;
+	}
+
+	public static Map<String, String> run(String algorithm, String provider) throws Exception {
+		KeyPairGenerator keyGenerator = getKeyPairGenerator(algorithm, provider);
 		keyGenerator.initialize(2048);
 		KeyPair keys = keyGenerator.generateKeyPair();
 
@@ -56,14 +70,22 @@ public class GenerateKeyPair {
 	}
 
 	private static String outputPrivatekey(byte[] privateKey, String algorithm) {
-		return "-----BEGIN " + algorithm + " PRIVATE KEY-----\n" + encoder.encodeToString(privateKey)
-				+ "\n-----END " + algorithm + " PRIVATE KEY-----\n";
+		return "-----BEGIN " + algorithm + " PRIVATE KEY-----\n" + encoder.encodeToString(privateKey) + "\n-----END "
+				+ algorithm + " PRIVATE KEY-----\n";
 	}
 
 	private static String outputPublickey(byte[] publicKey, String algorithm) {
-		return "-----BEGIN " + algorithm + " PUBLIC KEY-----\n" + encoder.encodeToString(publicKey)
-				+ "\n-----END " + algorithm + " PUBLIC KEY-----\n";
+		return "-----BEGIN " + algorithm + " PUBLIC KEY-----\n" + encoder.encodeToString(publicKey) + "\n-----END "
+				+ algorithm + " PUBLIC KEY-----\n";
 	}
+
+	private static KeyPairGenerator getKeyPairGenerator(String algorithm) throws NoSuchAlgorithmException {
+		return KeyPairGenerator.getInstance(algorithm);
+	}
+	
+	private static KeyPairGenerator getKeyPairGenerator(String algorithm, String provider) throws NoSuchAlgorithmException, NoSuchProviderException {
+		return KeyPairGenerator.getInstance(algorithm, provider);
+	}	
 
 	public static String savePrivateKey(PrivateKey priv) throws GeneralSecurityException {
 		KeyFactory fact = KeyFactory.getInstance("EllipticCurve");

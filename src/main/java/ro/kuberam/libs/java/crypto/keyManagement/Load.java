@@ -18,25 +18,28 @@ public class Load {
 	public static PublicKey publicKey(String base64PublicKey, String algorithm, String provider)
 			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
 		provider = Optional.ofNullable(provider).filter(str -> !str.isEmpty()).orElse("SunRsaSign");
-		String cleanedKey = pattern.matcher(base64PublicKey).replaceFirst("$1");
+		String cleanedKey = cleanKey(base64PublicKey);
 
 		X509EncodedKeySpec spec = new X509EncodedKeySpec(Base64.getMimeDecoder().decode(cleanedKey));
 		KeyFactory kf = KeyFactory.getInstance(algorithm, provider);
 
 		return kf.generatePublic(spec);
 	}
-	
+
 	public static PrivateKey privateKey(String base64PrivateKey, String algorithm, String provider)
 			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
 		provider = Optional.ofNullable(provider).filter(str -> !str.isEmpty()).orElse("SunRsaSign");
-		String cleanedKey = pattern.matcher(base64PrivateKey).replaceFirst("$1");
-		
-		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(
-				Base64.getMimeDecoder().decode(cleanedKey));
+		String cleanedKey = cleanKey(base64PrivateKey);
+
+		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getMimeDecoder().decode(cleanedKey));
 
 		KeyFactory kf = KeyFactory.getInstance(algorithm, provider);
 
 		return kf.generatePrivate(keySpec);
+	}
+
+	private static String cleanKey(String base64Key) {
+		return pattern.matcher(base64Key).replaceFirst("$1");
 	}
 
 }

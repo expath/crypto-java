@@ -33,6 +33,7 @@ public enum CryptoError {
     BadPaddingException("crypto:incorrect-padding", "Incorrect padding."),
     ENCRYPTION_TYPE("crypto:encryption-type", "The encryption type is not supported."),
     InvalidKeySpecException("crypto:invalid-crypto-key", "The cryptographic key is invalid."),
+    InvalidKeyException("crypto:invalid-crypto-key", "The cryptographic key is invalid."),
     IllegalBlockSizeException("crypto:block-size", "Illegal block size."),
     DECRYPTION_TYPE("crypto:decryption-type", "The decryption type is not supported."),
     NoSuchProviderException("crypto:no-provider", "The provider is not set."),

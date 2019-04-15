@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -46,14 +47,14 @@ import ro.kuberam.libs.java.crypto.utils.Buffer;
  */
 public class AsymmetricEncryption {
 
-	public static String encryptString(String data, PublicKey publicKey, String transformationName)
+	public static String encryptString(String data, Key key, String transformationName)
 			throws CryptoException, IOException {
 		String provider = "SUN";
 
-		return encryptString(data, publicKey, transformationName, provider);
+		return encryptString(data, key, transformationName, provider);
 	}
 
-	public static String encryptString(String data, PublicKey publicKey, String transformationName, String provider)
+	public static String encryptString(String data, Key key, String transformationName, String provider)
 			throws CryptoException, IOException {
 		byte[] dataBytes = data.getBytes(UTF_8);
 		byte[] resultBytes = null;
@@ -61,7 +62,7 @@ public class AsymmetricEncryption {
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(transformationName);
-			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+			cipher.init(Cipher.ENCRYPT_MODE, key);
 			resultBytes = cipher.doFinal(dataBytes);
 		} catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeyException e) {
@@ -178,6 +179,9 @@ public class AsymmetricEncryption {
 	}
 }
 // add providers to loadPublicKey() and loadPrivateKey()
+// add key length to GenerateKeyPair $key-strength 
+// remove GenerateKeyPair.generate() by replacing it?
 // add AsymmetricEncryption for binaries
 // change the output of symmetric encryption to base64Binary string (and tests, too)
 // add / improve error message for AsymmetricEncryption when the text to be encrypted is larger that the key
+

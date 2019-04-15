@@ -28,14 +28,43 @@ import ro.kuberam.tests.junit.BaseTest;
 
 import static org.junit.Assert.assertTrue;
 
+import java.security.Provider;
+import java.security.Security;
+import java.util.Iterator;
+import java.util.Set;
+
 public class ListProvidersTest extends BaseTest {
 
-    @Test
-    public void listProviders() throws FactoryConfigurationError, Exception {
-        StreamResult providers = ListProviders.listProviders();
-        String providersString = providers.getWriter().toString();
-        System.out.println(prettyPrintXmlString(providersString));
-        assertTrue(providersString.contains("SunJCE"));
-    }
+	@Test
+	public void listProviders() throws FactoryConfigurationError, Exception {
+		StreamResult providers = ListProviders.listProviders();
+		String providersString = providers.getWriter().toString();
+		System.out.println(prettyPrintXmlString(providersString));
+		assertTrue(providersString.contains("SunJCE"));
+	}
+
+	@Test
+	public void listProviders2() throws FactoryConfigurationError, Exception {
+		for (Provider provider : Security.getProviders()) {
+			final Set keys = provider.keySet();
+
+			System.out.println(provider);
+
+			for (Iterator it = keys.iterator(); it.hasNext();) {
+
+				String key = (String) it.next();
+				key = key.split(" ")[0];
+
+				if (key.startsWith("Alg.Alias")) {
+					// Strip the alias
+					key = key.substring(10);
+				}
+
+				final int ix = key.indexOf('.');
+				System.out.println("\t" + key);
+
+			}
+		}
+	}
 
 }

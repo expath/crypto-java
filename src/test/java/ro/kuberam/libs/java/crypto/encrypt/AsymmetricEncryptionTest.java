@@ -28,6 +28,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ro.kuberam.libs.java.crypto.CryptoModuleTests;
@@ -56,10 +57,10 @@ public class AsymmetricEncryptionTest extends CryptoModuleTests {
 	}
 
 	@Test
-	public void encryptAndDecryptStringWithAdHocGeneratedKey() throws Exception {
+	public void adHocGeneratedKeyWithTheSameAlgorithm() throws Exception {
 		String transformation = "RSA/ECB/PKCS1Padding";
 		String algorithm = "RSA";
-		Map<String, String> keys = GenerateKeyPair.run("RSA");
+		Map<String, String> keys = GenerateKeyPair.run(algorithm);
 
 		PublicKey publicKey = Load.publicKey(keys.get("public-key"), algorithm, null);
 		PrivateKey privateKey = Load.privateKey(keys.get("private-key"), algorithm, null);
@@ -68,5 +69,22 @@ public class AsymmetricEncryptionTest extends CryptoModuleTests {
 		String decryptedText = AsymmetricEncryption.decryptString(encryptedText, privateKey, transformation);
 
 		assertEquals(longString, decryptedText);
+	}
+
+	@Ignore
+	@Test
+	public void adHocGeneratedKeyWithDifferentAlgorithm() throws Exception {
+		String transformation = "RSA/ECB/PKCS1Padding";
+		String algorithm = "DSA";
+		String keyGenerationProvider = "SUN";
+		Map<String, String> keys = GenerateKeyPair.run(algorithm, keyGenerationProvider);
+
+		PublicKey publicKey = Load.publicKey(keys.get("public-key"), algorithm, keyGenerationProvider);
+		PrivateKey privateKey = Load.privateKey(keys.get("private-key"), algorithm, keyGenerationProvider);
+
+		String encryptedText = AsymmetricEncryption.encryptString(longString, publicKey, transformation);
+//		String decryptedText = AsymmetricEncryption.decryptString(encryptedText, privateKey, transformation);
+
+//		assertEquals(longString, decryptedText);
 	}
 }
