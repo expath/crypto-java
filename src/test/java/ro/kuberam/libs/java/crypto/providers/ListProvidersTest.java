@@ -22,6 +22,7 @@ package ro.kuberam.libs.java.crypto.providers;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.transform.stream.StreamResult;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
@@ -35,6 +36,7 @@ import java.util.Set;
 
 public class ListProvidersTest extends BaseTest {
 
+	@Ignore
 	@Test
 	public void listProviders() throws FactoryConfigurationError, Exception {
 		StreamResult providers = ListProviders.listProviders();
@@ -48,7 +50,9 @@ public class ListProvidersTest extends BaseTest {
 		for (Provider provider : Security.getProviders()) {
 			final Set keys = provider.keySet();
 
-			System.out.println(provider);
+			System.out.println(provider.getName());
+			System.out.println("   " + provider.getVersion());			
+			System.out.println("   " + provider.getInfo());
 
 			for (Iterator it = keys.iterator(); it.hasNext();) {
 
@@ -61,7 +65,7 @@ public class ListProvidersTest extends BaseTest {
 				}
 
 				final int ix = key.indexOf('.');
-				System.out.println("\t" + key);
+				//System.out.println("\t" + key);
 
 			}
 		}
