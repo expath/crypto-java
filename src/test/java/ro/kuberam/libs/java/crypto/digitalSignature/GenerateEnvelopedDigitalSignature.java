@@ -19,6 +19,9 @@
  */
 package ro.kuberam.libs.java.crypto.digitalSignature;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertTrue;
+
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
@@ -26,9 +29,6 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 
 import ro.kuberam.tests.junit.BaseTest;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertTrue;
 
 public class GenerateEnvelopedDigitalSignature extends BaseTest {
 

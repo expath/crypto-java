@@ -50,6 +50,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
@@ -61,6 +62,7 @@ import ro.kuberam.tests.junit.BaseTest;
 
 public class GenerateDigitalSignatureTest extends BaseTest {
 
+	@Ignore
     @Test
     public void generateEnvelopedDigitalSignature() throws Exception {
         final Parameters parameters = new Parameters();
