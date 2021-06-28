@@ -83,8 +83,8 @@ public class AsymmetricEncryptionTest extends CryptoModuleTests {
 		PrivateKey privateKey = Load.privateKey(keys.get("private-key"), algorithm, keyGenerationProvider);
 
 		String encryptedText = AsymmetricEncryption.encryptString(longString, publicKey, transformation);
-//		String decryptedText = AsymmetricEncryption.decryptString(encryptedText, privateKey, transformation);
+		String decryptedText = AsymmetricEncryption.decryptString(encryptedText, privateKey, transformation);
 
-//		assertEquals(longString, decryptedText);
+		assertEquals(longString, decryptedText);
 	}
 }

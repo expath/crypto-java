@@ -23,12 +23,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertEquals;
 
 public class HmacStringWithSha1AndDefaultFormatTest extends BaseTest {
 
@@ -41,7 +41,7 @@ public class HmacStringWithSha1AndDefaultFormatTest extends BaseTest {
 
         System.out.println(result);
 
-        Assert.assertTrue(result.equals("dYTuFEkwcs2NmuhQ4P8JBTgjD4w="));
+        assertEquals("dYTuFEkwcs2NmuhQ4P8JBTgjD4w=", result);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class HmacStringWithSha1AndDefaultFormatTest extends BaseTest {
 
             System.out.println(result);
 
-            Assert.assertTrue(result.equals("dYTuFEkwcs2NmuhQ4P8JBTgjD4w="));
+            assertEquals("dYTuFEkwcs2NmuhQ4P8JBTgjD4w=", result);
         }
     }
 }

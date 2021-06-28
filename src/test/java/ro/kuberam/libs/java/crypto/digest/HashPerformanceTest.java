@@ -35,7 +35,7 @@ import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HashPerformanceTest extends BaseTest {
 
@@ -61,7 +61,7 @@ public class HashPerformanceTest extends BaseTest {
             // get the hash value as byte array
             byte[] hash = algorithm.digest();
 
-            assertTrue(hash.length == 20);
+            assertEquals(20, hash.length);
         }
     }
 
@@ -78,7 +78,7 @@ public class HashPerformanceTest extends BaseTest {
             // get the hash value as byte array
             final byte[] hash = algorithm.digest();
 
-            assertTrue(hash.length == 20);
+            assertEquals(20, hash.length);
         }
     }
 
@@ -96,7 +96,7 @@ public class HashPerformanceTest extends BaseTest {
             // get the hash value as byte array
             final byte[] hash = algorithm.digest();
 
-            assertTrue(hash.length == 20);
+            assertEquals(20, hash.length);
         }
     }
 
@@ -106,7 +106,7 @@ public class HashPerformanceTest extends BaseTest {
         algorithm.update(tempString.getBytes(StandardCharsets.UTF_8));
         final byte[] hash = algorithm.digest();
 
-        assertTrue(hash.length == 20);
+        assertEquals(20, hash.length);
     }
 
     @Test
@@ -124,7 +124,7 @@ public class HashPerformanceTest extends BaseTest {
         // get the hash value as byte array
         final byte[] hash = algorithm.digest();
 
-        assertTrue(hash.length == 20);
+        assertEquals(20, hash.length);
     }
 
 }

@@ -29,7 +29,7 @@ import org.junit.Test;
 import ro.kuberam.tests.junit.BaseTest;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HmacStringWithSha512Test extends BaseTest {
 
@@ -41,8 +41,7 @@ public class HmacStringWithSha512Test extends BaseTest {
             final String result = Hmac.hmac(input.getBytes(UTF_8), IOUtils.toByteArray(secretKeyIs),
                     "HMAC-SHA-512", "base64");
 
-            assertTrue(result
-                    .equals("z9MtEpBXxO5bKmsXJWfKsZ4v+RduKU89Y95H2HMGQEwHGefWmewNNQ7urZVuWEU5aeRRdO7G7j0QlcLYv1pkrg=="));
+            assertEquals("z9MtEpBXxO5bKmsXJWfKsZ4v+RduKU89Y95H2HMGQEwHGefWmewNNQ7urZVuWEU5aeRRdO7G7j0QlcLYv1pkrg==", result);
         }
     }
 
@@ -55,8 +54,7 @@ public class HmacStringWithSha512Test extends BaseTest {
             final String result = Hmac.hmac(is, IOUtils.toByteArray(secretKeyIs),
                     "HMAC-SHA-512", "base64");
 
-            assertTrue(result
-                    .equals("z9MtEpBXxO5bKmsXJWfKsZ4v+RduKU89Y95H2HMGQEwHGefWmewNNQ7urZVuWEU5aeRRdO7G7j0QlcLYv1pkrg=="));
+            assertEquals("z9MtEpBXxO5bKmsXJWfKsZ4v+RduKU89Y95H2HMGQEwHGefWmewNNQ7urZVuWEU5aeRRdO7G7j0QlcLYv1pkrg==", result);
         }
     }
 }

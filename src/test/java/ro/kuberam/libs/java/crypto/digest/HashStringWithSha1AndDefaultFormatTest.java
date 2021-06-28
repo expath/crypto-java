@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HashStringWithSha1AndDefaultFormatTest extends BaseTest {
 
@@ -31,7 +31,6 @@ public class HashStringWithSha1AndDefaultFormatTest extends BaseTest {
     public void hashStringWithSha1hexOutput() throws Exception {
         final String input = "Short string for tests.";
         final String result = Hash.hashString(input, "SHA-1");
-        assertTrue(result
-                .equals("cV2wx17vo8eH2TaFRvCIIvJjNqU="));
+        assertEquals("cV2wx17vo8eH2TaFRvCIIvJjNqU=", result);
     }
 }

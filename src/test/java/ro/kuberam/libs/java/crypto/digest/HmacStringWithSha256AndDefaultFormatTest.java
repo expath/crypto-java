@@ -29,7 +29,7 @@ import org.junit.Test;
 import ro.kuberam.tests.junit.BaseTest;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HmacStringWithSha256AndDefaultFormatTest extends BaseTest {
 
@@ -42,7 +42,7 @@ public class HmacStringWithSha256AndDefaultFormatTest extends BaseTest {
             final String result = Hmac.hmac(input.getBytes(UTF_8), IOUtils.toByteArray(secretKeyIs),
                     "HMAC-SHA-256", "");
 
-            assertTrue(result.equals("FfZidcLEUg4oJLIZfw6xHlPMz8KPHxo2liaBKgLfcOE="));
+            assertEquals("FfZidcLEUg4oJLIZfw6xHlPMz8KPHxo2liaBKgLfcOE=", result);
         }
     }
 
@@ -55,7 +55,7 @@ public class HmacStringWithSha256AndDefaultFormatTest extends BaseTest {
             final String result = Hmac.hmac(is, IOUtils.toByteArray(secretKeyIs),
                     "HMAC-SHA-256", "");
 
-            assertTrue(result.equals("FfZidcLEUg4oJLIZfw6xHlPMz8KPHxo2liaBKgLfcOE="));
+            assertEquals("FfZidcLEUg4oJLIZfw6xHlPMz8KPHxo2liaBKgLfcOE=", result);
         }
     }
 }

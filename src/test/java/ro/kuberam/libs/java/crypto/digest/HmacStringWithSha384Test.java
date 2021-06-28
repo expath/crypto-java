@@ -29,7 +29,7 @@ import org.junit.Test;
 import ro.kuberam.tests.junit.BaseTest;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HmacStringWithSha384Test extends BaseTest {
 
@@ -41,7 +41,7 @@ public class HmacStringWithSha384Test extends BaseTest {
             final String result = Hmac.hmac(input.getBytes(UTF_8), IOUtils.toByteArray(secretKeyIs),
                     "HMAC-SHA-384", "base64");
 
-            assertTrue(result.equals("RRirKZTmx+cG8EXvgrRnpYFPEPYXaZBirY+LFmiUBAK61LCryDsL4clFRG5/BcBr"));
+            assertEquals("RRirKZTmx+cG8EXvgrRnpYFPEPYXaZBirY+LFmiUBAK61LCryDsL4clFRG5/BcBr", result);
         }
     }
 
@@ -54,7 +54,7 @@ public class HmacStringWithSha384Test extends BaseTest {
             final String result = Hmac.hmac(is, IOUtils.toByteArray(secretKeyIs),
                     "HMAC-SHA-384", "base64");
 
-            assertTrue(result.equals("RRirKZTmx+cG8EXvgrRnpYFPEPYXaZBirY+LFmiUBAK61LCryDsL4clFRG5/BcBr"));
+            assertEquals("RRirKZTmx+cG8EXvgrRnpYFPEPYXaZBirY+LFmiUBAK61LCryDsL4clFRG5/BcBr", result);
         }
     }
 }

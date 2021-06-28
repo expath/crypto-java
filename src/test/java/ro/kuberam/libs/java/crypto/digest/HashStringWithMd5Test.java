@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HashStringWithMd5Test extends BaseTest {
 
@@ -31,7 +31,6 @@ public class HashStringWithMd5Test extends BaseTest {
     public void hashStringWithMd5hexOutput() throws Exception {
         final String input = "Short string for tests.";
         final String result = Hash.hashString(input, "MD5", "base64");
-        assertTrue(result
-                .equals("use1oAoe8vIgnFgygz2OKw=="));
+        assertEquals("use1oAoe8vIgnFgygz2OKw==", result);
     }
 }

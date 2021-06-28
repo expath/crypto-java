@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HashStringWithSha512Test extends BaseTest {
 
@@ -31,7 +31,6 @@ public class HashStringWithSha512Test extends BaseTest {
     public void hashStringWithSha512hexOutput() throws Exception {
         final String input = "Short string for tests.";
         final String result = Hash.hashString(input, "SHA-512", "base64");
-        assertTrue(result
-                .equals("+YpeZRBrctlL1xr6plZOScp/6ArUw3GihjtKys1e3qQ6/aWLFjoOFEfuiUJA3uLIkebH1OG+rDdM\r\nFZ0+/JFK2g=="));
+        assertEquals("+YpeZRBrctlL1xr6plZOScp/6ArUw3GihjtKys1e3qQ6/aWLFjoOFEfuiUJA3uLIkebH1OG+rDdMFZ0+/JFK2g==", result);
     }
 }

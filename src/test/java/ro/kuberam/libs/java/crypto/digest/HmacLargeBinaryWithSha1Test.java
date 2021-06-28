@@ -27,7 +27,7 @@ import org.junit.Test;
 import ro.kuberam.tests.junit.BaseTest;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HmacLargeBinaryWithSha1Test extends BaseTest {
 
@@ -40,7 +40,7 @@ public class HmacLargeBinaryWithSha1Test extends BaseTest {
 
         System.out.println(result);
 
-        assertTrue(result.equals("McKrpaWMrn0fzAlfw0yVDxy9esE="));
+        assertEquals("McKrpaWMrn0fzAlfw0yVDxy9esE=", result);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class HmacLargeBinaryWithSha1Test extends BaseTest {
 
             System.out.println(result);
 
-            assertTrue(result.equals("McKrpaWMrn0fzAlfw0yVDxy9esE="));
+            assertEquals("McKrpaWMrn0fzAlfw0yVDxy9esE=", result);
         }
     }
 }

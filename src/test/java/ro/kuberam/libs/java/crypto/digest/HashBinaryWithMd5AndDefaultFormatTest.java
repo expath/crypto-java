@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HashBinaryWithMd5AndDefaultFormatTest extends BaseTest {
 
@@ -33,7 +33,7 @@ public class HashBinaryWithMd5AndDefaultFormatTest extends BaseTest {
     public void hashBinaryWithMd5() throws Exception {
         try (final InputStream input = getClass().getResourceAsStream("../keystore.ks")) {
             final String result = Hash.hashBinary(input, "MD5");
-            assertTrue(result.equals("UI/aOJodA6gtJPitQ6xcJA=="));
+            assertEquals("UI/aOJodA6gtJPitQ6xcJA==", result);
         }
     }
 }

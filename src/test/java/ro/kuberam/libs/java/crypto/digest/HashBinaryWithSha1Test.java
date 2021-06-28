@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HashBinaryWithSha1Test extends BaseTest {
 
@@ -33,7 +33,7 @@ public class HashBinaryWithSha1Test extends BaseTest {
     public void hashBinaryWithSha1() throws Exception {
         try (final InputStream input = getClass().getResourceAsStream("../keystore.ks")) {
             final String result = Hash.hashBinary(input, "SHA-1", "base64");
-            assertTrue(result.equals("GyscHvnJKxInsBLgSg/FRAmQXYU="));
+            assertEquals("GyscHvnJKxInsBLgSg/FRAmQXYU=", result);
         }
     }
 }

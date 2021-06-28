@@ -28,7 +28,7 @@ import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class GenerateAWSSignatureTest extends BaseTest {
 
@@ -42,26 +42,25 @@ public class GenerateAWSSignatureTest extends BaseTest {
         final String kSecret = "AWS4" + key;
         final String kSecretHexValue = DatatypeConverter.printHexBinary(kSecret.getBytes(StandardCharsets.UTF_8))
                 .toLowerCase();
-        assertTrue(kSecretHexValue
-                .equals("41575334774a616c725855746e46454d492f4b374d44454e472b62507852666943594558414d504c454b4559"));
+        assertEquals("41575334774a616c725855746e46454d492f4b374d44454e472b62507852666943594558414d504c454b4559", kSecretHexValue);
 
         final byte[] kDate = Hmac.hmac(dateStamp.getBytes(StandardCharsets.UTF_8), kSecret.getBytes(StandardCharsets.UTF_8),
                 "HMAC-SHA-256");
         System.out.println(Arrays.toString(kDate));
         final String kDateHexValue = generateHexValue(kDate);
-        assertTrue(kDateHexValue.equals("969fbb94feb542b71ede6f87fe4d5fa29c789342b0f407474670f0c2489e0a0d"));
+        assertEquals("969fbb94feb542b71ede6f87fe4d5fa29c789342b0f407474670f0c2489e0a0d", kDateHexValue);
 
         final byte[] kRegion = Hmac.hmac(regionName.getBytes(StandardCharsets.UTF_8), kDate, "HMAC-SHA-256");
         String kRegionHexValue = generateHexValue(kRegion);
-        assertTrue(kRegionHexValue.equals("69daa0209cd9c5ff5c8ced464a696fd4252e981430b10e3d3fd8e2f197d7a70c"));
+        assertEquals("69daa0209cd9c5ff5c8ced464a696fd4252e981430b10e3d3fd8e2f197d7a70c", kRegionHexValue);
 
         final byte[] kService = Hmac.hmac(serviceName.getBytes(StandardCharsets.UTF_8), kRegion, "HMAC-SHA-256");
         String kServiceHexValue = generateHexValue(kService);
-        assertTrue(kServiceHexValue.equals("f72cfd46f26bc4643f06a11eabb6c0ba18780c19a8da0c31ace671265e3c87fa"));
+        assertEquals("f72cfd46f26bc4643f06a11eabb6c0ba18780c19a8da0c31ace671265e3c87fa", kServiceHexValue);
 
         final byte[] kSigning = Hmac.hmac("aws4_request".getBytes(StandardCharsets.UTF_8), kService, "HMAC-SHA-256");
         String kSigningHexValue = generateHexValue(kSigning);
-        assertTrue(kSigningHexValue.equals("f4780e2d9f65fa895f9c67b32ce1baf0b0d8a43505a000a1a9e090d414db404d"));
+        assertEquals("f4780e2d9f65fa895f9c67b32ce1baf0b0d8a43505a000a1a9e090d414db404d", kSigningHexValue);
     }
 
     private String generateHexValue(byte[] hexValue) {

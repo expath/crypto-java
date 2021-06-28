@@ -29,7 +29,7 @@ import org.junit.Test;
 import ro.kuberam.tests.junit.BaseTest;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HmacStringWithSha256Test extends BaseTest {
 
@@ -51,7 +51,7 @@ public class HmacStringWithSha256Test extends BaseTest {
             result = Hmac.hmac("aws4_request".getBytes(StandardCharsets.UTF_8), Base64.getDecoder().decode(result), "HMAC-SHA-256", "hex");
             System.out.println(result);
 
-            assertTrue(result.equals("f4780e2d9f65fa895f9c67b32ce1baf0b0d8a43505a000a1a9e090d414db404d"));
+            assertEquals("f4780e2d9f65fa895f9c67b32ce1baf0b0d8a43505a000a1a9e090d414db404d", result);
         }
     }
 
@@ -72,6 +72,6 @@ public class HmacStringWithSha256Test extends BaseTest {
         result = Hmac.hmac("aws4_request".getBytes(StandardCharsets.UTF_8), Base64.getDecoder().decode(result), "HMAC-SHA-256", "hex");
         System.out.println(result);
 
-        assertTrue(result.equals("f4780e2d9f65fa895f9c67b32ce1baf0b0d8a43505a000a1a9e090d414db404d"));
+        assertEquals("f4780e2d9f65fa895f9c67b32ce1baf0b0d8a43505a000a1a9e090d414db404d", result);
     }
 }

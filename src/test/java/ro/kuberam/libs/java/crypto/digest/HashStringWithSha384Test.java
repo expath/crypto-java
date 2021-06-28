@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import ro.kuberam.tests.junit.BaseTest;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HashStringWithSha384Test extends BaseTest {
 
@@ -31,7 +31,6 @@ public class HashStringWithSha384Test extends BaseTest {
     public void hashStringWithSha384hexOutput() throws Exception {
         final String input = "Short string for tests.";
         final String result = Hash.hashString(input, "SHA-384", "base64");
-        assertTrue(result
-                .equals("F4CFDSBHm+Bm400bOgH2q2IbIUj8XRUBWf0inx7lrN0T8IHz9scGVmJoGZ2+s1La"));
+        assertEquals("F4CFDSBHm+Bm400bOgH2q2IbIUj8XRUBWf0inx7lrN0T8IHz9scGVmJoGZ2+s1La", result);
     }
 }

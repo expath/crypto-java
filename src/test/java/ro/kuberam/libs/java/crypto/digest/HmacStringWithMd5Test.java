@@ -28,7 +28,7 @@ import org.junit.Test;
 import ro.kuberam.tests.junit.BaseTest;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HmacStringWithMd5Test extends BaseTest {
 
@@ -41,7 +41,7 @@ public class HmacStringWithMd5Test extends BaseTest {
             final String result = Hmac.hmac(input.getBytes(UTF_8),
                     secretKey.getBytes(UTF_8), "HMAC-MD5", "base64");
 
-            assertTrue(result.equals("l4MY6Yosjo7W60VJeXB/PQ=="));
+            assertEquals("l4MY6Yosjo7W60VJeXB/PQ==", result);
         }
     }
 
@@ -55,7 +55,7 @@ public class HmacStringWithMd5Test extends BaseTest {
             final String result = Hmac.hmac(is,
                     secretKey.getBytes(UTF_8), "HMAC-MD5", "base64");
 
-            assertTrue(result.equals("l4MY6Yosjo7W60VJeXB/PQ=="));
+            assertEquals("l4MY6Yosjo7W60VJeXB/PQ==", result);
         }
     }
 }
