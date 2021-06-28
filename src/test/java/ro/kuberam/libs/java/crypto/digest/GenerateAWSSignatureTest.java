@@ -20,9 +20,8 @@
 package ro.kuberam.libs.java.crypto.digest;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
-import javax.xml.bind.DatatypeConverter;
+import jakarta.xml.bind.DatatypeConverter;
 
 import org.junit.Test;
 
