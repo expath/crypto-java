@@ -120,31 +120,75 @@
 			<plugin>
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
-				<version>3.0</version>
+				<version>4.1</version>
 				<configuration>
-					<header>LGPL2.1-template.txt</header>
 					<failIfMissing>true</failIfMissing>
 					<aggregate>true</aggregate>
-					<strictCheck>true</strictCheck>
-					<properties>
-						<owner>${project.organization.name}</owner>
-						<organization>${project.organization.name}</organization>
-						<url>${project.organization.url}</url>
-					</properties>
-					<excludes>
-						<exclude>.github/**</exclude>
-						<exclude>pom.xml</exclude>
-						<exclude>README.md</exclude>
-						<exclude>LICENSE</exclude>
-						<exclude>src/main/resources/changelog.txt</exclude>
-						<exclude>src/main/resources/ro/kuberam/libs/java/crypto/lib.properties</exclude>
-						<exclude>src/test/resources/**/*.txt</exclude>
-						<exclude>src/test/resources/**/*.xml</exclude>
-						<exclude>**/*.cer</exclude>
-						<exclude>**/*.ks</exclude>
-						<exclude>**/*.key</exclude>
-						<exclude>**/*.pub</exclude>
-					</excludes>
+					<strictCheck>false</strictCheck>
+					<licenseSets>
+
+						<!-- this enforces the original Copyright and License -->
+						<licenseSet>
+							<header>LGPL2.1-template.txt</header>
+							<properties>
+								<owner>${project.organization.name}</owner>
+								<organization>Kuberam</organization>
+								<url>${project.organization.url}</url>
+							</properties>
+							<excludes>
+								<exclude>.github/**</exclude>
+								<exclude>README.md</exclude>
+								<exclude>LICENSE</exclude>
+								<exclude>src/main/resources/changelog.txt</exclude>
+								<exclude>src/main/resources/ro/kuberam/libs/java/crypto/lib.properties</exclude>
+								<exclude>src/test/resources/**/*.txt</exclude>
+								<exclude>src/test/resources/**/*.xml</exclude>
+								<exclude>**/*.cer</exclude>
+								<exclude>**/*.ks</exclude>
+								<exclude>**/*.key</exclude>
+								<exclude>**/*.pub</exclude>
+								<exclude>**/*.pkcs8</exclude>
+
+								<!-- files now authored by the EXPath project (see below) -->
+								<exclude>pom.xml</exclude>
+								<exclude>src/test/java/ro/kuberam/libs/java/crypto/TestUtils.java</exclude>
+								<exclude>src/test/java/ro/kuberam/libs/java/crypto/digest/HashBinaryTest.java</exclude>
+								<exclude>src/test/java/ro/kuberam/libs/java/crypto/digest/HashBinaryWithWrongAlgorithmTest.java</exclude>
+								<exclude>src/test/java/ro/kuberam/libs/java/crypto/digest/HashLargeBinaryTest.java</exclude>
+								<exclude>src/test/java/ro/kuberam/libs/java/crypto/digest/HashLargeStringTest.java</exclude>
+								<exclude>src/test/java/ro/kuberam/libs/java/crypto/digest/HashStringTest.java</exclude>
+								<exclude>src/test/java/ro/kuberam/libs/java/crypto/digest/HashStringWithWrongAlgorithmTest.java</exclude>
+								<exclude>src/test/java/ro/kuberam/libs/java/crypto/digest/HMACBinaryTest.java</exclude>
+								<exclude>src/test/java/ro/kuberam/libs/java/crypto/digest/HMACLargeBinaryTest.java</exclude>
+								<exclude>src/test/java/ro/kuberam/libs/java/crypto/digest/HMACLargeStringTest.java</exclude>
+								<exclude>src/test/java/ro/kuberam/libs/java/crypto/digest/HMACStringTest.java</exclude>
+							</excludes>
+						</licenseSet>
+
+						<!-- this enforces the EXPath Copyright and License on newer files -->
+						<licenseSet>
+							<header>LGPL2.1-template.txt</header>
+							<properties>
+								<owner>${project.organization.name}</owner>
+								<organization>${project.organization.name}</organization>
+								<url>${project.organization.url}</url>
+							</properties>
+							<includes>
+								<include>pom.xml</include>
+								<include>src/test/java/ro/kuberam/libs/java/crypto/TestUtils.java</include>
+								<include>src/test/java/ro/kuberam/libs/java/crypto/digest/HashBinaryTest.java</include>
+								<include>src/test/java/ro/kuberam/libs/java/crypto/digest/HashBinaryWithWrongAlgorithmTest.java</include>
+								<include>src/test/java/ro/kuberam/libs/java/crypto/digest/HashLargeBinaryTest.java</include>
+								<include>src/test/java/ro/kuberam/libs/java/crypto/digest/HashLargeStringTest.java</include>
+								<include>src/test/java/ro/kuberam/libs/java/crypto/digest/HashStringTest.java</include>
+								<include>src/test/java/ro/kuberam/libs/java/crypto/digest/HashStringWithWrongAlgorithmTest.java</include>
+								<include>src/test/java/ro/kuberam/libs/java/crypto/digest/HMACBinaryTest.java</include>
+								<include>src/test/java/ro/kuberam/libs/java/crypto/digest/HMACLargeBinaryTest.java</include>
+								<include>src/test/java/ro/kuberam/libs/java/crypto/digest/HMACLargeStringTest.java</include>
+								<include>src/test/java/ro/kuberam/libs/java/crypto/digest/HMACStringTest.java</include>
+							</includes>
+						</licenseSet>
+					</licenseSets>
 				</configuration>
 			</plugin>
 			<plugin>
