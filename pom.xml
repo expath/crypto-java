@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>ro.kuberam.libs.java</groupId>
-	<artifactId>crypto</artifactId>
-	<version>1.7</version>
+	<parent>
+		<groupId>org.expath</groupId>
+		<artifactId>expath-parent</artifactId>
+		<version>1.4.0</version>
+		<relativePath />
+	</parent>
+
+	<groupId>org.expath.crypto</groupId>
+	<artifactId>crypto-java</artifactId>
+	<version>1.8.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
 	<name>EXPath Cryptographic Module</name>
 	<description>Java Library providing an EXPath Cryptographic Module</description>
-	<url>http://kuberam.ro/specs/expath/crypto/crypto.html</url>
+
+	<scm>
+		<connection>scm:git:https://github.com/expath/crypto-java.git</connection>
+		<developerConnection>scm:git:https://github.com/expath/crypto-java.git</developerConnection>
+		<url>scm:git:https://github.com/expath/crypto-java.git</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<url>https://github.com/expath/crypto-java</url>
 	<inceptionYear>2015</inceptionYear>
+
 	<licenses>
 		<license>
 			<name>GNU Lesser General Public License version 2.1</name>
@@ -19,48 +36,28 @@
 		</license>
 	</licenses>
 
-	<organization>
-		<name>Kuberam</name>
-		<url>http://kuberam.ro</url>
-	</organization>
-
 	<developers>
 		<developer>
 			<id>claudius</id>
 			<name>Claudius Teodorescu</name>
+			<organization>Kuberam</organization>
 			<email>claudius.teodorescu@gmail.com</email>
+			<url>http://kuberam.ro</url>
 		</developer>
 	</developers>
 
 	<contributors>
 		<contributor>
 			<name>Adam Retter</name>
+			<organization>Evolved Binary</organization>
+			<email>adam@evolvedbinary.com</email>
+			<url>https://www.evolvedbinary.com</url>
 		</contributor>
 	</contributors>
 
-	<scm>
-		<connection>scm:git:https://github.com/claudius108/crypto-java-lib.git</connection>
-		<developerConnection>scm:git:https://github.com/claudius108/crypto-java-lib.git</developerConnection>
-		<url>scm:git:https://github.com/claudius108/crypto-java-lib.git</url>
-	</scm>
-
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.version>3.6.0</maven.version>
 	</properties>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh-snapshots</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh-releases</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
 
 	<dependencies>
 		<dependency>
@@ -71,12 +68,11 @@
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
-			<version>3.0.2</version>
 		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -88,32 +84,23 @@
 		<dependency>
 			<groupId>com.fasterxml.uuid</groupId>
 			<artifactId>java-uuid-generator</artifactId>
-			<version>3.1.3</version>
+			<version>4.0.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.5</version>
+			<version>2.10.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.sonatype.plugins</groupId>
-					<artifactId>nexus-staging-maven-plugin</artifactId>
-					<version>1.6.8</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0-M2</version>
+				<version>3.0.0-M3</version>
 				<executions>
 					<execution>
 						<id>enforce-maven</id>
@@ -142,15 +129,14 @@
 					<properties>
 						<owner>${project.organization.name}</owner>
 						<organization>${project.organization.name}</organization>
-						<email>exit-open@lists.sourceforge.net</email>
 						<url>${project.organization.url}</url>
 					</properties>
 					<excludes>
+						<exclude>.github/**</exclude>
 						<exclude>pom.xml</exclude>
 						<exclude>README.md</exclude>
 						<exclude>LICENSE</exclude>
-						<exclude>crypto-java-lib deploy.launch</exclude>
-						<exclude>src/main/java/ro/kuberam/libs/java/crypto/changelog.txt</exclude>
+						<exclude>src/main/resources/changelog.txt</exclude>
 						<exclude>src/main/resources/ro/kuberam/libs/java/crypto/lib.properties</exclude>
 						<exclude>src/test/resources/**/*.txt</exclude>
 						<exclude>src/test/resources/**/*.xml</exclude>
@@ -162,164 +148,35 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>com.code54.mojo</groupId>
-				<artifactId>buildversion-plugin</artifactId>
-				<version>1.0.3</version>
-				<executions>
-					<execution>
-						<phase>validate</phase>
-						<goals>
-							<goal>set-properties</goal>
-						</goals>
-					</execution>
-				</executions>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.9.1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.0.2</version>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>3.1.2</version>
 				<configuration>
-					<archive>
-						<manifest>
-							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<Build-Tag>${build-tag}</Build-Tag>
-							<Git-Commit>${build-commit}</Git-Commit>
-							<Git-Commit-Abbrev>${build-commit-abbrev}</Git-Commit-Abbrev>
-							<Build-Version>${build-version}</Build-Version>
-							<Build-Timestamp>${build-tstamp}</Build-Timestamp>
-							<Source-Repository>${project.scm.connection}</Source-Repository>
-							<Description>${project.description}</Description>
-							<Implementation-URL>${project.url}</Implementation-URL>
-						</manifestEntries>
-					</archive>
+					<dependencyDetailsEnabled>false</dependencyDetailsEnabled>  <!-- TODO(AR) disabled due to slow `mvn site` build times -->
 				</configuration>
-			</plugin>
-			<plugin>
-				<!-- Attach source jars -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>3.0.1</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<Build-Tag>${build-tag}</Build-Tag>
-							<Git-Commit>${build-commit}</Git-Commit>
-							<Git-Commit-Abbrev>${build-commit-abbrev}</Git-Commit-Abbrev>
-							<Build-Version>${build-version}</Build-Version>
-							<Build-Timestamp>${build-tstamp}</Build-Timestamp>
-							<Source-Repository>${project.scm.connection}</Source-Repository>
-							<Description>${project.description}</Description>
-							<Implementation-URL>${project.url}</Implementation-URL>
-						</manifestEntries>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<!-- Attach javadoc jars -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.0.0-M1</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<Build-Tag>${build-tag}</Build-Tag>
-							<Git-Commit>${build-commit}</Git-Commit>
-							<Git-Commit-Abbrev>${build-commit-abbrev}</Git-Commit-Abbrev>
-							<Build-Version>${build-version}</Build-Version>
-							<Build-Timestamp>${build-tstamp}</Build-Timestamp>
-							<Source-Repository>${project.scm.connection}</Source-Repository>
-							<Description>${project.description}</Description>
-							<Implementation-URL>${project.url}</Implementation-URL>
-						</manifestEntries>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.6</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
 
-	<profiles>
-		<profile>
-			<id>deploy-release</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<extensions>true</extensions>
-						<configuration>
-							<serverId>ossrh-releases</serverId>
-							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>deploy-snapshot</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<extensions>true</extensions>
-						<configuration>
-							<serverId>ossrh-snapshots</serverId>
-							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>3.0.0-M5</version>
+			</plugin>
+		</plugins>
+	</reporting>
 
 	<pluginRepositories>
 		<pluginRepository>
 			<id>clojars.org</id>
-			<url>http://clojars.org/repo</url>
+			<url>https://clojars.org/repo</url>
 		</pluginRepository>
 	</pluginRepositories>
 
