@@ -43,9 +43,12 @@ public class GenerateEnvelopedDigitalSignatureTest {
             certificateDetails[0] = "";
             final String signatureString = GenerateXmlSignature.generate(input, "inclusive", "SHA1", "DSA_SHA1", "dsig", "enveloped", null, certificateDetails, null);
 
+            System.out.println("signatureString=[" + signatureString + "]");
+
             assertTrue(
                     signatureString.contains("/KaCzo4Syrom78z3EQ5SbbB4sF7ey80etKII864WF64B81uRpH5t9jQTxeEu0ImbzRMqzVDZkVG9\nxD7nN1kuFw==")
-                    || signatureString.contains("/KaCzo4Syrom78z3EQ5SbbB4sF7ey80etKII864WF64B81uRpH5t9jQTxeEu0ImbzRMqzVDZkVG9&#xd;\nxD7nN1kuFw=="));
+                    || signatureString.contains("/KaCzo4Syrom78z3EQ5SbbB4sF7ey80etKII864WF64B81uRpH5t9jQTxeEu0ImbzRMqzVDZkVG9&#xd;\nxD7nN1kuFw==")
+                    || signatureString.contains("/KaCzo4Syrom78z3EQ5SbbB4sF7ey80etKII864WF64B81uRpH5t9jQTxeEu0ImbzRMqzVDZkVG9&#13;\nxD7nN1kuFw=="));
         }
     }
 }
