@@ -33,8 +33,9 @@ import javax.xml.crypto.dsig.keyinfo.KeyInfo;
 import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import javax.xml.xpath.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import ro.kuberam.libs.java.crypto.CryptoException;
@@ -48,12 +49,12 @@ import ro.kuberam.libs.java.crypto.CryptoException;
 
 public class ValidateXmlSignature {
 
-	private static Logger LOG = LogManager.getLogger(ValidateXmlSignature.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ValidateXmlSignature.class);
 
 	public static Boolean validate(Document inputDoc) throws CryptoException, IOException, XMLSignatureException {
 
 		// Find Signature element
-		LOG.debug("Claudius test: {}", () -> inputDoc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature").getLength());
+		LOG.debug("Claudius test: {}", inputDoc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature").getLength());
 
 		// NodeList nl = inputDoc.getElementsByTagName("Signature");
 		// NodeList nl = inputDoc.getElementsByTagNameNS(XMLSignature.XMLNS,
@@ -73,7 +74,7 @@ public class ValidateXmlSignature {
 			// Create a DOM XMLSignatureFactory that will be used to unmarshal the
 			// document containing the XMLSignature
 			XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
-			LOG.debug("Claudius test: {}", () -> nl.getNodeName());
+			LOG.debug("Claudius test: {}", nl.getNodeName());
 
 			// Create a DOMValidateContext and specify a KeyValue KeySelector
 			// and document context

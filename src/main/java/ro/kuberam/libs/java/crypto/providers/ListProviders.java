@@ -33,12 +33,13 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ro.kuberam.libs.java.crypto.ExpathCryptoModule;
 
 public class ListProviders {
-    private static Logger LOG = LogManager.getLogger(ListProviders.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ListProviders.class);
     private static String moduleNsUri = ExpathCryptoModule.NAMESPACE_URI;
     private static String modulePrefix = ExpathCryptoModule.PREFIX;
 
@@ -84,7 +85,7 @@ public class ListProviders {
             xmlWriter.close();
 
             final StreamResult resultAsStreamResult = new StreamResult(writer);
-            LOG.debug("The list with cryptographic providers was generated in {} ms.", () -> (new Date().getTime() - startTime));
+            LOG.debug("The list with cryptographic providers was generated in {} ms.", (new Date().getTime() - startTime));
 
             return resultAsStreamResult;
         }

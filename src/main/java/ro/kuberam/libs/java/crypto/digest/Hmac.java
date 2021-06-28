@@ -32,8 +32,8 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ro.kuberam.libs.java.crypto.CryptoError;
 import ro.kuberam.libs.java.crypto.CryptoException;
@@ -42,14 +42,14 @@ import ro.kuberam.libs.java.crypto.utils.Buffer;
 
 public class Hmac {
 
-	private static Logger LOG = LogManager.getLogger(Hmac.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Hmac.class);
 
 	public static String hmac(final byte[] data, final byte[] secretKey, final String algorithm,
 			@Nullable final String format) throws CryptoException {
 
 		// TODO: validate the format
 		final String actualFormat = Optional.ofNullable(format).filter(str -> !str.isEmpty()).orElse("base64");
-		LOG.debug("secretKey = {}", () -> secretKey);
+		LOG.debug("secretKey = {}", secretKey);
 
 		final byte[] resultBytes = hmac(data, secretKey, algorithm);
 
@@ -59,7 +59,7 @@ public class Hmac {
 		} else {
 			result = DatatypeConverter.printHexBinary(resultBytes).toLowerCase();
 		}
-		LOG.debug("result = {}", () -> result);
+		LOG.debug("result = {}", result);
 
 		return result;
 	}
@@ -69,7 +69,7 @@ public class Hmac {
 
 		// TODO: validate the format
 		String actualFormat = Optional.ofNullable(format).filter(str -> !str.isEmpty()).orElse("base64");
-		LOG.debug("secretKey = {}", () -> secretKey);
+		LOG.debug("secretKey = {}", secretKey);
 
 		byte[] resultBytes = hmac(data, secretKey, algorithm);
 
@@ -79,7 +79,7 @@ public class Hmac {
 		} else {
 			result = DatatypeConverter.printHexBinary(resultBytes).toLowerCase();
 		}
-		LOG.debug("result = {}", () -> result);
+		LOG.debug("result = {}", result);
 
 		return result;
 	}

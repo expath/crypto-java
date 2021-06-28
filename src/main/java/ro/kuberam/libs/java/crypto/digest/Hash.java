@@ -26,11 +26,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Optional;
-
 import javax.annotation.Nullable;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ro.kuberam.libs.java.crypto.CryptoException;
 import ro.kuberam.libs.java.crypto.utils.Buffer;
@@ -44,7 +43,7 @@ import ro.kuberam.libs.java.crypto.utils.HexString;
  */
 public class Hash {
 
-	private static Logger LOG = LogManager.getLogger(Hash.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Hash.class);
 
 	public static String hashString(final String data, final String algorithm) throws CryptoException {
 		return hashString(data, algorithm, null);
@@ -95,7 +94,7 @@ public class Hash {
 		} else {
 			result = HexString.fromBytes(resultBytes);
 		}
-		LOG.debug("hash value is = {}", () -> result);
+		LOG.debug("hash value is = {}", result);
 
 		return result;
 	}
