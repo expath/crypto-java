@@ -5,7 +5,7 @@
 
 # Java library for EXPath Crypto Module
 
-This is a Java implementation of the EXPath HTTP Crypto Module specification.
+This is a Java implementation of the [EXPath HTTP Crypto Module specification](http://expath.org/spec/crypto).
 
 We provide a Java library that may be used as the basis for specific product implementations.
 
