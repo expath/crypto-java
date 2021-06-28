@@ -78,15 +78,12 @@ public class ParametersTest {
     @Test
     public void testSignatureAlgorithmDefaultValue() {
         final Parameters parameters = new Parameters();
-        System.out.println(parameters.getSignatureAlgorithm());
         assertEquals("http://www.w3.org/2000/09/xmldsig#rsa-sha1", parameters.getSignatureAlgorithm());
     }
 
     @Test
     public void testSignatureNamespacePrefixDefaultValue() {
         final Parameters parameters = new Parameters();
-
         assertEquals("dsig", parameters.getSignatureNamespacePrefix());
     }
-
 }

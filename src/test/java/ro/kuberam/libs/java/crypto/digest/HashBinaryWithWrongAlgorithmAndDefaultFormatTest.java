@@ -26,12 +26,11 @@ import org.junit.Test;
 
 import ro.kuberam.libs.java.crypto.CryptoError;
 import ro.kuberam.libs.java.crypto.CryptoException;
-import ro.kuberam.tests.junit.BaseTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class HashBinaryWithWrongAlgorithmAndDefaultFormatTest extends BaseTest {
+public class HashBinaryWithWrongAlgorithmAndDefaultFormatTest {
 
     @Test
     public void hashBinaryWithWrongAlgorithm() throws IOException {

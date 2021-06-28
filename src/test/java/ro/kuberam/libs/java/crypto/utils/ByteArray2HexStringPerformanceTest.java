@@ -28,27 +28,30 @@ import java.util.Formatter;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import ro.kuberam.tests.junit.BaseTest;
+import org.junit.rules.TemporaryFolder;
 
 import static junit.framework.TestCase.assertEquals;
+import static ro.kuberam.libs.java.crypto.TestUtils.generate5MbFile;
 
-public class ByteArray2HexStringPerformanceTest extends BaseTest {
+public class ByteArray2HexStringPerformanceTest {
+
+    @ClassRule
+    public static final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private static Path tempFile;
     private static byte[] tempByteArray;
 
     @BeforeClass
     public static void initialize() throws IOException {
-        tempFile = generate5MbTempFile().toPath();
+        tempFile = generate5MbFile(temporaryFolder.newFile("ByteArray2HexStringPerformanceTest"));
         tempByteArray = Files.readAllBytes(tempFile);
     }
 
-
     @Test
-    public void hexCharsTest() throws Exception {
+    public void hexCharsTest() {
         final char[] HEX_CHARS = "0123456789abcdef".toCharArray();
         final int tempByteArrayLength = tempByteArray.length;
 
@@ -58,22 +61,22 @@ public class ByteArray2HexStringPerformanceTest extends BaseTest {
             chars[2 * i + 1] = HEX_CHARS[tempByteArray[i] & 0x0F];
         }
         final String result = new String(chars);
-        assertEquals(10400000, result.length());
+        assertEquals(tempByteArrayLength * 2, result.length());
     }
 
     @Test
-    public void formatterTest() throws Exception {
+    public void formatterTest() {
         final Formatter formatter = new Formatter();
         for (final byte b : tempByteArray) {
             formatter.format("%02x", b);
         }
 
         final String result = formatter.toString();
-        assertEquals(10400000, result.length());
+        assertEquals(tempByteArray.length * 2, result.length());
     }
 
     @Test
-    public void stringBuilderTest1() throws Exception {
+    public void stringBuilderTest1() {
         final int tempByteArrayLength = tempByteArray.length;
 
         final StringBuilder strbuf = new StringBuilder(tempByteArrayLength * 2);
@@ -86,22 +89,22 @@ public class ByteArray2HexStringPerformanceTest extends BaseTest {
         }
 
         final String result = strbuf.toString();
-        assertEquals(10400000, result.length());
+        assertEquals(tempByteArrayLength * 2, result.length());
     }
 
     @Test
-    public void stringBuilderTest2() throws Exception {
+    public void stringBuilderTest2() {
         final StringBuilder sb = new StringBuilder();
         for (final byte b : tempByteArray) {
             sb.append(Integer.toHexString((int) (b & 0xff)));
         }
 
         final String result = sb.toString();
-        assertEquals(10400000, result.length());
+        assertEquals(tempByteArray.length * 2, result.length());
     }
 
     @Test
-    public void charArrayTest() throws Exception {
+    public void charArrayTest() {
         final char[] hexDigits = "0123456789abcdef".toCharArray();
         final char[] byteToHexPair = new char[16 * 16 * 2];
         for (int i = 0, o = 0; i < 256; ++i) {
@@ -118,11 +121,11 @@ public class ByteArray2HexStringPerformanceTest extends BaseTest {
         }
 
         final String result = new String(chars);
-        assertEquals(10400000, result.length());
+        assertEquals(tempByteArrayLength * 2, result.length());
     }
 
     @Test
-    public void hexArrayTest() throws Exception {
+    public void hexArrayTest() {
         final int tempByteArrayLength = tempByteArray.length;
         final char[] hexArray = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
         final char[] hexChars = new char[tempByteArrayLength * 2];
@@ -134,22 +137,22 @@ public class ByteArray2HexStringPerformanceTest extends BaseTest {
         }
 
         final String result = new String(hexChars);
-        assertEquals(10400000, result.length());
+        assertEquals(tempByteArrayLength * 2, result.length());
     }
 
     @Test
-    public void stringBuilder1Test() throws Exception {
+    public void stringBuilder1Test() {
         final StringBuilder sb = new StringBuilder();
         for (final byte b : tempByteArray) {
             sb.append(String.format("%1$02X", b));
         }
 
         final String result = sb.toString();
-        assertEquals(10400000, result.length());
+        assertEquals(tempByteArray.length * 2, result.length());
     }
 
     @Test
-    public void stringBuilder2Test() throws Exception {
+    public void stringBuilder2Test() {
         final int tempByteArrayLength = tempByteArray.length;
         final StringBuilder sb = new StringBuilder(tempByteArrayLength * 2);
         for (final byte b : tempByteArray) {
@@ -157,11 +160,11 @@ public class ByteArray2HexStringPerformanceTest extends BaseTest {
         }
 
         final String result = sb.toString();
-        assertEquals(10400000, result.length());
+        assertEquals(tempByteArrayLength * 2, result.length());
     }
 
     @Test
-    public void stringBuilder3Test() throws Exception {
+    public void stringBuilder3Test() {
         final int tempByteArrayLength = tempByteArray.length;
         final String digits = "0123456789abcdef";
         final StringBuilder sb = new StringBuilder(tempByteArrayLength * 2);
@@ -172,11 +175,11 @@ public class ByteArray2HexStringPerformanceTest extends BaseTest {
         }
 
         final String result = sb.toString();
-        assertEquals(10400000, result.length());
+        assertEquals(tempByteArrayLength * 2, result.length());
     }
 
     @Test
-    public void stringBuilder4Test() throws Exception {
+    public void stringBuilder4Test() {
         final int tempByteArrayLength = tempByteArray.length;
         final StringBuilder hexString = new StringBuilder();
         for (int i = 0; i < tempByteArrayLength; i++) {
@@ -189,18 +192,18 @@ public class ByteArray2HexStringPerformanceTest extends BaseTest {
         }
 
         final String result = hexString.toString();
-        assertEquals(10400000, result.length());
+        assertEquals(tempByteArrayLength * 2, result.length());
     }
 
     @Ignore
     @Test
-    public void hexBinaryAdapterTest() throws Exception {
+    public void hexBinaryAdapterTest() {
         final String result = new HexBinaryAdapter().marshal(tempByteArray);
-        assertEquals(10400000, result.length());
+        assertEquals(tempByteArray.length, result.length());
     }
 
     @Test
-    public void integer2Test() throws Exception {
+    public void integer2Test() {
         final int tempByteArrayLength = tempByteArray.length;
         final StringBuilder hexString = new StringBuilder();
         for (int i = 0; i < tempByteArrayLength; i++) {
@@ -213,12 +216,12 @@ public class ByteArray2HexStringPerformanceTest extends BaseTest {
         }
 
         final String result = hexString.toString();
-        assertEquals(10400000, result.length());
+        assertEquals(tempByteArrayLength * 2, result.length());
     }
 
     @Test
     @Ignore("too slow, took hours and didn't finish")
-    public void integer1Test() throws Exception {
+    public void integer1Test() {
         final int tempByteArrayLengthQuartered = tempByteArray.length / 4;
 
         String result = "";
@@ -228,12 +231,12 @@ public class ByteArray2HexStringPerformanceTest extends BaseTest {
             result = Integer.toHexString(inty) + result;
         }
 
-        assertEquals(10400000, result.length());
+        assertEquals(tempByteArray.length, result.length());
     }
 
     @Test
     @Ignore("too slow")
-    public void stringFormatterTest() throws Exception {
+    public void stringFormatterTest() {
         final byte[] a = {0x40, 0x00, 0x39, 0x00};
         final String result = String.format("%0128x", new BigInteger(1, tempByteArray));
     }

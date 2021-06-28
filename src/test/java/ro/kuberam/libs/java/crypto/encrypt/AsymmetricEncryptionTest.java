@@ -26,7 +26,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Map;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -60,10 +59,10 @@ public class AsymmetricEncryptionTest extends CryptoModuleTests {
 	public void adHocGeneratedKeyWithTheSameAlgorithm() throws Exception {
 		String transformation = "RSA/ECB/PKCS1Padding";
 		String algorithm = "RSA";
-		Map<String, String> keys = GenerateKeyPair.run(algorithm);
+		final GenerateKeyPair.GeneratedKeys keys = GenerateKeyPair.run(algorithm);
 
-		PublicKey publicKey = Load.publicKey(keys.get("public-key"), algorithm, null);
-		PrivateKey privateKey = Load.privateKey(keys.get("private-key"), algorithm, null);
+		PublicKey publicKey = Load.publicKey(keys.getPublicKey(), algorithm, null);
+		PrivateKey privateKey = Load.privateKey(keys.getPrivateKey(), algorithm, null);
 
 		String encryptedText = AsymmetricEncryption.encryptString(longString, publicKey, transformation);
 		String decryptedText = AsymmetricEncryption.decryptString(encryptedText, privateKey, transformation);
@@ -77,10 +76,10 @@ public class AsymmetricEncryptionTest extends CryptoModuleTests {
 		String transformation = "RSA/ECB/PKCS1Padding";
 		String algorithm = "DSA";
 		String keyGenerationProvider = "SUN";
-		Map<String, String> keys = GenerateKeyPair.run(algorithm, keyGenerationProvider);
+		final GenerateKeyPair.GeneratedKeys keys = GenerateKeyPair.run(algorithm, keyGenerationProvider);
 
-		PublicKey publicKey = Load.publicKey(keys.get("public-key"), algorithm, keyGenerationProvider);
-		PrivateKey privateKey = Load.privateKey(keys.get("private-key"), algorithm, keyGenerationProvider);
+		PublicKey publicKey = Load.publicKey(keys.getPublicKey(), algorithm, keyGenerationProvider);
+		PrivateKey privateKey = Load.privateKey(keys.getPrivateKey(), algorithm, keyGenerationProvider);
 
 		String encryptedText = AsymmetricEncryption.encryptString(longString, publicKey, transformation);
 		String decryptedText = AsymmetricEncryption.decryptString(encryptedText, privateKey, transformation);

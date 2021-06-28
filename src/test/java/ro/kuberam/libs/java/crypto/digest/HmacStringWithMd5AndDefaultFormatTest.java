@@ -25,12 +25,10 @@ import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-import ro.kuberam.tests.junit.BaseTest;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 
-public class HmacStringWithMd5AndDefaultFormatTest extends BaseTest {
+public class HmacStringWithMd5AndDefaultFormatTest {
 
     @Test
     public void hmacStringWithMd5() throws Exception {

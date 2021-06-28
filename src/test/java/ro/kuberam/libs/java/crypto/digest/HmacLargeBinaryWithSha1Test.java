@@ -22,37 +22,38 @@ package ro.kuberam.libs.java.crypto.digest;
 import java.io.InputStream;
 import java.nio.file.Files;
 
+import org.junit.ClassRule;
 import org.junit.Test;
-
-import ro.kuberam.tests.junit.BaseTest;
+import org.junit.rules.TemporaryFolder;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
+import static ro.kuberam.libs.java.crypto.TestUtils.generate5MbFile;
+import static ro.kuberam.libs.java.crypto.TestUtils.generate5MbString;
 
-public class HmacLargeBinaryWithSha1Test extends BaseTest {
+public class HmacLargeBinaryWithSha1Test {
+
+    @ClassRule
+    public static final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
     public void hmacLargeBinaryWithSha1() throws Exception {
-        final String input = new String(Files.readAllBytes(generate5MbTempFile().toPath()), UTF_8);
+        final String input = generate5MbString();
         final String secretKey = "/hWLmb8xRM75bOS6fyV9Pn0mf3Aiw+HphRCL8nOq";
         final String result = Hmac.hmac(input.getBytes(UTF_8),
                 secretKey.getBytes(UTF_8), "HMAC-SHA-1", "base64");
 
-        System.out.println(result);
-
-        assertEquals("McKrpaWMrn0fzAlfw0yVDxy9esE=", result);
+        assertEquals("5oQ7eaxyCwKP6utsj9kngm0sj90=", result);
     }
 
     @Test
     public void hmacLargeBinaryWithSha1_inputStream() throws Exception {
-        try(final InputStream is = Files.newInputStream(generate5MbTempFile().toPath())) {
+        try(final InputStream is = Files.newInputStream(generate5MbFile(temporaryFolder.newFile("hmacLargeBinaryWithSha1_inputStream")))) {
             final String secretKey = "/hWLmb8xRM75bOS6fyV9Pn0mf3Aiw+HphRCL8nOq";
             final String result = Hmac.hmac(is,
                     secretKey.getBytes(UTF_8), "HMAC-SHA-1", "base64");
 
-            System.out.println(result);
-
-            assertEquals("McKrpaWMrn0fzAlfw0yVDxy9esE=", result);
+            assertEquals("5oQ7eaxyCwKP6utsj9kngm0sj90=", result);
         }
     }
 }

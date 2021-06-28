@@ -22,19 +22,23 @@ package ro.kuberam.libs.java.crypto.digest;
 import java.io.InputStream;
 import java.nio.file.Files;
 
+import org.junit.ClassRule;
 import org.junit.Test;
-
-import ro.kuberam.tests.junit.BaseTest;
+import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.assertEquals;
+import static ro.kuberam.libs.java.crypto.TestUtils.generate5MbFile;
 
-public class HashLargeBinaryWithMd5Test extends BaseTest {
+public class HashLargeBinaryWithMd5Test {
+
+    @ClassRule
+    public static final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
     public void hashLargeBinaryWithMd5() throws Exception {
-        try (final InputStream is = Files.newInputStream(generate5MbTempFile().toPath())) {
+        try (final InputStream is = Files.newInputStream(generate5MbFile(temporaryFolder.newFile("hashLargeBinaryWithMd5")))) {
             final String result = Hash.hashBinary(is, "MD5", "base64");
-            assertEquals("fSAcOQGKiTzr20UUJWNpaQ==", result);
+            assertEquals("K1yRrTmUCeybQJtm9bsA+w==", result);
         }
     }
 }

@@ -19,19 +19,21 @@
  */
 package ro.kuberam.libs.java.crypto.keyManagement;
 
-import java.util.Map;
-
 import org.junit.Test;
 
-import ro.kuberam.tests.junit.BaseTest;
+import static org.junit.Assert.*;
 
-public class GenerateKeyPairTest extends BaseTest {
+public class GenerateKeyPairTest {
 
 	@Test
 	public void rsaKeyPair() throws Exception {
-		Map<String, String> keys = GenerateKeyPair.run("RSA");
+		final GenerateKeyPair.GeneratedKeys keys = GenerateKeyPair.run("RSA");
+		assertNotNull(keys);
 
-		System.out.println("Private key:\n" + keys.get("private-key"));
-		System.out.println("Public key:\n" + keys.get("public-key"));
+		assertNotNull(keys.getPrivateKey());
+		assertTrue(keys.getPrivateKey().matches("-----BEGIN RSA PRIVATE KEY-----\n[^-]+-----END RSA PRIVATE KEY-----\n"));
+
+		assertNotNull(keys.getPublicKey());
+		assertTrue(keys.getPublicKey().matches("-----BEGIN RSA PUBLIC KEY-----\n[^-]+-----END RSA PUBLIC KEY-----\n"));
 	}
 }

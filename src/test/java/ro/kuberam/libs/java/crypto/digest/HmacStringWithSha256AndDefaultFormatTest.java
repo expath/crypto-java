@@ -26,12 +26,10 @@ import org.apache.commons.io.IOUtils;
 
 import org.junit.Test;
 
-import ro.kuberam.tests.junit.BaseTest;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 
-public class HmacStringWithSha256AndDefaultFormatTest extends BaseTest {
+public class HmacStringWithSha256AndDefaultFormatTest {
 
     @Test
     public void hmacStringWithSha256() throws Exception {

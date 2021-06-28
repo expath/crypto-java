@@ -21,11 +21,9 @@ package ro.kuberam.libs.java.crypto.digest;
 
 import org.junit.Test;
 
-import ro.kuberam.tests.junit.BaseTest;
-
 import static org.junit.Assert.assertEquals;
 
-public class HashStringWithSha512AndDefaultFormatTest extends BaseTest {
+public class HashStringWithSha512AndDefaultFormatTest {
 
     @Test
     public void hashStringWithSha512hexOutput() throws Exception {

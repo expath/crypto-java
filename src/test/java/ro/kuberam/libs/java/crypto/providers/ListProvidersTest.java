@@ -25,8 +25,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import ro.kuberam.tests.junit.BaseTest;
-
 import static org.junit.Assert.assertTrue;
 
 import java.security.Provider;
@@ -34,19 +32,18 @@ import java.security.Security;
 import java.util.Iterator;
 import java.util.Set;
 
-public class ListProvidersTest extends BaseTest {
+public class ListProvidersTest {
 
 	@Ignore
 	@Test
 	public void listProviders() throws FactoryConfigurationError, Exception {
 		StreamResult providers = ListProviders.listProviders();
 		String providersString = providers.getWriter().toString();
-		System.out.println(prettyPrintXmlString(providersString));
 		assertTrue(providersString.contains("SunJCE"));
 	}
 
 	@Test
-	public void listProviders2() throws FactoryConfigurationError, Exception {
+	public void listProviders2() throws FactoryConfigurationError {
 		for (Provider provider : Security.getProviders()) {
 			final Set keys = provider.keySet();
 

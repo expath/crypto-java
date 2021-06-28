@@ -7,19 +7,24 @@ import org.junit.Test;
 
 import java.security.Security;
 
+import static org.junit.Assert.*;
+
 public class ListDSAProviderTest {
 
 	@Test
-	public void list() throws Exception {
+	public void list() {
 		final Provider[] providers = Security.getProviders();
+		assertNotNull(providers);
+		assertTrue(providers.length > 1);
+
+		boolean foundDsa = false;
 		for (final Provider p : providers) {
-			Service s = p.getService("KeyPairGenerator", "DSA");
-			if (s == null) {
-				continue;
+			final Service s = p.getService("KeyPairGenerator", "DSA");
+			if (s != null) {
+				foundDsa = true;
 			}
-
-			System.out.println(p.getName());
 		}
-	}
 
+		assertTrue("JDK should always implement DSA", foundDsa);
+	}
 }

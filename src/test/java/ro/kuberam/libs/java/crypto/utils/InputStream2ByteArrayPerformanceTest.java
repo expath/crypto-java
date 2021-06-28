@@ -26,19 +26,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
-
-import ro.kuberam.tests.junit.BaseTest;
+import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.assertEquals;
+import static ro.kuberam.libs.java.crypto.TestUtils.generate5MbFile;
 
-public class InputStream2ByteArrayPerformanceTest extends BaseTest {
+public class InputStream2ByteArrayPerformanceTest {
+
+    @ClassRule
+    public static final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private static Path tempFile;
 
     @Before
     public void initialize() throws IOException {
-        tempFile = generate5MbTempFile().toPath();
+        tempFile = generate5MbFile(temporaryFolder.newFile("InputStream2ByteArrayPerformanceTest"));
     }
 
     @Test
@@ -54,7 +58,7 @@ public class InputStream2ByteArrayPerformanceTest extends BaseTest {
             baos.flush();
             final byte[] byteArray = baos.toByteArray();
 
-            assertEquals(5200000, byteArray.length);
+            assertEquals(5 * 1024 * 1024, byteArray.length);
         }
     }
 

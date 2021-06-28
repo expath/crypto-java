@@ -30,22 +30,27 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import ro.kuberam.tests.junit.BaseTest;
+import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.assertEquals;
+import static ro.kuberam.libs.java.crypto.TestUtils.generate5MbFile;
+import static ro.kuberam.libs.java.crypto.TestUtils.generate5MbString;
 
-public class HashPerformanceTest extends BaseTest {
+public class HashPerformanceTest {
+
+    @ClassRule
+    public static final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private static Path tempFile;
     private static String tempString;
 
     @BeforeClass
     public static void initialize() throws IOException {
-        tempFile = generate5MbTempFile().toPath();
-        tempString = generate5MbTempString();
+        tempFile = generate5MbFile(temporaryFolder.newFile("HashPerformanceTest"));
+        tempString = generate5MbString();
     }
 
     @Test

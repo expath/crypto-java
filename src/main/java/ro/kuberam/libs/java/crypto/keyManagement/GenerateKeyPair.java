@@ -30,36 +30,32 @@ import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 
 import ro.kuberam.libs.java.crypto.randomSequencesGeneration.RandomNumber;
 
 public class GenerateKeyPair {
 	private static Base64.Encoder encoder = Base64.getEncoder();
 
-	public static Map<String, String> run(String algorithm) throws Exception {
+	public static GeneratedKeys run(String algorithm) throws Exception {
 		KeyPairGenerator keyGenerator = getKeyPairGenerator(algorithm);
 		keyGenerator.initialize(2048);
 		KeyPair keys = keyGenerator.generateKeyPair();
 
-		Map<String, String> result = new HashMap<String, String>();
-		result.put("private-key", outputPrivatekey(keys.getPrivate().getEncoded(), algorithm));
-		result.put("public-key", outputPublickey(keys.getPublic().getEncoded(), algorithm));
+		final String privateKey = outputPrivatekey(keys.getPrivate().getEncoded(), algorithm);
+		final String publicKey = outputPublickey(keys.getPublic().getEncoded(), algorithm);
 
-		return result;
+		return new GeneratedKeys(privateKey, publicKey);
 	}
 
-	public static Map<String, String> run(String algorithm, String provider) throws Exception {
+	public static GeneratedKeys run(String algorithm, String provider) throws Exception {
 		KeyPairGenerator keyGenerator = getKeyPairGenerator(algorithm, provider);
 		keyGenerator.initialize(2048);
 		KeyPair keys = keyGenerator.generateKeyPair();
 
-		Map<String, String> result = new HashMap<String, String>();
-		result.put("private-key", outputPrivatekey(keys.getPrivate().getEncoded(), algorithm));
-		result.put("public-key", outputPublickey(keys.getPublic().getEncoded(), algorithm));
+		final String privateKey = outputPrivatekey(keys.getPrivate().getEncoded(), algorithm);
+		final String publicKey = outputPublickey(keys.getPublic().getEncoded(), algorithm);
 
-		return result;
+		return new GeneratedKeys(privateKey, publicKey);
 	}
 
 	public static KeyPair generate(String algorithm, long seed, String provider) throws Exception {
@@ -99,6 +95,24 @@ public class GenerateKeyPair {
 		X509EncodedKeySpec spec = fact.getKeySpec(publ, X509EncodedKeySpec.class);
 
 		return Base64.getEncoder().encodeToString(spec.getEncoded());
+	}
+
+	public static class GeneratedKeys {
+		private final String privateKey;
+		private final String publicKey;
+
+		public GeneratedKeys(final String privateKey, final String publicKey) {
+			this.privateKey = privateKey;
+			this.publicKey = publicKey;
+		}
+
+		public String getPrivateKey() {
+			return privateKey;
+		}
+
+		public String getPublicKey() {
+			return publicKey;
+		}
 	}
 }
 

@@ -26,12 +26,10 @@ import java.util.Base64;
 
 import org.junit.Test;
 
-import ro.kuberam.tests.junit.BaseTest;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 
-public class HmacStringWithSha256Test extends BaseTest {
+public class HmacStringWithSha256Test {
 
     @Test
     public void hmacStringWithSha256() throws Exception {
@@ -40,17 +38,15 @@ public class HmacStringWithSha256Test extends BaseTest {
             String result = Hmac.hmac(is,
                     "AWS4wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY".getBytes(StandardCharsets.UTF_8),
                     "HMAC-SHA-256", "base64");
-            System.out.println(result);
+            assertEquals("lp+7lP61Qrce3m+H/k1fopx4k0Kw9AdHRnDwwkieCg0=", result);
 
             result = Hmac.hmac("us-east-1".getBytes(StandardCharsets.UTF_8), Base64.getDecoder().decode(result), "HMAC-SHA-256", "base64");
-            System.out.println(result);
+            assertEquals("adqgIJzZxf9cjO1GSmlv1CUumBQwsQ49P9ji8ZfXpww=", result);
 
             result = Hmac.hmac("iam".getBytes(StandardCharsets.UTF_8), Base64.getDecoder().decode(result), "HMAC-SHA-256", "base64");
-            System.out.println(result);
+            assertEquals("9yz9RvJrxGQ/BqEeq7bAuhh4DBmo2gwxrOZxJl48h/o=", result);
 
             result = Hmac.hmac("aws4_request".getBytes(StandardCharsets.UTF_8), Base64.getDecoder().decode(result), "HMAC-SHA-256", "hex");
-            System.out.println(result);
-
             assertEquals("f4780e2d9f65fa895f9c67b32ce1baf0b0d8a43505a000a1a9e090d414db404d", result);
         }
     }
@@ -61,17 +57,15 @@ public class HmacStringWithSha256Test extends BaseTest {
         String result = Hmac.hmac(input.getBytes(UTF_8),
                 "AWS4wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY".getBytes(StandardCharsets.UTF_8),
                 "HMAC-SHA-256", "base64");
-        System.out.println(result);
+        assertEquals("lp+7lP61Qrce3m+H/k1fopx4k0Kw9AdHRnDwwkieCg0=", result);
 
         result = Hmac.hmac("us-east-1".getBytes(StandardCharsets.UTF_8), Base64.getDecoder().decode(result), "HMAC-SHA-256", "base64");
-        System.out.println(result);
+        assertEquals("adqgIJzZxf9cjO1GSmlv1CUumBQwsQ49P9ji8ZfXpww=", result);
 
         result = Hmac.hmac("iam".getBytes(StandardCharsets.UTF_8), Base64.getDecoder().decode(result), "HMAC-SHA-256", "base64");
-        System.out.println(result);
+        assertEquals("9yz9RvJrxGQ/BqEeq7bAuhh4DBmo2gwxrOZxJl48h/o=", result);
 
         result = Hmac.hmac("aws4_request".getBytes(StandardCharsets.UTF_8), Base64.getDecoder().decode(result), "HMAC-SHA-256", "hex");
-        System.out.println(result);
-
         assertEquals("f4780e2d9f65fa895f9c67b32ce1baf0b0d8a43505a000a1a9e090d414db404d", result);
     }
 }

@@ -29,24 +29,23 @@ import java.io.PipedOutputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.ClassRule;
 import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
 
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.NameBasedGenerator;
 import org.junit.rules.TemporaryFolder;
 
-public class UtilsTests extends CryptoModuleTests {
+public class UtilsTest extends CryptoModuleTests {
 
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @ClassRule
+    public static final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
     public void pipedStreams1Test() throws Exception {

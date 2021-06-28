@@ -25,12 +25,10 @@ import java.nio.charset.StandardCharsets;
 
 import org.junit.Test;
 
-import ro.kuberam.tests.junit.BaseTest;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 
-public class HmacStringWithSha1AndDefaultFormatTest extends BaseTest {
+public class HmacStringWithSha1AndDefaultFormatTest {
 
     @Test
     public void hmacStringWithSha1() throws Exception {
@@ -38,8 +36,6 @@ public class HmacStringWithSha1AndDefaultFormatTest extends BaseTest {
 
         final String result = Hmac.hmac(input.getBytes(StandardCharsets.UTF_8),
                 "def".getBytes(StandardCharsets.UTF_8), "HMAC-SHA-1", "");
-
-        System.out.println(result);
 
         assertEquals("dYTuFEkwcs2NmuhQ4P8JBTgjD4w=", result);
     }
@@ -51,8 +47,6 @@ public class HmacStringWithSha1AndDefaultFormatTest extends BaseTest {
         try(final InputStream is = new ByteArrayInputStream(input.getBytes(UTF_8))) {
             final String result = Hmac.hmac(is,
                     "def".getBytes(StandardCharsets.UTF_8), "HMAC-SHA-1", "");
-
-            System.out.println(result);
 
             assertEquals("dYTuFEkwcs2NmuhQ4P8JBTgjD4w=", result);
         }

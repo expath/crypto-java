@@ -27,15 +27,15 @@ import java.nio.charset.StandardCharsets;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ro.kuberam.tests.junit.BaseTest;
+import static ro.kuberam.libs.java.crypto.TestUtils.generate5MbString;
 
-public class String2InputStreamPerformanceTest extends BaseTest {
+public class String2InputStreamPerformanceTest {
 
     private static String tempString;
 
     @BeforeClass
-    public static void initialize() throws IOException {
-        tempString = generate5MbTempString();
+    public static void initialize() {
+        tempString = generate5MbString();
     }
 
     @Test

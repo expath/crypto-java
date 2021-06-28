@@ -23,11 +23,9 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
-import ro.kuberam.tests.junit.BaseTest;
-
 import static org.junit.Assert.assertEquals;
 
-public class HashBinaryWithMd5Test extends BaseTest {
+public class HashBinaryWithMd5Test {
 
     @Test
     public void hashBinaryWithMd5() throws Exception {

@@ -27,9 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import ro.kuberam.tests.junit.BaseTest;
-
-public class CryptoModuleTests extends BaseTest {
+public class CryptoModuleTests {
 
 	protected static String longString = "Long string for tests. Long string for tests. Long string for tests. Long string for tests. Long string for tests.";
 	protected static String veryLongString;

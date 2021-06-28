@@ -19,6 +19,9 @@
  */
 package ro.kuberam.libs.java.crypto.digitalSignature;
 
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyException;
@@ -58,11 +61,13 @@ import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 
 import ro.kuberam.libs.java.crypto.Parameters;
-import ro.kuberam.tests.junit.BaseTest;
 
-public class GenerateDigitalSignatureTest extends BaseTest {
+import static org.junit.Assert.assertEquals;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
-	@Ignore
+public class GenerateDigitalSignatureTest {
+
+    @Ignore
     @Test
     public void generateEnvelopedDigitalSignature() throws Exception {
         final Parameters parameters = new Parameters();
@@ -83,7 +88,11 @@ public class GenerateDigitalSignatureTest extends BaseTest {
                 "src/test/resources/ro/kuberam/libs/java/crypto/digitalSignature/doc-3.xml").toFile());
         data.add(doc3);
 
-        generateXMLSignature(data, parameters);
+        final String result = generateXMLSignature(data, parameters);
+
+        final URI expectedUri = getClass().getResource("expected-digital-signature.xml").toURI();
+        final byte[] expectedData = Files.readAllBytes(Paths.get(expectedUri));
+        assertEquals(new String(expectedData, UTF_8), result);
     }
 
     private String generateXMLSignature(final List<Document> data, final Parameters parameters)
@@ -139,8 +148,6 @@ public class GenerateDigitalSignatureTest extends BaseTest {
         final DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
         final DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
         final LSSerializer serializer = impl.createLSSerializer();
-        System.out.println(serializer.writeToString(doc));
-
-        return "";
+        return serializer.writeToString(doc);
     }
 }

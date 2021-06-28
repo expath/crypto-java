@@ -26,11 +26,9 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.junit.Test;
 
-import ro.kuberam.tests.junit.BaseTest;
-
 import static org.junit.Assert.assertEquals;
 
-public class GenerateAWSSignatureTest extends BaseTest {
+public class GenerateAWSSignatureTest {
 
     @Test
     public void hmacStringWithSha256() throws Exception {
@@ -46,7 +44,6 @@ public class GenerateAWSSignatureTest extends BaseTest {
 
         final byte[] kDate = Hmac.hmac(dateStamp.getBytes(StandardCharsets.UTF_8), kSecret.getBytes(StandardCharsets.UTF_8),
                 "HMAC-SHA-256");
-        System.out.println(Arrays.toString(kDate));
         final String kDateHexValue = generateHexValue(kDate);
         assertEquals("969fbb94feb542b71ede6f87fe4d5fa29c789342b0f407474670f0c2489e0a0d", kDateHexValue);
 

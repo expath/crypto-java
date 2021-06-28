@@ -26,9 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import ro.kuberam.tests.junit.BaseTest;
-
-public class ListServicesTest extends BaseTest {
+public class ListServicesTest {
 
 	// @Test
 	// public void listServices() throws XMLStreamException,

@@ -19,21 +19,24 @@
  */
 package ro.kuberam.libs.java.crypto.digitalSignature;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import ro.kuberam.libs.java.crypto.CryptoException;
 
-import ro.kuberam.tests.junit.BaseTest;
+import javax.xml.crypto.dsig.XMLSignatureException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertTrue;
+import static ro.kuberam.libs.java.crypto.TestUtils.parseXmlString;
 
-public class ValidateEnvelopedDigitalSignatureTest extends BaseTest {
+public class ValidateEnvelopedDigitalSignatureTest {
 
     @Test
-    public void test() throws Exception {
+    public void test() throws IOException, CryptoException, XMLSignatureException {
         try (final InputStream inputIs = getClass().getResourceAsStream("../doc-1.xml")) {
             final Document input = parseXmlString(IOUtils.toString(inputIs, UTF_8));
             final String[] certificateDetails = new String[5];

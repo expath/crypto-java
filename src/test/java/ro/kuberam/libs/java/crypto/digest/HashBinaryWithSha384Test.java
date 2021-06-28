@@ -23,11 +23,9 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
-import ro.kuberam.tests.junit.BaseTest;
-
 import static org.junit.Assert.assertEquals;
 
-public class HashBinaryWithSha384Test extends BaseTest {
+public class HashBinaryWithSha384Test {
 
     @Test
     public void hashBinaryWithSha384() throws Exception {

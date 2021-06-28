@@ -21,16 +21,14 @@ package ro.kuberam.libs.java.crypto.digest;
 
 import org.junit.Test;
 
-import ro.kuberam.tests.junit.BaseTest;
-
 import static org.junit.Assert.assertEquals;
+import static ro.kuberam.libs.java.crypto.TestUtils.generate5MbString;
 
-public class HashLargeStringWithMd5Test extends BaseTest {
+public class HashLargeStringWithMd5Test {
 
     @Test
     public void hashLargeStringWithMd5() throws Exception {
-        final String result = Hash.hashString(generate5MbTempString(), "MD5", "base64");
-        System.out.println(result);
-        assertEquals("0oZeT8dy8rR/aqDYUz3sCw==", result);
+        final String result = Hash.hashString(generate5MbString(), "MD5", "base64");
+        assertEquals("K1yRrTmUCeybQJtm9bsA+w==", result);
     }
 }
