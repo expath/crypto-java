@@ -1,4 +1,4 @@
-/**
+/*
  * EXPath Cryptographic Module
  * Java Library providing an EXPath Cryptographic Module
  * Copyright (C) 2015 The EXPath Project

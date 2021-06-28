@@ -1,7 +1,7 @@
-/**
+/*
  * EXPath Cryptographic Module
  * Java Library providing an EXPath Cryptographic Module
- * Copyright (C) 2015 Claudius Teodorescu
+ * Copyright (C) 2015 Kuberam
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
