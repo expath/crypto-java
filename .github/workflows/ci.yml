@@ -31,6 +31,6 @@ jobs:
         run: mvn -V -B -DskipTests=true install
       - name: Maven Test
         run: mvn -B verify
-      - name: Maven Code Coverage
-        if: ${{ github.ref == 'refs/heads/main' && matrix.jdk == '1.8' && matrix.os == 'ubuntu-latest' }}
-        run: mvn -B jacoco:report coveralls:report -DrepoToken=${{ secrets.COVERALLS_TOKEN }}
+#      - name: Maven Code Coverage
+#        if: ${{ github.ref == 'refs/heads/main' && matrix.jdk == '1.8' && matrix.os == 'ubuntu-latest' }}
+#        run: mvn -B jacoco:report coveralls:report -DrepoToken=${{ secrets.COVERALLS_TOKEN }}
