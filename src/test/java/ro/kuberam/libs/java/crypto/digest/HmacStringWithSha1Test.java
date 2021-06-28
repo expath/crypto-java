@@ -42,7 +42,7 @@ public class HmacStringWithSha1Test extends BaseTest {
             final String result = Hmac.hmac(input.getBytes(StandardCharsets.UTF_8), IOUtils.toByteArray(secretKeyIs),
                     "HMAC-SHA-1", "base64");
 
-            assertEquals("55LyDq7GFnqijauK4CQWR4AqyZk=", result);
+            assertEquals("nUXjFZOV3d/7v+s4dTrbEqTzld8=", result);
         }
     }
 
@@ -55,7 +55,7 @@ public class HmacStringWithSha1Test extends BaseTest {
             final String result = Hmac.hmac(is, IOUtils.toByteArray(secretKeyIs),
                     "HMAC-SHA-1", "base64");
 
-            assertEquals("55LyDq7GFnqijauK4CQWR4AqyZk=", result);
+            assertEquals("nUXjFZOV3d/7v+s4dTrbEqTzld8=", result);
         }
     }
 }

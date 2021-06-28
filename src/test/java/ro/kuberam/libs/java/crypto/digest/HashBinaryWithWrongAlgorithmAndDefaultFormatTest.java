@@ -35,7 +35,7 @@ public class HashBinaryWithWrongAlgorithmAndDefaultFormatTest extends BaseTest {
 
     @Test
     public void hashBinaryWithWrongAlgorithm() throws IOException {
-        try (final InputStream input = getClass().getResourceAsStream("../../keystore.ks")) {
+        try (final InputStream input = getClass().getResourceAsStream("../keystore.ks")) {
             Hash.hashBinary(input, "SHA-17");
             fail("algorithm should have been unknown");
         } catch (CryptoException e) {

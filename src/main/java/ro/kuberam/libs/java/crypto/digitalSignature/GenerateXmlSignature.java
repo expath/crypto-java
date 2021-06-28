@@ -134,7 +134,7 @@ public class GenerateXmlSignature {
 				try {
 					keyStore = KeyStore.getInstance(certificateDetails[0]);
 				} catch (KeyStoreException e) {
-					throw new CryptoException(e);
+					throw CryptoException.fromCause(e);
 				}
 				keyStore.load(keyStoreInputStream, certificateDetails[1].toCharArray());
 				String alias = certificateDetails[2];

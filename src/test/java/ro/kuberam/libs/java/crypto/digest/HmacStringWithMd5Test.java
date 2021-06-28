@@ -41,7 +41,7 @@ public class HmacStringWithMd5Test extends BaseTest {
             final String result = Hmac.hmac(input.getBytes(UTF_8),
                     secretKey.getBytes(UTF_8), "HMAC-MD5", "base64");
 
-            assertEquals("l4MY6Yosjo7W60VJeXB/PQ==", result);
+            assertEquals("itnbgVvBCBqOareTyzTz0w==", result);
         }
     }
 
@@ -55,7 +55,7 @@ public class HmacStringWithMd5Test extends BaseTest {
             final String result = Hmac.hmac(is,
                     secretKey.getBytes(UTF_8), "HMAC-MD5", "base64");
 
-            assertEquals("l4MY6Yosjo7W60VJeXB/PQ==", result);
+            assertEquals("itnbgVvBCBqOareTyzTz0w==", result);
         }
     }
 }

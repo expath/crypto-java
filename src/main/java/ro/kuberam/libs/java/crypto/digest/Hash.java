@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ro.kuberam.libs.java.crypto.CryptoError;
 import ro.kuberam.libs.java.crypto.CryptoException;
 import ro.kuberam.libs.java.crypto.utils.Buffer;
 import ro.kuberam.libs.java.crypto.utils.HexString;
@@ -103,7 +104,7 @@ public class Hash {
 		try {
 			return MessageDigest.getInstance(algorithm);
 		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(e);
+			throw new CryptoException(CryptoError.NoSuchAlgorithmException, e);
 		}
 	}
 }

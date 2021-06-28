@@ -47,7 +47,7 @@ public enum CryptoError {
     	this.code = code;
         this.message = message;
     }
-    
+
     public String getCode() {
         return this.code;
     }
@@ -58,6 +58,5 @@ public enum CryptoError {
     
     public String getDescription() {
         return this.code + ", " + this.message;
-    }    
-    
+    }
 }

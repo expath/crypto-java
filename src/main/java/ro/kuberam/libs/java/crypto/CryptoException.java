@@ -36,8 +36,9 @@ public class CryptoException extends Exception {
 		this.cryptoError = cryptoError;
 	}
 	
-	public CryptoException(Throwable cause) {
-		super(CryptoError.valueOf(cause.getClass().getSimpleName()).getDescription(), cause);
+	public static CryptoException fromCause(final Throwable cause) {
+		final CryptoError cryptoError = CryptoError.valueOf(cause.getClass().getSimpleName());
+		return new CryptoException(cryptoError, cause);
 	}	
 
 	public CryptoError getCryptoError() {

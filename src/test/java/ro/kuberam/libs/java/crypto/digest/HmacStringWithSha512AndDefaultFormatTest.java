@@ -39,9 +39,9 @@ public class HmacStringWithSha512AndDefaultFormatTest extends BaseTest {
         try (final InputStream secretKeyIs = getClass().getResourceAsStream("../rsa-private-key.key")) {
 
             final String result = Hmac.hmac(input.getBytes(UTF_8), IOUtils.toByteArray(secretKeyIs),
-                    "HMAC-SHA-512", "");
+                    "HMAC-SHA-512", null);
 
-            assertEquals("z9MtEpBXxO5bKmsXJWfKsZ4v+RduKU89Y95H2HMGQEwHGefWmewNNQ7urZVuWEU5aeRRdO7G7j0QlcLYv1pkrg==", result);
+            assertEquals("pI/CNSAbX55+U5gYPSe+mGYr1dbvnBM10Kmd6VIGANGKXPA73UuL8JcX0CcESqke9n4PJLgZulaEyJvb/zx6NA==", result);
         }
     }
 
@@ -52,9 +52,9 @@ public class HmacStringWithSha512AndDefaultFormatTest extends BaseTest {
              final InputStream secretKeyIs = getClass().getResourceAsStream("../rsa-private-key.key")) {
 
             final String result = Hmac.hmac(is, IOUtils.toByteArray(secretKeyIs),
-                    "HMAC-SHA-512", "");
+                    "HMAC-SHA-512", null);
 
-            assertEquals("z9MtEpBXxO5bKmsXJWfKsZ4v+RduKU89Y95H2HMGQEwHGefWmewNNQ7urZVuWEU5aeRRdO7G7j0QlcLYv1pkrg==", result);
+            assertEquals("pI/CNSAbX55+U5gYPSe+mGYr1dbvnBM10Kmd6VIGANGKXPA73UuL8JcX0CcESqke9n4PJLgZulaEyJvb/zx6NA==", result);
         }
     }
 }

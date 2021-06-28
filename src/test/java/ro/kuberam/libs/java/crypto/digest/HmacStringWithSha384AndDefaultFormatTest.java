@@ -39,9 +39,9 @@ public class HmacStringWithSha384AndDefaultFormatTest extends BaseTest {
         try (final InputStream secretKeyIs = getClass().getResourceAsStream("../rsa-private-key.key")) {
 
             final String result = Hmac.hmac(input.getBytes(UTF_8), IOUtils.toByteArray(secretKeyIs),
-                    "HMAC-SHA-384", "");
+                    "HMAC-SHA-384", null);
 
-            assertEquals("RRirKZTmx+cG8EXvgrRnpYFPEPYXaZBirY+LFmiUBAK61LCryDsL4clFRG5/BcBr", result);
+            assertEquals("I89ANhNIxCc44IsbpfT+v9bClNTat7zlG3NWNy95M4X+1KYF6Njadcpzyocqsbik", result);
         }
     }
 
@@ -52,9 +52,9 @@ public class HmacStringWithSha384AndDefaultFormatTest extends BaseTest {
              final InputStream secretKeyIs = getClass().getResourceAsStream("../rsa-private-key.key")) {
 
             final String result = Hmac.hmac(is, IOUtils.toByteArray(secretKeyIs),
-                    "HMAC-SHA-384", "");
+                    "HMAC-SHA-384", null);
 
-            assertEquals("RRirKZTmx+cG8EXvgrRnpYFPEPYXaZBirY+LFmiUBAK61LCryDsL4clFRG5/BcBr", result);
+            assertEquals("I89ANhNIxCc44IsbpfT+v9bClNTat7zlG3NWNy95M4X+1KYF6Njadcpzyocqsbik", result);
         }
     }
 }

@@ -39,9 +39,9 @@ public class HmacStringWithMd5AndDefaultFormatTest extends BaseTest {
             final String secretKey = IOUtils.toString(secretKeyIs, UTF_8);
 
             final String result = Hmac.hmac(input.getBytes(UTF_8),
-                    secretKey.getBytes(UTF_8), "HMAC-MD5", "");
+                    secretKey.getBytes(UTF_8), "HMAC-MD5", null);
 
-            assertEquals("l4MY6Yosjo7W60VJeXB/PQ==", result);
+            assertEquals("itnbgVvBCBqOareTyzTz0w==", result);
         }
     }
 
@@ -53,9 +53,9 @@ public class HmacStringWithMd5AndDefaultFormatTest extends BaseTest {
             final String secretKey = IOUtils.toString(secretKeyIs, UTF_8);
 
             final String result = Hmac.hmac(is,
-                    secretKey.getBytes(UTF_8), "HMAC-MD5", "");
+                    secretKey.getBytes(UTF_8), "HMAC-MD5", null);
 
-            assertEquals("l4MY6Yosjo7W60VJeXB/PQ==", result);
+            assertEquals("itnbgVvBCBqOareTyzTz0w==", result);
         }
     }
 }
