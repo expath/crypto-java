@@ -36,12 +36,17 @@ import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.NameBasedGenerator;
+import org.junit.rules.TemporaryFolder;
 
 public class UtilsTests extends CryptoModuleTests {
+
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
     public void pipedStreams1Test() throws Exception {
@@ -96,7 +101,7 @@ public class UtilsTests extends CryptoModuleTests {
     public void digestOutputStreamTest() throws Exception {
         final MessageDigest md = MessageDigest.getInstance("SHA-512");
 
-        try (final OutputStream fos = Files.newOutputStream(Paths.get("/home/claudius/workspace-claudius/expath-crypto/src/org/expath/crypto/tests/string.txt"));
+        try (final OutputStream fos = Files.newOutputStream(temporaryFolder.newFile("string.txt").toPath());
              final DigestOutputStream dos = new DigestOutputStream(fos, md);
              final ObjectOutputStream oos = new ObjectOutputStream(dos)
         ) {
