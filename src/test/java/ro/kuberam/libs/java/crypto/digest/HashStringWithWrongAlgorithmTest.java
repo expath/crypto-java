@@ -19,21 +19,21 @@
  */
 package ro.kuberam.libs.java.crypto.digest;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import ro.kuberam.libs.java.crypto.CryptoError;
+import ro.kuberam.libs.java.crypto.CryptoException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import ro.kuberam.libs.java.crypto.CryptoError;
-import ro.kuberam.libs.java.crypto.CryptoException;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
-public class HashBinaryWithWrongAlgorithmTest {
+public class HashStringWithWrongAlgorithmTest {
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<Object[]> data() {
@@ -54,11 +54,10 @@ public class HashBinaryWithWrongAlgorithmTest {
     public String format;
 
     @Test
-    public void hashBinaryWithWrongAlgorithm() throws IOException {
-        try (final InputStream input = getClass().getResourceAsStream("../keystore.ks")) {
-            assertNotNull(input);
-
-            Hash.hashBinary(input, algorithm, format);
+    public void hashStringWithWrongAlgorithm() {
+        try {
+            final String input = "Short string for tests.";
+            Hash.hashString(input, algorithm, format);
             fail("Algorithm: " + algorithm + " should have been unknown");
         } catch (final CryptoException e) {
             assertEquals(CryptoError.NoSuchAlgorithmException, e.getCryptoError());
