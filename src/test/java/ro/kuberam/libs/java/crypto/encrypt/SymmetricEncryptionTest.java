@@ -70,7 +70,6 @@ public class SymmetricEncryptionTest extends CryptoModuleTests {
 		assertEquals(longString, new String(decryptionResult, UTF_8));
 	}
 
-	//@Ignore
 	@Test
 	public void aesAlgorithmAndWrongKeyAndDefaultProviderAndCbcMode() throws IOException {
 		try {
