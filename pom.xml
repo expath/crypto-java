@@ -32,7 +32,7 @@
 
 	<groupId>org.expath.crypto</groupId>
 	<artifactId>crypto-java</artifactId>
-	<version>1.9.0</version>
+	<version>1.9.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>EXPath Cryptographic Module</name>
@@ -42,7 +42,7 @@
 		<connection>scm:git:https://github.com/expath/crypto-java.git</connection>
 		<developerConnection>scm:git:https://github.com/expath/crypto-java.git</developerConnection>
 		<url>scm:git:https://github.com/expath/crypto-java.git</url>
-		<tag>crypto-java-1.9.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<url>https://github.com/expath/crypto-java</url>
