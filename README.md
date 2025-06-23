@@ -1,7 +1,7 @@
-[![CI](https://github.com/expath/crypto-java/workflows/CI/badge.svg)](https://github.com/expath/crypto-java/actions?query=workflow%3ACI)
+[![Build Status](https://github.com/expath/crypto-java/actions/workflows/ci.yml/badge.svg)](https://github.com/expath/crypto-java/actions/workflows/ci.yml)
 [![Java 8+](https://img.shields.io/badge/java-8%2B-blue.svg)](https://adoptopenjdk.net/)
 [![License](https://img.shields.io/badge/license-LGPL%202.1-blue.svg)](https://opensource.org/licenses/lgpl-2.1)
-[![Maven Central](https://img.shields.io/maven-central/v/org.expath.crypto/crypto-java.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22org.expath.crypto%22%20AND%20a:%22crypto-java%22)
+[![Maven Central](https://img.shields.io/maven-central/v/org.expath/crypto-java?logo=apachemaven&label=maven+central&color=green)](https://central.sonatype.com/search?namespace=org.expath)
 
 # Java library for EXPath Crypto Module
 
