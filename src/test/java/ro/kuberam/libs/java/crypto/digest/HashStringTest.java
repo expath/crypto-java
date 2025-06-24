@@ -67,9 +67,9 @@ public class HashStringTest {
     public String expected;
 
     @Test
-    public void hashString() throws IOException, CryptoException {
+    public void hashString() throws CryptoException {
         final String input = "Short string for tests.";
-        final String result = Hash.hashString(input, algorithm, format);
+        final String result = Hash.hashString(input, algorithm, null, format);
         assertEquals(expected, result);
     }
 }

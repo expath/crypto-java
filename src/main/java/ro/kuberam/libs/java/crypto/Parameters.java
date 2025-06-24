@@ -42,7 +42,7 @@ public class Parameters {
 
     public void setCanonicalizationAlgorithm(final String canonicalizationAlgorithm) throws CryptoException {
         if (!contains(CANONICALIZATION_ALGORITHM_VALUES, canonicalizationAlgorithm)) {
-            throw new CryptoException(CryptoError.NoSuchAlgorithmException);
+            throw new CryptoException(CryptoError.UNKNOWN_ALGORITHM);
         }
 
         if (canonicalizationAlgorithm.equals("exclusive")) {
@@ -62,7 +62,7 @@ public class Parameters {
 
     public void setDigestAlgorithm(final String digestAlgorithm) throws CryptoException {
         if (!contains(DIGEST_ALGORITHM_VALUES, digestAlgorithm)) {
-            throw new CryptoException(CryptoError.NoSuchAlgorithmException);
+            throw new CryptoException(CryptoError.UNKNOWN_ALGORITHM);
         }
 
         if (digestAlgorithm.equals("SHA256")) {
@@ -80,7 +80,7 @@ public class Parameters {
 
     public void setSignatureAlgorithm(final String signatureAlgorithm) throws CryptoException {
         if (!contains(SIGNATURE_ALGORITHM_VALUES, signatureAlgorithm)) {
-            throw new CryptoException(CryptoError.NoSuchAlgorithmException);
+            throw new CryptoException(CryptoError.UNKNOWN_ALGORITHM);
         }
 
         if (signatureAlgorithm.equals("DSA_SHA1")) {

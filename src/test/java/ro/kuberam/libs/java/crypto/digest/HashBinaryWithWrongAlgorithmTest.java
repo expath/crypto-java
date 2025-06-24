@@ -58,10 +58,10 @@ public class HashBinaryWithWrongAlgorithmTest {
         try (final InputStream input = getClass().getResourceAsStream("../keystore.ks")) {
             assertNotNull(input);
 
-            Hash.hashBinary(input, algorithm, format);
+            Hash.hashBinary(input, algorithm, null, format);
             fail("Algorithm: " + algorithm + " should have been unknown");
         } catch (final CryptoException e) {
-            assertEquals(CryptoError.NoSuchAlgorithmException, e.getCryptoError());
+            assertEquals(CryptoError.UNKNOWN_ALGORITHM, e.getCryptoError());
         }
     }
 }

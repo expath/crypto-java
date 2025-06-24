@@ -103,7 +103,7 @@ public class GenerateXmlSignature {
 				NodeList nodes = (NodeList) expr.evaluate(inputDoc, XPathConstants.NODESET);
 				if (nodes.getLength() < 1) {
 					// TODO this error message has to replaced
-					throw new CryptoException(CryptoError.NoSuchAlgorithmException);
+					throw new CryptoException(CryptoError.UNKNOWN_ALGORITHM);
 				}
 
 				// Node nodeToSign = nodes.item(0);
@@ -134,7 +134,7 @@ public class GenerateXmlSignature {
 				try {
 					keyStore = KeyStore.getInstance(certificateDetails[0]);
 				} catch (KeyStoreException e) {
-					throw CryptoException.fromCause(e);
+					throw new CryptoException(e);
 				}
 				keyStore.load(keyStoreInputStream, certificateDetails[1].toCharArray());
 				String alias = certificateDetails[2];
@@ -219,14 +219,14 @@ public class GenerateXmlSignature {
 				return serializer.writeToString(sigParent);
 			}
 		} catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
-			throw new CryptoException(CryptoError.NoSuchAlgorithmException, e);
+			throw new CryptoException(CryptoError.UNKNOWN_ALGORITHM, e);
 		} catch (CertificateException e) {
 			// TODO error code needs improving
-			throw new CryptoException(CryptoError.InvalidKeySpecException, e);
+			throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
 		} catch (KeyStoreException e) {
 			throw new CryptoException(CryptoError.UNREADABLE_KEYSTORE, e);
 		} catch (UnrecoverableKeyException | KeyException e) {
-			throw new CryptoException(CryptoError.InvalidKeySpecException, e);
+			throw new CryptoException(CryptoError.INVALID_CRYPTO_KEY, e);
 		} catch (ParserConfigurationException | XPathExpressionException | MarshalException e) {
 			throw new IOException(e);
 		}
@@ -268,7 +268,7 @@ public class GenerateXmlSignature {
 			return CanonicalizationMethod.INCLUSIVE;
 
 		default:
-			throw new CryptoException(CryptoError.NoSuchAlgorithmException);
+			throw new CryptoException(CryptoError.UNKNOWN_ALGORITHM);
 		}
 	}
 
@@ -285,7 +285,7 @@ public class GenerateXmlSignature {
 			return DigestMethod.SHA1;
 
 		default:
-			throw new CryptoException(CryptoError.NoSuchAlgorithmException);
+			throw new CryptoException(CryptoError.UNKNOWN_ALGORITHM);
 		}
 	}
 
@@ -299,7 +299,7 @@ public class GenerateXmlSignature {
 			return SignatureMethod.RSA_SHA1;
 
 		default:
-			throw new CryptoException(CryptoError.NoSuchAlgorithmException);
+			throw new CryptoException(CryptoError.UNKNOWN_ALGORITHM);
 		}
 	}
 }

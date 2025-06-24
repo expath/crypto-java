@@ -68,8 +68,8 @@ public class HashLargeStringTest {
     public String expected;
 
     @Test
-    public void hashLargeString() throws IOException, CryptoException {
-        final String result = Hash.hashString(generate5MbString(), algorithm, format);
+    public void hashLargeString() throws CryptoException {
+        final String result = Hash.hashString(generate5MbString(), algorithm, null, format);
         assertEquals(expected, result);
     }
 }

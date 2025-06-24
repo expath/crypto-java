@@ -25,7 +25,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ro.kuberam.libs.java.crypto.CryptoError;
@@ -41,16 +40,12 @@ public class SymmetricEncryptionTest extends CryptoModuleTests {
 	private static String iv;
 
 	@BeforeClass
-	public static void beforeClassFunction() {
-		try {
-			iv = Hash.hashString("initialization vector", "MD5", "hex");
-		} catch (CryptoException e) {
-			e.printStackTrace();
-		}
+	public static void beforeClassFunction() throws CryptoException {
+		iv = Hash.hashString("initialization vector", "MD5", null, "hex");
 	}
 
 	@Test
-	public void aesAlgorithmAndDefaultProviderAndCbcMode() throws Exception {
+	public void aesAlgorithmAndDefaultProviderAndCbcMode() throws CryptoException, IOException {
 		byte[] encryptionResult = SymmetricEncryption.encrypt(longInputBytes, key, aesAlgorithmCbcMode, iv, "");
 		byte[] decryptionResult = SymmetricEncryption.decrypt(encryptionResult, key, aesAlgorithmCbcMode, iv, "");
 
@@ -58,7 +53,7 @@ public class SymmetricEncryptionTest extends CryptoModuleTests {
 	}
 
 	@Test
-	public void aesAlgorithmAndCbcMode() throws Exception {
+	public void aesAlgorithmAndCbcMode() throws CryptoException, IOException {
 		byte[] encryptionResult = SymmetricEncryption.encrypt(longInputBytes, key, aesAlgorithmCbcMode, iv,
 				sunProvider);
 		byte[] decryptionResult = SymmetricEncryption.decrypt(encryptionResult, key, aesAlgorithmCbcMode, iv,
@@ -68,21 +63,20 @@ public class SymmetricEncryptionTest extends CryptoModuleTests {
 	}
 	
 	@Test
-	public void aesAlgorithmAndDefaultProviderAndEcbMode() throws Exception {
+	public void aesAlgorithmAndDefaultProviderAndEcbMode() throws CryptoException, IOException {
 		byte[] encryptionResult = SymmetricEncryption.encrypt(longInputBytes, key, aesAlgorithmEcbMode, "", "");
 		byte[] decryptionResult = SymmetricEncryption.decrypt(encryptionResult, key, aesAlgorithmEcbMode, "", "");
 
 		assertEquals(longString, new String(decryptionResult, UTF_8));
 	}
 
-	@Ignore
 	@Test
-	public void aesAlgorithmAndWrongKeyAndDefaultProviderAndCbcMode() throws IOException, CryptoException {
+	public void aesAlgorithmAndWrongKeyAndDefaultProviderAndCbcMode() throws IOException {
 		try {
 			byte[] encryptionResult = SymmetricEncryption.encrypt(longInputBytes, key, aesAlgorithmCbcMode, iv, "");
 			SymmetricEncryption.decrypt(encryptionResult, wrongKey, aesAlgorithmCbcMode, iv, "");
 		} catch (CryptoException e) {
-			assertEquals(CryptoError.InvalidKeySpecException, e.getCryptoError());
+			assertEquals(CryptoError.INVALID_CRYPTO_KEY, e.getCryptoError());
 		}
 	}
 }
